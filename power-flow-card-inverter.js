@@ -244,11 +244,28 @@ class PowerFlowCardInverter extends HTMLElement {
       else appCard.classList.remove('dark-mode');
     }
 
-    const customInvImage = this.config?.inverter_icon || 
-                           this.config?.custom_inverter_icon || 
-                           (typeof this.config?.inverter_image === 'string' ? this.config.inverter_image : '');
+    // Xử lý bật/tắt ảnh tùy chỉnh
+    const rawInvImg = this.config?.inverter_image;
+    let useCustomImg = false;
+    let customInvImage = '';
 
-    const useCustomImg = isTrue(this.config?.inverter_image) || Boolean(customInvImage);
+    if (typeof rawInvImg === 'boolean') {
+      useCustomImg = rawInvImg;
+      customInvImage = this.config?.inverter_icon || this.config?.custom_inverter_icon || '';
+    } else if (typeof rawInvImg === 'string' && rawInvImg.trim() !== '') {
+      if (rawInvImg.toLowerCase() === 'false') {
+        useCustomImg = false;
+      } else if (rawInvImg.toLowerCase() === 'true') {
+        useCustomImg = true;
+        customInvImage = this.config?.inverter_icon || this.config?.custom_inverter_icon || '';
+      } else {
+        useCustomImg = true;
+        customInvImage = rawInvImg;
+      }
+    } else {
+      customInvImage = this.config?.inverter_icon || this.config?.custom_inverter_icon || '';
+      useCustomImg = Boolean(customInvImage);
+    }
 
     const invDefaultG = this.getEl('inv-default-graphics');
     const invCustomImg = this.getEl('inv-custom-image');
@@ -1500,89 +1517,16 @@ class PowerFlowCardInverterEditor extends HTMLElement {
       { name: "inverter_y", label: "Tọa độ Y Biến tần", selector: { number: { mode: "box" } } },
       { name: "inverter_width", label: "Chiều rộng Biến tần", selector: { number: { mode: "box" } } },
       { name: "inverter_height", label: "Chiều cao Biến tần", selector: { number: { mode: "box" } } },
-      { name: "inverter_custom_x", label: "Tọa độ X ảnh tùy chỉnh", selector: { number: { mode: "box" } } },
-      { name: "inverter_custom_y", label: "Tọa độ Y ảnh tùy chỉnh", selector: { number: { mode: "box" } } },
-      {
-        name: "entities",
-        label: "Danh sách Entities",
-        type: "grid",
-        schema: [
-          // --- PV DC ---
-          { name: "pv_power", label: "Tổng công suất PV (pv_power)", selector: { entity: { domain: "sensor" } } },
-          { name: "pv_daily", label: "Sản lượng PV hôm nay (pv_daily)", selector: { entity: { domain: "sensor" } } },
-          { name: "pv_total", label: "Tổng sản lượng PV (pv_total)", selector: { entity: { domain: "sensor" } } },
-          { name: "pv1_power", label: "Công suất Chuỗi PV 1 (pv1_power)", selector: { entity: { domain: "sensor" } } },
-          { name: "pv1_voltage", label: "Điện áp Chuỗi PV 1 (pv1_voltage)", selector: { entity: { domain: "sensor" } } },
-          { name: "pv2_power", label: "Công suất Chuỗi PV 2 (pv2_power)", selector: { entity: { domain: "sensor" } } },
-          { name: "pv2_voltage", label: "Điện áp Chuỗi PV 2 (pv2_voltage)", selector: { entity: { domain: "sensor" } } },
-          { name: "pv3_power", label: "Công suất Chuỗi PV 3 (pv3_power)", selector: { entity: { domain: "sensor" } } },
-          { name: "pv3_voltage", label: "Điện áp Chuỗi PV 3 (pv3_voltage)", selector: { entity: { domain: "sensor" } } },
-          { name: "pv4_power", label: "Công suất Chuỗi PV 4 (pv4_power)", selector: { entity: { domain: "sensor" } } },
-          { name: "pv4_voltage", label: "Điện áp Chuỗi PV 4 (pv4_voltage)", selector: { entity: { domain: "sensor" } } },
-
-          // --- PV AC ---
-          { name: "ac_pv_power", label: "Công suất PV AC (ac_pv_power)", selector: { entity: { domain: "sensor" } } },
-          { name: "ac_pv_power_l1", label: "Công suất PV AC L1 (ac_pv_power_l1)", selector: { entity: { domain: "sensor" } } },
-          { name: "ac_pv_power_l2", label: "Công suất PV AC L2 (ac_pv_power_l2)", selector: { entity: { domain: "sensor" } } },
-          { name: "ac_pv_power_l3", label: "Công suất PV AC L3 (ac_pv_power_l3)", selector: { entity: { domain: "sensor" } } },
-          { name: "ac_pv_voltage", label: "Điện áp PV AC (ac_pv_voltage)", selector: { entity: { domain: "sensor" } } },
-          { name: "ac_pv_frequency", label: "Tần số PV AC (ac_pv_frequency)", selector: { entity: { domain: "sensor" } } },
-
-          // --- LƯỚI ---
-          { name: "grid_power", label: "Công suất Lưới (grid_power)", selector: { entity: { domain: "sensor" } } },
-          { name: "grid_voltage", label: "Điện áp Lưới (grid_voltage)", selector: { entity: { domain: "sensor" } } },
-          { name: "grid_frequency", label: "Tần số Lưới (grid_frequency)", selector: { entity: { domain: "sensor" } } },
-          { name: "grid_sell_daily", label: "Bán điện hôm nay (grid_sell_daily)", selector: { entity: { domain: "sensor" } } },
-          { name: "grid_sell_total", label: "Tổng bán điện (grid_sell_total)", selector: { entity: { domain: "sensor" } } },
-          { name: "grid_buy_daily", label: "Mua điện hôm nay (grid_buy_daily)", selector: { entity: { domain: "sensor" } } },
-          { name: "grid_buy_total", label: "Tổng mua điện (grid_buy_total)", selector: { entity: { domain: "sensor" } } },
-          { name: "grid_power_l1", label: "Công suất Lưới L1 (grid_power_l1)", selector: { entity: { domain: "sensor" } } },
-          { name: "grid_power_l2", label: "Công suất Lưới L2 (grid_power_l2)", selector: { entity: { domain: "sensor" } } },
-          { name: "grid_power_l3", label: "Công suất Lưới L3 (grid_power_l3)", selector: { entity: { domain: "sensor" } } },
-          { name: "grid_voltage_l1", label: "Điện áp Lưới L1 (grid_voltage_l1)", selector: { entity: { domain: "sensor" } } },
-
-          // --- TẢI TIÊU THỤ ---
-          { name: "load_power", label: "Công suất Tiêu thụ (load_power)", selector: { entity: { domain: "sensor" } } },
-          { name: "load_daily", label: "Tiêu thụ hôm nay (load_daily)", selector: { entity: { domain: "sensor" } } },
-          { name: "load_total", label: "Tổng tiêu thụ (load_total)", selector: { entity: { domain: "sensor" } } },
-          { name: "load_power_l1", label: "Công suất Tiêu thụ L1 (load_power_l1)", selector: { entity: { domain: "sensor" } } },
-          { name: "load_power_l2", label: "Công suất Tiêu thụ L2 (load_power_l2)", selector: { entity: { domain: "sensor" } } },
-          { name: "load_power_l3", label: "Công suất Tiêu thụ L3 (load_power_l3)", selector: { entity: { domain: "sensor" } } },
-
-          // --- EPS DỰ PHÒNG ---
-          { name: "eps_power", label: "Công suất EPS (eps_power)", selector: { entity: { domain: "sensor" } } },
-          { name: "eps_voltage", label: "Điện áp EPS (eps_voltage)", selector: { entity: { domain: "sensor" } } },
-          { name: "eps_frequency", label: "Tần số EPS (eps_frequency)", selector: { entity: { domain: "sensor" } } },
-          { name: "eps_power_l1", label: "Công suất EPS L1 (eps_power_l1)", selector: { entity: { domain: "sensor" } } },
-          { name: "eps_power_l2", label: "Công suất EPS L2 (eps_power_l2)", selector: { entity: { domain: "sensor" } } },
-          { name: "eps_power_l3", label: "Công suất EPS L3 (eps_power_l3)", selector: { entity: { domain: "sensor" } } },
-
-          // --- PIN 1 ---
-          { name: "battery_power", label: "Công suất Pin 1 (battery_power)", selector: { entity: { domain: "sensor" } } },
-          { name: "battery_voltage", label: "Điện áp Pin 1 (battery_voltage)", selector: { entity: { domain: "sensor" } } },
-          { name: "battery_soc", label: "Dung lượng Pin 1 % (battery_soc)", selector: { entity: { domain: "sensor" } } },
-          { name: "battery_charge_daily", label: "Nạp Pin 1 hôm nay (battery_charge_daily)", selector: { entity: { domain: "sensor" } } },
-          { name: "battery_charge_total", label: "Tổng nạp Pin 1 (battery_charge_total)", selector: { entity: { domain: "sensor" } } },
-          { name: "battery_discharge_daily", label: "Xả Pin 1 hôm nay (battery_discharge_daily)", selector: { entity: { domain: "sensor" } } },
-          { name: "battery_discharge_total", label: "Tổng xả Pin 1 (battery_discharge_total)", selector: { entity: { domain: "sensor" } } },
-
-          // --- PIN 2 ---
-          { name: "battery2_power", label: "Công suất Pin 2 (battery2_power)", selector: { entity: { domain: "sensor" } } },
-          { name: "battery2_voltage", label: "Điện áp Pin 2 (battery2_voltage)", selector: { entity: { domain: "sensor" } } },
-          { name: "battery2_soc", label: "Dung lượng Pin 2 % (battery2_soc)", selector: { entity: { domain: "sensor" } } }
-        ]
-      }
+      { name: "inverter_custom_x", label: "Tọa độ X ảnh tùy chỉnh", selector: { number: { mode: "box" } } }
     ];
   }
 }
 
 customElements.define('power-flow-card-inverter', PowerFlowCardInverter);
 customElements.define('power-flow-card-inverter-editor', PowerFlowCardInverterEditor);
-
 window.customCards = window.customCards || [];
 window.customCards.push({
-  type: "power-flow-card-inverter",
-  name: "Power Flow Card Inverter",
-  preview: true,
-  description: "Thẻ hiển thị luồng công suất biến tần lưu trữ mặt trời."
+  type: 'power-flow-card-inverter',
+  name: 'Power Flow Card Inverter',
+  description: 'Thẻ theo dõi công suất biến tần Hybrid'
 });
