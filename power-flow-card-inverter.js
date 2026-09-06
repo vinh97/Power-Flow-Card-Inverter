@@ -87,14 +87,67 @@ class PowerFlowCardInverter extends HTMLElement {
     this._gridToggle = 'buy';
   }
 
+  static getConfigElement() {
+    return document.createElement("power-flow-card-inverter-editor");
+  }
+
+  static getStubConfig() {
+    return {
+      language: "vi",
+      dark_mode: false,
+      three_phase: false,
+      single_load_mode: false,
+      always_show_ac_pv: false,
+      invert_grid_power: false,
+      invert_battery_power: false,
+      always_show_battery2: false,
+      invert_battery2_power: false,
+      inverter_image: false,
+      inverter_icon: "/local/community/inverter.png",
+      inverter_x: 144,
+      inverter_y: 74,
+      inverter_width: 58,
+      inverter_height: 58,
+      entities: {
+        pv_power: "sensor.pv_total_power",
+        pv_daily: "sensor.pv_energy_today",
+        pv_total: "sensor.pv_energy_total",
+        pv1_power: "sensor.pv1_power",
+        pv1_voltage: "sensor.pv1_voltage",
+        pv2_power: "sensor.pv2_power",
+        pv2_voltage: "sensor.pv2_voltage",
+        grid_power: "sensor.grid_power",
+        grid_voltage: "sensor.grid_voltage",
+        grid_frequency: "sensor.grid_frequency",
+        grid_sell_daily: "sensor.grid_export_today",
+        grid_sell_total: "sensor.grid_export_total",
+        grid_buy_daily: "sensor.grid_import_today",
+        grid_buy_total: "sensor.grid_import_total",
+        load_power: "sensor.load_power",
+        load_daily: "sensor.load_energy_today",
+        load_total: "sensor.load_energy_total",
+        eps_power: "sensor.eps_power",
+        eps_voltage: "sensor.eps_voltage",
+        eps_frequency: "sensor.eps_frequency",
+        battery_power: "sensor.battery_power",
+        battery_voltage: "sensor.battery_voltage",
+        battery_soc: "sensor.battery_soc",
+        battery_charge_daily: "sensor.battery_charge_today",
+        battery_charge_total: "sensor.battery_charge_total",
+        battery_discharge_daily: "sensor.battery_discharge_today",
+        battery_discharge_total: "sensor.battery_discharge_total"
+      }
+    };
+  }
+
   getTranslation() {
     const lang = (this.config?.language || this.config?.lang || 'vi').toLowerCase();
     return TRANSLATIONS[lang] || TRANSLATIONS.vi;
   }
 
   setConfig(config) {
-    if (!config || !config.entities) {
-      throw new Error("Vui lòng cấu hình danh sách entities!");
+    if (!config) {
+      throw new Error("Cấu hình không hợp lệ!");
     }
     this.config = config;
     this.render();
@@ -201,7 +254,7 @@ class PowerFlowCardInverter extends HTMLElement {
   updateData() {
     if (!this._hass || !this.config || !this.shadowRoot || !this.shadowRoot.querySelector('.app-card')) return;
 
-    const ent = this.config.entities;
+    const ent = this.config.entities || {};
     const isTrue = (val) => val === true || String(val).toLowerCase() === 'true';
     const t = this.getTranslation();
 
@@ -212,7 +265,6 @@ class PowerFlowCardInverter extends HTMLElement {
       else appCard.classList.remove('dark-mode');
     }
 
-    // Kiểm tra giá trị bị tắt hoặc chọn tùy chỉnh hình ảnh inverter
     const isExplicitlyFalse = this.config?.inverter_image === false || String(this.config?.inverter_image).toLowerCase() === 'false';
 
     const customInvImage = this.config?.inverter_icon || 
@@ -1418,11 +1470,165 @@ class PowerFlowCardInverter extends HTMLElement {
   }
 }
 
+class PowerFlowCardEditor extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: "open" });
+    this._config = {};
+    this._hass = null;
+  }
+
+  setConfig(config) {
+    this._config = config || {};
+    this._render();
+  }
+
+  set hass(hass) {
+    this._hass = hass;
+    if (this._form) {
+      this._form.hass = hass;
+    } else {
+      this._render();
+    }
+  }
+
+  _render() {
+    if (!this.shadowRoot) return;
+
+    if (!this._form) {
+      this.shadowRoot.innerHTML = '';
+      this._form = document.createElement('ha-form');
+      this._form.addEventListener('value-changed', (ev) => this._valueChanged(ev));
+      this.shadowRoot.appendChild(this._form);
+    }
+
+    const entitySelector = { entity: {} };
+
+    const schema = [
+      {
+        name: "language",
+        label: "Ngôn ngữ / Language",
+        selector: {
+          select: {
+            options: [
+              { value: "vi", label: "Tiếng Việt" },
+              { value: "en", label: "English" }
+            ]
+          }
+        }
+      },
+      { name: "dark_mode", label: "Giao diện tối    (Dark Mode)", selector: { boolean: {} } },
+      { name: "three_phase", label: "Hệ thống điện 3 pha    (Three_phase)", selector: { boolean: {} } },
+      { name: "single_load_mode", label: "Chế độ 1 tải Load/EPS    (single_load_mode)", selector: { boolean: {} } },
+      { name: "always_show_ac_pv", label: "Luôn hiển thị Hoà lưới/Máy phát    (always_show_ac_pv)", selector: { boolean: {} } },
+      { name: "invert_grid_power", label: "Đảo chiều công suất lưới    (invert_grid_power)", selector: { boolean: {} } },
+      { name: "invert_battery_power", label: "Đảo chiều công suất Pin 1    (invert_battery_power)", selector: { boolean: {} } },
+      { name: "always_show_battery2", label: "Luôn hiển thị Pin lưu trữ 2    (always_show_battery2)", selector: { boolean: {} } },
+      { name: "invert_battery2_power", label: "Đảo chiều công suất Pin 2    (invert_battery2_power)", selector: { boolean: {} } },
+      { name: "inverter_image", label: "Bật tùy chỉnh ảnh Biến tần  (Set true to use custom image)", selector: { boolean: {} } },
+	  { name: "inverter_icon", label: "Icon Biến tần    (inverter_icon)", selector: { icon: {} } },
+      { name: "inverter_icon", label: "Tùy chỉnh ảnh Biến tần  (Đường dẫn / URL)    (inverter_image) ", selector: { text: {} } },
+      { name: "inverter_x", label: "Tọa độ X Biến tần    (Inverter X coordinate)", selector: { number: { min: 0, max: 500, step: 1, mode: "box" } } },
+      { name: "inverter_y", label: "Tọa độ Y Biến tần    (Inverter Y coordinate)", selector: { number: { min: 0, max: 500, step: 1, mode: "box" } } },
+      { name: "inverter_width", label: "Chiều rộng hình ảnh    (Image width)", selector: { number: { min: 0, max: 500, step: 1, mode: "box" } } },
+      { name: "inverter_height", label: "Chiều cao hình ảnh    (Image height)", selector: { number: { min: 0, max: 500, step: 1, mode: "box" } } },
+
+      {
+        name: "entities",
+        title: "Khai báo Thực thể / Entities",
+        type: "expandable",
+        schema: [
+          // PV DC
+          { name: "pv_power", label: "PV - Tổng công suất", selector: entitySelector },
+          { name: "pv_daily", label: "PV - Sản lượng hôm nay", selector: entitySelector },
+          { name: "pv_total", label: "PV - Tổng sản lượng", selector: entitySelector },
+          { name: "pv1_power", label: "PV1 - Công suất", selector: entitySelector },
+          { name: "pv1_voltage", label: "PV1 - Điện áp", selector: entitySelector },
+          { name: "pv2_power", label: "PV2 - Công suất", selector: entitySelector },
+          { name: "pv2_voltage", label: "PV2 - Điện áp", selector: entitySelector },
+          { name: "pv3_power", label: "PV3 - Công suất", selector: entitySelector },
+          { name: "pv3_voltage", label: "PV3 - Điện áp", selector: entitySelector },
+          { name: "pv4_power", label: "PV4 - Công suất", selector: entitySelector },
+          { name: "pv4_voltage", label: "PV4 - Điện áp", selector: entitySelector },
+
+          // Hoà lưới/Máy phát
+          { name: "ac_pv_power", label: "Hoà lưới/Máy phát - Công suất", selector: entitySelector },
+          { name: "ac_pv_voltage", label: "Hoà lưới/Máy phát - Điện áp", selector: entitySelector },
+          { name: "ac_pv_frequency", label: "Hoà lưới/Máy phát - Tần số", selector: entitySelector },
+          { name: "ac_pv_power_l1", label: "Hoà lưới/Máy phát - Công suất L1", selector: entitySelector },
+          { name: "ac_pv_power_l2", label: "Hoà lưới/Máy phát - Công suất L2", selector: entitySelector },
+          { name: "ac_pv_power_l3", label: "Hoà lưới/Máy phát - Công suất L3", selector: entitySelector },
+
+          // Grid
+          { name: "grid_power", label: "Lưới - Công suất 1 pha", selector: entitySelector },
+          { name: "grid_voltage", label: "Lưới - Điện áp", selector: entitySelector },
+          { name: "grid_frequency", label: "Lưới - Tần số", selector: entitySelector },
+          { name: "grid_buy_daily", label: "Lưới - Nhập hôm nay", selector: entitySelector },
+          { name: "grid_buy_total", label: "Lưới - Tổng nhập", selector: entitySelector },
+          { name: "grid_sell_daily", label: "Lưới - Phát hôm nay", selector: entitySelector },
+          { name: "grid_sell_total", label: "Lưới - Tổng phát", selector: entitySelector },
+          { name: "grid_power_l1", label: "Lưới - Công suất L1", selector: entitySelector },
+          { name: "grid_power_l2", label: "Lưới - Công suất L2", selector: entitySelector },
+          { name: "grid_power_l3", label: "Lưới - Công suất L3", selector: entitySelector },
+          { name: "grid_voltage_l1", label: "Lưới - Điện áp L1", selector: entitySelector },
+
+          // Load
+          { name: "load_power", label: "Tải - Công suất 1 pha", selector: entitySelector },
+          { name: "load_daily", label: "Tải - Tiêu thụ hôm nay", selector: entitySelector },
+          { name: "load_total", label: "Tải - Tổng tiêu thụ", selector: entitySelector },
+          { name: "load_power_l1", label: "Tải - Công suất L1", selector: entitySelector },
+          { name: "load_power_l2", label: "Tải - Công suất L2", selector: entitySelector },
+          { name: "load_power_l3", label: "Tải - Công suất L3", selector: entitySelector },
+
+          // EPS
+          { name: "eps_power", label: "EPS - Công suất 1 pha", selector: entitySelector },
+          { name: "eps_voltage", label: "EPS - Điện áp", selector: entitySelector },
+          { name: "eps_frequency", label: "EPS - Tần số", selector: entitySelector },
+          { name: "eps_power_l1", label: "EPS - Công suất L1", selector: entitySelector },
+          { name: "eps_power_l2", label: "EPS - Công suất L2", selector: entitySelector },
+          { name: "eps_power_l3", label: "EPS - Công suất L3", selector: entitySelector },
+
+          // Battery 1
+          { name: "battery_power", label: "Pin 1 - Công suất", selector: entitySelector },
+          { name: "battery_voltage", label: "Pin 1 - Điện áp", selector: entitySelector },
+          { name: "battery_soc", label: "Pin 1 - Dung lượng SOC (%)", selector: entitySelector },
+          { name: "battery_charge_daily", label: "Pin Lưu Trữ - Nạp hôm nay", selector: entitySelector },
+          { name: "battery_charge_total", label: "Pin Lưu Trữ - Tổng nạp", selector: entitySelector },
+          { name: "battery_discharge_daily", label: "Pin Lưu Trữ - Xả hôm nay", selector: entitySelector },
+          { name: "battery_discharge_total", label: "Pin Lưu Trữ - Tổng xả", selector: entitySelector },
+
+          // Battery 2
+          { name: "battery2_power", label: "Pin 2 - Công suất", selector: entitySelector },
+          { name: "battery2_voltage", label: "Pin 2 - Điện áp", selector: entitySelector },
+          { name: "battery2_soc", label: "Pin 2 - Dung lượng SOC (%)", selector: entitySelector }
+        ]
+      }
+    ];
+
+    this._form.hass = this._hass;
+    this._form.data = this._config;
+    this._form.schema = schema;
+    this._form.computeLabel = (s) => s.label || s.name;
+  }
+
+  _valueChanged(ev) {
+    const newConfig = ev.detail.value;
+    const event = new CustomEvent("config-changed", {
+      detail: { config: newConfig },
+      bubbles: true,
+      composed: true,
+    });
+    this.dispatchEvent(event);
+  }
+}
+
+customElements.define('power-flow-card-inverter-editor', PowerFlowCardEditor);
 customElements.define('power-flow-card-inverter', PowerFlowCardInverter);
 
 window.customCards = window.customCards || [];
 window.customCards.push({
   type: "power-flow-card-inverter",
   name: "Power Flow Card Inverter",
-  description: "Sơ đồ luồng năng lượng cho Inverter Hybrid (1 Pha / 3 Pha)"
+  description: "Sơ đồ luồng năng lượng cho Inverter Hybrid (1 Pha / 3 Pha)",
+  configurable: true
 });
