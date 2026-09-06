@@ -49,100 +49,87 @@ Vào Dashboard bất kỳ ➔ Chọn **Chỉnh sửa giao diện** (Edit Dashboa
 
 ```yaml
 type: custom:power-flow-card-inverter
-language: vi             # 'vi' (Tiếng Việt) hoặc 'en' (Tiếng Anh)
-dark_mode: false         # true: Bật giao diện tối, false: Giao diện sáng
-three_phase: false       # true: Hệ thống 3 pha, false: Hệ thống 1 pha
-single_load_mode: false  # true: Gom Tải tiêu thụ thành tải EPS khi mất lưới
-invert_grid_power: false    # true: Đảo chiều dấu (+) (-) cho công suất lưới
-invert_battery_power: false # true: Đảo chiều dấu (+) (-) cho pin lưu trữ
+language: vi             # Ngôn ngữ: 'vi' hoặc 'en'
+dark_mode: false         # Bật/tắt giao diện tối
+three_phase: false       # Đổi thành true nếu dùng điện 3 pha
+single_load_mode: false  # Bật true để tự chuyển tải sang EPS khi mất lưới
+invert_grid_power: false # Bật true nếu công suất lưới bị ngược chiều (+/-)
+invert_battery_power: false # Bật true nếu công suất pin bị ngược chiều (+/-)
+always_show_ac_pv: false # Bật true để luôn hiển thị nguồn AC PV
+always_show_battery2: false # Bật true để luôn hiển thị Pin lưu trữ 2
+invert_battery2_power: false # Bật true nếu công suất pin 2 bị ngược chiều (+/-)
 
-# Tùy chọn hiển thị và tọa độ icon biến tần
-inverter_image: false
-inverter_icon: /hacsfiles/Power-Flow-Card-Inverter/inverter.png
-inverter_x: 144                                 # Tọa độ X toàn khối Inverter
-inverter_y: 74                                  # Tọa độ Y toàn khối Inverter
-inverter_width: 58                              # Chiều rộng hình ảnh
-inverter_height: 58                             # Chiều cao hình ảnh
-inverter_custom_x: 0                            # Lệch tọa độ X nội bộ của ảnh
-inverter_custom_y: 0                            # Lệch tọa độ Y nội bộ của ảnh
+# Tùy chỉnh ảnh / Icon Biến tần (Inverter)
+inverter_image: false    # Bật true nếu muốn dùng ảnh riêng
+inverter_icon: /local/community/power-flow-card-inverter/inverter.png
+
 entities:
-
-  # --- Điện mặt trời (DC PV) ---
+  # --- PV DC (Năng Lượng Mặt Trời) ---
+  pv_power: sensor.pv_total_power
+  pv_daily: sensor.pv_energy_today
+  pv_total: sensor.pv_energy_total
   pv1_power: sensor.pv1_power
   pv1_voltage: sensor.pv1_voltage
   pv2_power: sensor.pv2_power
   pv2_voltage: sensor.pv2_voltage
-  pv3_power: sensor.inverter_pv3_power
-  pv3_voltage: sensor.inverter_pv3_voltage
-  pv4_power: sensor.inverter_pv4_power
-  pv4_voltage: sensor.inverter_pv4_voltage
+  # pv3_power: sensor.pv3_power
+  # pv3_voltage: sensor.pv3_voltage
+  # pv4_power: sensor.pv4_power
+  # pv4_voltage: sensor.pv4_voltage
 
-  # --- Điện mặt trời AC / Máy phát điện (AC PV) ---
-  ac_pv_power: sensor.ac_pv_power
-  ac_pv_voltage: sensor.ac_pv_voltage
-  ac_pv_frequency: sensor.ac_pv_frequency
-  # Nếu dùng 3 pha cho AC PV:
-  ac_pv_power_l1: sensor.ac_pv_power_l1
-  ac_pv_power_l2: sensor.ac_pv_power_l2
-  ac_pv_power_l3: sensor.ac_pv_power_l3
+  # --- PV AC (Microinverter / Inverter hòa lưới phụ) ---
+  # ac_pv_power: sensor.ac_pv_power
+  # ac_pv_power_l1: sensor.ac_pv_power_l1
+  # ac_pv_power_l2: sensor.ac_pv_power_l2
+  # ac_pv_power_l3: sensor.ac_pv_power_l3
+  # ac_pv_voltage: sensor.ac_pv_voltage
+  # ac_pv_frequency: sensor.ac_pv_frequency
 
-  # --- Pin lưu trữ 1 (Battery 1) ---
-  battery_power: sensor.lux_battery_flow_live
-  battery_voltage: sensor.battery_voltage
-  battery_soc: sensor.battery_soc
+  # --- Điện Lưới (Grid) ---
+  grid_power: sensor.grid_power            # Cấu hình 1 pha
+  grid_voltage: sensor.grid_voltage        # Cấu hình 1 pha
+  grid_frequency: sensor.grid_frequency
+  grid_sell_daily: sensor.grid_export_today
+  grid_sell_total: sensor.grid_export_total
+  grid_buy_daily: sensor.grid_import_today
+  grid_buy_total: sensor.grid_import_total
+  # Bỏ comment các dòng dưới nếu three_phase: true
+  # grid_power_l1: sensor.grid_power_l1
+  # grid_power_l2: sensor.grid_power_l2
+  # grid_power_l3: sensor.grid_power_l3
+  # grid_voltage_l1: sensor.grid_voltage_l1
 
-  # --- Pin lưu trữ 2 (Battery 2) ---
-  battery2_power: sensor.battery2_power
-  battery2_voltage: sensor.battery2_voltage
-  battery2_soc: sensor.battery2_soc
+  # --- Tải Tiêu Thụ (Load) ---
+  load_power: sensor.load_power            # Cấu hình 1 pha
+  load_daily: sensor.load_energy_today
+  load_total: sensor.load_energy_total
+  # Bỏ comment các dòng dưới nếu three_phase: true
+  # load_power_l1: sensor.load_power_l1
+  # load_power_l2: sensor.load_power_l2
+  # load_power_l3: sensor.load_power_l3
 
-  # --- Tải tiêu thụ (Load) ---    # Cảm biến công suất tải duy nhất
-  load_power: sensor.inverter_power        
-  # Nếu dùng 3 pha cho Tải tiêu thụ:
-  load_power_l1: sensor.inverter_load_power_l1
-  load_power_l2: sensor.inverter_load_power_l2
-  load_power_l3: sensor.inverter_load_power_l3
-
-  # --- Cổng dự phòng (EPS / Backup) ---
-  eps_power: sensor.eps_power
+  # --- Nguồn Dự Phòng (EPS / Backup) ---
+  eps_power: sensor.eps_power              # Cấu hình 1 pha
   eps_voltage: sensor.eps_voltage
   eps_frequency: sensor.eps_frequency
-  # Nếu dùng 3 pha cho EPS:
-  eps_power_l1: sensor.inverter_eps_power_l1
-  eps_power_l2: sensor.inverter_eps_power_l2
-  eps_power_l3: sensor.inverter_eps_power_l3
+  # Bỏ comment các dòng dưới nếu three_phase: true
+  # eps_power_l1: sensor.eps_power_l1
+  # eps_power_l2: sensor.eps_power_l2
+  # eps_power_l3: sensor.eps_power_l3
 
-  # --- Điện lưới (Grid) ---      # Cảm biến điện áp lưới để nhận biết mất lưới
-  grid_power: sensor.lux_grid_flow_live               
-  grid_voltage: sensor.grid_voltage
-  grid_frequency: sensor.grid_frequency
-  # Nếu dùng 3 pha cho Lưới:
-  grid_power_l1: sensor.inverter_grid_power_l1
-  grid_power_l2: sensor.inverter_grid_power_l2
-  grid_power_l3: sensor.inverter_grid_power_l3
-  grid_voltage_l1: sensor.inverter_grid_voltage_l1     
-  grid_frequency_l1: sensor.inverter_grid_frequency_l1
+  # --- Pin Lưu Trữ 1 (Battery 1) ---
+  battery_power: sensor.battery_power
+  battery_voltage: sensor.battery_voltage
+  battery_soc: sensor.battery_soc
+  battery_charge_daily: sensor.battery_charge_today
+  battery_charge_total: sensor.battery_charge_total
+  battery_discharge_daily: sensor.battery_discharge_today
+  battery_discharge_total: sensor.battery_discharge_total
 
-  # --- Thống kê sản lượng & tiêu thụ (kWh) ---
+  # --- Pin Lưu Trữ 2 (Battery 2) ---
+  # battery2_power: sensor.battery2_power
+  # battery2_voltage: sensor.battery2_voltage
+  # battery2_soc: sensor.battery2_soc
 
-  # --- Thống kê Sản lượng PV ---
-  pv_daily: sensor.lux_solar_output_daily
-  pv_total: sensor.pv_energy_total
-
-  # --- Thống kê Tải tiêu thụ ---
-  load_daily: sensor.load_consumption_today
-  load_total: sensor.load_consumption_total
-
-  # --- Thống kê Sạc / Xả Pin ---
-  battery_charge_daily: sensor.charge_energy_today
-  battery_charge_total: sensor.charge_energy_total
-  battery_discharge_daily: sensor.discharge_energy_today
-  battery_discharge_total: sensor.discharge_energy_total
-
-  # --- Thống kê Mua / Bán Điện Lưới ---
-  grid_buy_daily: sensor.energy_from_grid_today
-  grid_buy_total: sensor.energy_from_grid_total
-  grid_sell_daily: sensor.energy_to_grid_today
-  grid_sell_total: sensor.energy_to_grid_total
 
 ```
