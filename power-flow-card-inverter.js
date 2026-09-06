@@ -87,6 +87,38 @@ class PowerFlowCardInverter extends HTMLElement {
     this._gridToggle = 'buy';
   }
 
+  static async getConfigElement() {
+    return document.createElement('power-flow-card-inverter-editor');
+  }
+
+  static getStubConfig() {
+    return {
+      name: 'Biến Tần Biến Năng',
+      language: 'vi',
+      dark_mode: false,
+      three_phase: false,
+      single_load_mode: false,
+      always_show_ac_pv: false,
+      always_show_battery2: false,
+      invert_grid_power: false,
+      invert_battery_power: false,
+      invert_battery2_power: false,
+      inverter_x: 144,
+      inverter_y: 74,
+      inverter_width: 58,
+      inverter_height: 58,
+      inverter_custom_x: 0,
+      inverter_custom_y: 0,
+      entities: {
+        pv_power: '',
+        grid_power: '',
+        load_power: '',
+        battery_power: '',
+        battery_soc: ''
+      }
+    };
+  }
+
   getTranslation() {
     const lang = (this.config?.language || this.config?.lang || 'vi').toLowerCase();
     return TRANSLATIONS[lang] || TRANSLATIONS.vi;
@@ -688,7 +720,6 @@ class PowerFlowCardInverter extends HTMLElement {
       this.getEl('line-bat-soc')
     ];
 
-    // Dịch Y xuống dưới icon pin 4px (80 -> 84) và cách trạng thái Y = 2px (gapIndex: 1, gapAmount: 2)
     this.alignTextStack(batElements, 84, 12, 3.5, 1, 2);
 
     const batFill = this.getEl('bat-fill');
@@ -756,7 +787,6 @@ class PowerFlowCardInverter extends HTMLElement {
         this.getEl('line-bat2-soc')
       ];
 
-      // Áp dụng tương tự cho Pin 2
       this.alignTextStack(bat2Elements, 84, 12, 3.5, 1, 2);
 
       const bat2Fill = this.getEl('bat2-fill');
@@ -966,8 +996,8 @@ class PowerFlowCardInverter extends HTMLElement {
 
       <ha-card>
         <div class="app-card">
+          ${this.config.name ? `<div style="font-size: 14px; font-weight: 800; padding: 4px 6px; margin-bottom: 4px; color: var(--primary-text-color, #0f172a);">${this.config.name}</div>` : ''}
           <div class="stats-grid">
-            <!-- Thẻ 1: PV -->
             <div class="stat-card">
               <div class="card-header bg-pv">
                 <div class="header-title">
@@ -987,7 +1017,6 @@ class PowerFlowCardInverter extends HTMLElement {
               </div>
             </div>
 
-            <!-- Thẻ 2: Pin nạp / Pin xả -->
             <div class="stat-card">
               <div class="card-header bg-bat">
                 <div class="header-title">
@@ -1008,7 +1037,6 @@ class PowerFlowCardInverter extends HTMLElement {
               </div>
             </div>
 
-            <!-- Thẻ 3: Phát lên lưới / Nhập lưới -->
             <div class="stat-card">
               <div class="card-header bg-grid">
                 <div class="header-title">
@@ -1029,7 +1057,6 @@ class PowerFlowCardInverter extends HTMLElement {
               </div>
             </div>
 
-            <!-- Thẻ 4: Tiêu thụ -->
             <div class="stat-card">
               <div class="card-header bg-load">
                 <div class="header-title">
@@ -1143,7 +1170,7 @@ class PowerFlowCardInverter extends HTMLElement {
               <g id="flow-bat-trunk-charge">
                 <use href="#chv-block-l" x="114" y="98" class="chv-block" style="animation-delay: 0.00s;" />
                 <use href="#chv-block-l" x="100" y="98" class="chv-block" style="animation-delay: 0.12s;" />
-                <use href="#chv-block-l" x="86" y="98" class="chv-block" style="animation-delay: 0.24s;" />
+                <use href="#chv-block-l" x="86" y="98" class="chv-block" style="animation-delay: 0.00s;" />
               </g>
 
               <g id="flow-inv-to-bus">
@@ -1158,7 +1185,7 @@ class PowerFlowCardInverter extends HTMLElement {
                 <use href="#chv-block-l" x="276" y="98" class="chv-block" style="animation-delay: 0.00s;" />
                 <use href="#chv-block-l" x="262" y="98" class="chv-block" style="animation-delay: 0.12s;" />
                 <use href="#chv-block-l" x="248" y="98" class="chv-block" style="animation-delay: 0.24s;" />
-                <use href="#chv-block-l" x="234" y="98" class="chv-block" style="animation-delay: 0.36s;" />
+                <use href="#chv-block-l" x="234" y="98" class="chv-block" style="animation-delay: 0.12s;" />
                 <use href="#chv-block-l" x="220" y="98" class="chv-block" style="animation-delay: 0.48s;" />
               </g>
 
@@ -1178,7 +1205,6 @@ class PowerFlowCardInverter extends HTMLElement {
 
               <circle id="ac-bus-node" cx="296" cy="103" r="5" fill="#16a34a" stroke="#ffffff" stroke-width="1.5"/>
 
-              <!-- Khối PV DC -->
               <g id="grp-pv" transform="translate(4, -12)">
                 <g id="grp-pv1">
                   <text id="lbl-pv1" x="0" y="0" class="svg-txt-sub" text-anchor="start">PV1</text>
@@ -1230,7 +1256,6 @@ class PowerFlowCardInverter extends HTMLElement {
                 </g>
               </g>
 
-              <!-- Khối PV AC -->
               <g id="grp-pv-ac">
                 <text id="line-ac-pv-1p" x="320" y="0" text-anchor="start"><tspan id="txt-ac-pv-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
                 <text id="line-ac-pv-l1" x="320" y="0" text-anchor="start" style="display:none;"><tspan id="txt-ac-pv-l1" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
@@ -1258,7 +1283,6 @@ class PowerFlowCardInverter extends HTMLElement {
                 </g>
               </g>
 
-              <!-- Khối Pin Lưu Trữ 1 -->
               <g id="grp-bat1" transform="translate(5, 72)">
                 <rect x="11" y="1" width="10" height="4" rx="1.5" fill="#16a34a"/>
                 <rect class="svg-bg-card" x="2" y="5" width="28" height="48" rx="4" fill="#ffffff" stroke="#16a34a" stroke-width="2"/>
@@ -1270,7 +1294,6 @@ class PowerFlowCardInverter extends HTMLElement {
                 <text id="line-bat-soc" x="0" y="0" text-anchor="start"><tspan id="txt-soc-val" font-size="13px" font-weight="bold" fill="#16a34a">0</tspan><tspan class="unit-lbl" dx="1" fill="#16a34a">%</tspan></text>
               </g>
 
-              <!-- Khối Pin Lưu Trữ 2 -->
               <g id="grp-bat2" transform="translate(5, 196)" style="display: none;">
                 <rect x="11" y="1" width="10" height="4" rx="1.5" fill="#16a34a"/>
                 <rect class="svg-bg-card" x="2" y="5" width="28" height="48" rx="4" fill="#ffffff" stroke="#16a34a" stroke-width="2"/>
@@ -1282,7 +1305,6 @@ class PowerFlowCardInverter extends HTMLElement {
                 <text id="line-bat2-soc" x="0" y="0" text-anchor="start"><tspan id="txt-soc2-val" font-size="13px" font-weight="bold" fill="#16a34a">0</tspan><tspan class="unit-lbl" dx="1" fill="#16a34a">%</tspan></text>
               </g>
 
-              <!-- Khối Inverter -->
               <g transform="translate(144, 74)">
                 <g id="inv-default-graphics">
                   <rect class="svg-inv-bg" x="0" y="0" width="58" height="58" rx="6" fill="#ffffff" stroke="#334155" stroke-width="2"/>
@@ -1294,7 +1316,6 @@ class PowerFlowCardInverter extends HTMLElement {
                 <image id="inv-custom-image" x="0" y="0" width="58" height="58" preserveAspectRatio="xMidYMid meet" style="display: none;" />
               </g>
 
-              <!-- Khối Điện Lưới -->
               <g id="grp-grid" transform="translate(374, 32.5)">
                 <text id="line-grid-1p" x="21" y="0" text-anchor="middle"><tspan id="txt-grid-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
                 <text id="line-grid-l1" x="21" y="0" text-anchor="middle" style="display:none;"><tspan id="txt-grid-l1" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
@@ -1338,7 +1359,6 @@ class PowerFlowCardInverter extends HTMLElement {
                 <text id="line-grid-f" x="21" y="0" text-anchor="middle"><tspan id="txt-grid-f" class="highlight-freq">0.00</tspan><tspan class="unit-lbl" dx="1">Hz</tspan></text>
               </g>
 
-              <!-- Khối EPS -->
               <g id="grp-eps" transform="translate(154, 232)">
                 <svg id="icon-eps" x="0" y="0" width="56" height="56" viewBox="0 0 60 60">
                   <g stroke="#52b788" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -1369,7 +1389,6 @@ class PowerFlowCardInverter extends HTMLElement {
                 <text x="0" y="75" id="lbl-eps-standby" style="font-size: 9px; fill: #16a34a; font-weight: 800; display: none;">${t.standby_mode}</text>
               </g>
 
-              <!-- Khối tiêu thụ -->
               <g transform="translate(273, 232)">
                 <svg id="icon-load" x="0" y="0" width="54" height="54" viewBox="0 0 100 100">
                   <rect class="load-icon-color" x="27" y="14" width="10" height="20" rx="1" fill="#52b788"/>
@@ -1417,11 +1436,153 @@ class PowerFlowCardInverter extends HTMLElement {
   }
 }
 
+class PowerFlowCardInverterEditor extends HTMLElement {
+  setConfig(config) {
+    this._config = config || {};
+    this.render();
+  }
+
+  set hass(hass) {
+    this._hass = hass;
+    if (this._haForm) {
+      this._haForm.hass = hass;
+    }
+  }
+
+  render() {
+    if (!this.shadowRoot) {
+      this.attachShadow({ mode: 'open' });
+    }
+
+    if (!this._haForm) {
+      this._haForm = document.createElement('ha-form');
+      this.shadowRoot.appendChild(this._haForm);
+
+      this._haForm.addEventListener('value-changed', (ev) => {
+        const config = ev.detail.value;
+        this.dispatchEvent(
+          new CustomEvent('config-changed', {
+            detail: { config },
+            bubbles: true,
+            composed: true,
+          })
+        );
+      });
+    }
+
+    this._haForm.hass = this._hass;
+    this._haForm.data = this._config;
+    this._haForm.schema = [
+      { name: "name", label: "Tên thẻ (Card Name)", selector: { text: {} } },
+      {
+        name: "language",
+        label: "Ngôn ngữ / Language",
+        selector: {
+          select: {
+            options: [
+              { value: "vi", label: "Tiếng Việt" },
+              { value: "en", label: "English" }
+            ]
+          }
+        }
+      },
+      { name: "dark_mode", label: "Giao diện tối (Dark Mode)", selector: { boolean: {} } },
+      { name: "three_phase", label: "Hệ thống điện 3 pha", selector: { boolean: {} } },
+      { name: "single_load_mode", label: "Chế độ 1 tải Load/EPS", selector: { boolean: {} } },
+      { name: "always_show_ac_pv", label: "Luôn hiển thị Hoà lưới/Máy phát", selector: { boolean: {} } },
+      { name: "always_show_battery2", label: "Luôn hiển thị Pin lưu trữ 2", selector: { boolean: {} } },
+      { name: "invert_grid_power", label: "Đảo chiều công suất lưới (+/-)", selector: { boolean: {} } },
+      { name: "invert_battery_power", label: "Đảo chiều công suất Pin 1 (+/-)", selector: { boolean: {} } },
+      { name: "invert_battery2_power", label: "Đảo chiều công suất Pin 2 (+/-)", selector: { boolean: {} } },
+      { name: "inverter_image", label: "Tùy chỉnh icon cho Biến tần", selector: { boolean: {} } },
+      { name: "inverter_icon", label: "Đường dẫn ảnh Biến tần (/local/...)", selector: { text: {} } },
+      { name: "inverter_x", label: "Tọa độ X Biến tần", selector: { number: { mode: "box" } } },
+      { name: "inverter_y", label: "Tọa độ Y Biến tần", selector: { number: { mode: "box" } } },
+      { name: "inverter_width", label: "Chiều rộng Biến tần", selector: { number: { mode: "box" } } },
+      { name: "inverter_height", label: "Chiều cao Biến tần", selector: { number: { mode: "box" } } },
+      { name: "inverter_custom_x", label: "Tọa độ X ảnh tùy chỉnh", selector: { number: { mode: "box" } } },
+      { name: "inverter_custom_y", label: "Tọa độ Y ảnh tùy chỉnh", selector: { number: { mode: "box" } } },
+      {
+        name: "entities",
+        label: "Danh sách Entities",
+        type: "grid",
+        schema: [
+          // --- PV DC ---
+          { name: "pv_power", label: "Tổng công suất PV (pv_power)", selector: { entity: { domain: "sensor" } } },
+          { name: "pv_daily", label: "Sản lượng PV hôm nay (pv_daily)", selector: { entity: { domain: "sensor" } } },
+          { name: "pv_total", label: "Tổng sản lượng PV (pv_total)", selector: { entity: { domain: "sensor" } } },
+          { name: "pv1_power", label: "Công suất Chuỗi PV 1 (pv1_power)", selector: { entity: { domain: "sensor" } } },
+          { name: "pv1_voltage", label: "Điện áp Chuỗi PV 1 (pv1_voltage)", selector: { entity: { domain: "sensor" } } },
+          { name: "pv2_power", label: "Công suất Chuỗi PV 2 (pv2_power)", selector: { entity: { domain: "sensor" } } },
+          { name: "pv2_voltage", label: "Điện áp Chuỗi PV 2 (pv2_voltage)", selector: { entity: { domain: "sensor" } } },
+          { name: "pv3_power", label: "Công suất Chuỗi PV 3 (pv3_power)", selector: { entity: { domain: "sensor" } } },
+          { name: "pv3_voltage", label: "Điện áp Chuỗi PV 3 (pv3_voltage)", selector: { entity: { domain: "sensor" } } },
+          { name: "pv4_power", label: "Công suất Chuỗi PV 4 (pv4_power)", selector: { entity: { domain: "sensor" } } },
+          { name: "pv4_voltage", label: "Điện áp Chuỗi PV 4 (pv4_voltage)", selector: { entity: { domain: "sensor" } } },
+
+          // --- PV AC ---
+          { name: "ac_pv_power", label: "Công suất PV AC (ac_pv_power)", selector: { entity: { domain: "sensor" } } },
+          { name: "ac_pv_power_l1", label: "Công suất PV AC L1 (ac_pv_power_l1)", selector: { entity: { domain: "sensor" } } },
+          { name: "ac_pv_power_l2", label: "Công suất PV AC L2 (ac_pv_power_l2)", selector: { entity: { domain: "sensor" } } },
+          { name: "ac_pv_power_l3", label: "Công suất PV AC L3 (ac_pv_power_l3)", selector: { entity: { domain: "sensor" } } },
+          { name: "ac_pv_voltage", label: "Điện áp PV AC (ac_pv_voltage)", selector: { entity: { domain: "sensor" } } },
+          { name: "ac_pv_frequency", label: "Tần số PV AC (ac_pv_frequency)", selector: { entity: { domain: "sensor" } } },
+
+          // --- LƯỚI ---
+          { name: "grid_power", label: "Công suất Lưới (grid_power)", selector: { entity: { domain: "sensor" } } },
+          { name: "grid_voltage", label: "Điện áp Lưới (grid_voltage)", selector: { entity: { domain: "sensor" } } },
+          { name: "grid_frequency", label: "Tần số Lưới (grid_frequency)", selector: { entity: { domain: "sensor" } } },
+          { name: "grid_sell_daily", label: "Bán điện hôm nay (grid_sell_daily)", selector: { entity: { domain: "sensor" } } },
+          { name: "grid_sell_total", label: "Tổng bán điện (grid_sell_total)", selector: { entity: { domain: "sensor" } } },
+          { name: "grid_buy_daily", label: "Mua điện hôm nay (grid_buy_daily)", selector: { entity: { domain: "sensor" } } },
+          { name: "grid_buy_total", label: "Tổng mua điện (grid_buy_total)", selector: { entity: { domain: "sensor" } } },
+          { name: "grid_power_l1", label: "Công suất Lưới L1 (grid_power_l1)", selector: { entity: { domain: "sensor" } } },
+          { name: "grid_power_l2", label: "Công suất Lưới L2 (grid_power_l2)", selector: { entity: { domain: "sensor" } } },
+          { name: "grid_power_l3", label: "Công suất Lưới L3 (grid_power_l3)", selector: { entity: { domain: "sensor" } } },
+          { name: "grid_voltage_l1", label: "Điện áp Lưới L1 (grid_voltage_l1)", selector: { entity: { domain: "sensor" } } },
+
+          // --- TẢI TIÊU THỤ ---
+          { name: "load_power", label: "Công suất Tiêu thụ (load_power)", selector: { entity: { domain: "sensor" } } },
+          { name: "load_daily", label: "Tiêu thụ hôm nay (load_daily)", selector: { entity: { domain: "sensor" } } },
+          { name: "load_total", label: "Tổng tiêu thụ (load_total)", selector: { entity: { domain: "sensor" } } },
+          { name: "load_power_l1", label: "Công suất Tiêu thụ L1 (load_power_l1)", selector: { entity: { domain: "sensor" } } },
+          { name: "load_power_l2", label: "Công suất Tiêu thụ L2 (load_power_l2)", selector: { entity: { domain: "sensor" } } },
+          { name: "load_power_l3", label: "Công suất Tiêu thụ L3 (load_power_l3)", selector: { entity: { domain: "sensor" } } },
+
+          // --- EPS DỰ PHÒNG ---
+          { name: "eps_power", label: "Công suất EPS (eps_power)", selector: { entity: { domain: "sensor" } } },
+          { name: "eps_voltage", label: "Điện áp EPS (eps_voltage)", selector: { entity: { domain: "sensor" } } },
+          { name: "eps_frequency", label: "Tần số EPS (eps_frequency)", selector: { entity: { domain: "sensor" } } },
+          { name: "eps_power_l1", label: "Công suất EPS L1 (eps_power_l1)", selector: { entity: { domain: "sensor" } } },
+          { name: "eps_power_l2", label: "Công suất EPS L2 (eps_power_l2)", selector: { entity: { domain: "sensor" } } },
+          { name: "eps_power_l3", label: "Công suất EPS L3 (eps_power_l3)", selector: { entity: { domain: "sensor" } } },
+
+          // --- PIN 1 ---
+          { name: "battery_power", label: "Công suất Pin 1 (battery_power)", selector: { entity: { domain: "sensor" } } },
+          { name: "battery_voltage", label: "Điện áp Pin 1 (battery_voltage)", selector: { entity: { domain: "sensor" } } },
+          { name: "battery_soc", label: "Dung lượng Pin 1 % (battery_soc)", selector: { entity: { domain: "sensor" } } },
+          { name: "battery_charge_daily", label: "Nạp Pin 1 hôm nay (battery_charge_daily)", selector: { entity: { domain: "sensor" } } },
+          { name: "battery_charge_total", label: "Tổng nạp Pin 1 (battery_charge_total)", selector: { entity: { domain: "sensor" } } },
+          { name: "battery_discharge_daily", label: "Xả Pin 1 hôm nay (battery_discharge_daily)", selector: { entity: { domain: "sensor" } } },
+          { name: "battery_discharge_total", label: "Tổng xả Pin 1 (battery_discharge_total)", selector: { entity: { domain: "sensor" } } },
+
+          // --- PIN 2 ---
+          { name: "battery2_power", label: "Công suất Pin 2 (battery2_power)", selector: { entity: { domain: "sensor" } } },
+          { name: "battery2_voltage", label: "Điện áp Pin 2 (battery2_voltage)", selector: { entity: { domain: "sensor" } } },
+          { name: "battery2_soc", label: "Dung lượng Pin 2 % (battery2_soc)", selector: { entity: { domain: "sensor" } } }
+        ]
+      }
+    ];
+  }
+}
+
 customElements.define('power-flow-card-inverter', PowerFlowCardInverter);
+customElements.define('power-flow-card-inverter-editor', PowerFlowCardInverterEditor);
 
 window.customCards = window.customCards || [];
 window.customCards.push({
   type: "power-flow-card-inverter",
   name: "Power Flow Card Inverter",
-  description: "Sơ đồ luồng năng lượng cho Inverter Hybrid (1 Pha / 3 Pha)"
+  preview: true,
+  description: "Thẻ hiển thị luồng công suất biến tần lưu trữ mặt trời."
 });
