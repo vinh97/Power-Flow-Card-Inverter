@@ -93,7 +93,7 @@ class PowerFlowCardInverter extends HTMLElement {
 
   static getStubConfig() {
     return {
-      name: 'Biến Tần Biến Năng',
+      name: 'Theo dõi Biến Tần Hybrid',
       language: 'vi',
       dark_mode: false,
       three_phase: false,
@@ -1486,7 +1486,7 @@ class PowerFlowCardInverterEditor extends HTMLElement {
           }
         }
       },
-      { name: "dark_mode", label: "Giao diện tối (Dark Mode)", selector: { boolean: {} } },
+      { name: "dark_mode", label: "Giao diện tối ", selector: { boolean: {} } },
       { name: "three_phase", label: "Hệ thống điện 3 pha", selector: { boolean: {} } },
       { name: "single_load_mode", label: "Chế độ 1 tải Load/EPS", selector: { boolean: {} } },
       { name: "always_show_ac_pv", label: "Luôn hiển thị Hoà lưới/Máy phát", selector: { boolean: {} } },
