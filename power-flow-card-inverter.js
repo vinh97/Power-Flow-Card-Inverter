@@ -216,7 +216,6 @@ class PowerFlowCardInverter extends HTMLElement {
                            this.config?.custom_inverter_icon || 
                            (typeof this.config?.inverter_image === 'string' ? this.config.inverter_image : '');
 
-    // Tự động bật custom image nếu inverter_image = true HOẶC nếu có chuỗi đường dẫn ảnh
     const useCustomImg = isTrue(this.config?.inverter_image) || Boolean(customInvImage);
 
     const invDefaultG = this.getEl('inv-default-graphics');
@@ -239,7 +238,6 @@ class PowerFlowCardInverter extends HTMLElement {
       if (useCustomImg && customInvImage && String(customInvImage).trim() !== '') {
         invDefaultG.style.display = 'none';
         invCustomImg.style.display = 'inline';
-        // Gán cả href lẫn xlink:href để tối ưu tương thích mọi trình duyệt
         invCustomImg.setAttribute('href', customInvImage);
         invCustomImg.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', customInvImage);
         invCustomImg.setAttribute('width', invWidth);
@@ -690,7 +688,8 @@ class PowerFlowCardInverter extends HTMLElement {
       this.getEl('line-bat-soc')
     ];
 
-    this.alignTextStack(batElements, 80, 12, 3.5);
+    // Dịch Y xuống dưới icon pin 4px (80 -> 84) và cách trạng thái Y = 2px (gapIndex: 1, gapAmount: 2)
+    this.alignTextStack(batElements, 84, 12, 3.5, 1, 2);
 
     const batFill = this.getEl('bat-fill');
     const maxH = 43.0;
@@ -757,7 +756,8 @@ class PowerFlowCardInverter extends HTMLElement {
         this.getEl('line-bat2-soc')
       ];
 
-      this.alignTextStack(bat2Elements, 80, 12, 3.5);
+      // Áp dụng tương tự cho Pin 2
+      this.alignTextStack(bat2Elements, 84, 12, 3.5, 1, 2);
 
       const bat2Fill = this.getEl('bat2-fill');
       const h2 = Math.max(1, (soc2 / 100) * maxH);
