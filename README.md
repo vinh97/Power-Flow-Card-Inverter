@@ -61,7 +61,8 @@ invert_battery2_power: false # Bật true nếu công suất pin 2 bị ngược
 
 # Tùy chỉnh ảnh / Icon Biến tần (Inverter)
 inverter_image: false    # Bật true nếu muốn dùng ảnh riêng
-inverter_icon: /local/community/power-flow-card-inverter/inverter.png
+inverter_icon: /hacsfiles/Power-Flow-Card-Inverter/inverter.png
+#inverter_icon: /local/community/power-flow-card-inverter/inverter.png
 inverter_x: 144                                 # Tọa độ X toàn khối Inverter , Mặc định X: 144
 inverter_y: 74                                  # Tọa độ Y toàn khối Inverter , Mặc định X: 74
 inverter_width: 58                              # Chiều rộng hình ảnh           Mặc định X: 58
