@@ -53,19 +53,19 @@ language: vi             # Ngôn ngữ: 'vi' hoặc 'en'
 dark_mode: false         # Bật/tắt giao diện tối
 three_phase: false       # Đổi thành true nếu dùng điện 3 pha
 single_load_mode: false  # Bật true để tự chuyển tải sang EPS khi mất lưới
+always_show_ac_pv: false # Bật true để luôn hiển thị nguồn AC PV
 invert_grid_power: false # Bật true nếu công suất lưới bị ngược chiều (+/-)
 invert_battery_power: false # Bật true nếu công suất pin bị ngược chiều (+/-)
-always_show_ac_pv: false # Bật true để luôn hiển thị nguồn AC PV
 always_show_battery2: false # Bật true để luôn hiển thị Pin lưu trữ 2
 invert_battery2_power: false # Bật true nếu công suất pin 2 bị ngược chiều (+/-)
 
 # Tùy chỉnh ảnh / Icon Biến tần (Inverter)
 inverter_image: false    # Bật true nếu muốn dùng ảnh riêng
 inverter_icon: /local/community/power-flow-card-inverter/inverter.png
-inverter_x: 144                                 # Tọa độ X toàn khối Inverter
-inverter_y: 74                                  # Tọa độ Y toàn khối Inverter
-inverter_width: 58                              # Chiều rộng hình ảnh
-inverter_height: 58                             # Chiều cao hình ảnh                      
+inverter_x: 144                                 # Tọa độ X toàn khối Inverter , Mặc định X: 144
+inverter_y: 74                                  # Tọa độ Y toàn khối Inverter , Mặc định X: 74
+inverter_width: 58                              # Chiều rộng hình ảnh           Mặc định X: 58
+inverter_height: 58                             # Chiều cao hình ảnh            Mặc định X: 58              
 
 entities:
   # --- PV DC (Năng Lượng Mặt Trời) ---
