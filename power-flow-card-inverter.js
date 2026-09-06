@@ -1,7 +1,27 @@
 const TRANSLATIONS = {
   vi: {
     pv_yield: "SẢN LƯỢNG PV",
+    pv_today: "Sản lượng hôm nay",
+    pv_total: "Tổng sản lượng",
+
+    bat_charge_title: "Pin nạp",
+    bat_discharge_title: "Pin xả",
+    charge_today: "Nạp hôm nay",
+    discharge_today: "Xả hôm nay",
+    total_charge: "Tổng nạp",
+    total_discharge: "Tổng xả",
+
+    grid_import_title: "Nhập lưới",
+    grid_export_title: "Phát lên lưới",
+    import_today: "Nhập hôm nay",
+    export_today: "Phát hôm nay",
+    total_import: "Tổng nhập",
+    total_export: "Tổng phát",
+
     load_consumption: "TIÊU THỤ",
+    load_today: "Tiêu thụ hôm nay",
+    load_total: "Tổng tiêu thụ",
+
     today: "HÔM NAY",
     total: "TỔNG",
     pv_power_lbl: "CÔNG SUẤT PV",
@@ -20,7 +40,27 @@ const TRANSLATIONS = {
   },
   en: {
     pv_yield: "SOLAR PV",
+    pv_today: "Today's Yield",
+    pv_total: "Total Yield",
+
+    bat_charge_title: "Battery Charge",
+    bat_discharge_title: "Battery Discharge",
+    charge_today: "Charged Today",
+    discharge_today: "Discharged Today",
+    total_charge: "Total Charged",
+    total_discharge: "Total Discharged",
+
+    grid_import_title: "Grid Import",
+    grid_export_title: "Grid Export",
+    import_today: "Imported Today",
+    export_today: "Exported Today",
+    total_import: "Total Imported",
+    total_export: "Total Exported",
+
     load_consumption: "LOAD POWER",
+    load_today: "Today's Load",
+    load_total: "Total Load",
+
     today: "TODAY",
     total: "TOTAL",
     pv_power_lbl: "PV POWER",
@@ -736,16 +776,16 @@ class PowerFlowCardInverter extends HTMLElement {
     this.setEnergyStat('stat-load-total', this.getState(ent.load_total));
 
     const isBatCharge = this._batToggle === 'charge';
-    this.setText('lbl-bat-title', isBatCharge ? "Pin nạp" : "Pin xả");
-    this.setText('lbl-bat-today', isBatCharge ? "Nạp hôm nay" : "Xả hôm nay");
-    this.setText('lbl-bat-total', isBatCharge ? "Tổng nạp" : "Tổng xả");
+    this.setText('lbl-bat-title', isBatCharge ? t.bat_charge_title : t.bat_discharge_title);
+    this.setText('lbl-bat-today', isBatCharge ? t.charge_today : t.discharge_today);
+    this.setText('lbl-bat-total', isBatCharge ? t.total_charge : t.total_discharge);
     this.setEnergyStat('stat-bat-today', this.getState(isBatCharge ? ent.battery_charge_daily : ent.battery_discharge_daily));
     this.setEnergyStat('stat-bat-total', this.getState(isBatCharge ? ent.battery_charge_total : ent.battery_discharge_total));
 
     const isGridSell = this._gridToggle === 'sell';
-    this.setText('lbl-grid-title', isGridSell ? "Phát lên lưới" : "Nhập lưới");
-    this.setText('lbl-grid-today', isGridSell ? "Phát hôm nay" : "Nhập hôm nay");
-    this.setText('lbl-grid-total', isGridSell ? "Tổng phát" : "Tổng nhập");
+    this.setText('lbl-grid-title', isGridSell ? t.grid_export_title : t.grid_import_title);
+    this.setText('lbl-grid-today', isGridSell ? t.export_today : t.import_today);
+    this.setText('lbl-grid-total', isGridSell ? t.total_export : t.total_import);
     this.setEnergyStat('stat-grid-today', this.getState(isGridSell ? ent.grid_sell_daily : ent.grid_buy_daily));
     this.setEnergyStat('stat-grid-total', this.getState(isGridSell ? ent.grid_sell_total : ent.grid_buy_total));
 
@@ -926,59 +966,59 @@ class PowerFlowCardInverter extends HTMLElement {
               <div class="card-header bg-pv">
                 <div class="header-title">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>
-                  <span>Sản lượng PV</span>
+                  <span>${t.pv_yield}</span>
                 </div>
               </div>
               <div class="card-body-row">
                 <div class="stat-row-item">
                   <div class="stat-value" id="stat-pv-today">0.00 <span class="unit">kWh</span></div>
-                  <div class="stat-label">Sản lượng hôm nay</div>
+                  <div class="stat-label">${t.pv_today}</div>
                 </div>
                 <div class="stat-row-item">
                   <div class="stat-value highlight-orange" id="stat-pv-total">0.00 <span class="unit">kWh</span></div>
-                  <div class="stat-label">Tổng sản lượng</div>
+                  <div class="stat-label">${t.pv_total}</div>
                 </div>
               </div>
             </div>
 
-            <!-- Thẻ 2: Pin nạp / Pin xả (Mặc định: Pin xả) -->
+            <!-- Thẻ 2: Pin nạp / Pin xả -->
             <div class="stat-card">
               <div class="card-header bg-bat">
                 <div class="header-title">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="10" x="2" y="7" rx="2" ry="2"></rect><line x1="22" x2="22" y1="11" y2="13"></line></svg>
-                  <span id="lbl-bat-title">Pin xả</span>
+                  <span id="lbl-bat-title">${this._batToggle === 'charge' ? t.bat_charge_title : t.bat_discharge_title}</span>
                 </div>
                 <span class="toggle-btn" id="btn-toggle-bat" title="Chuyển đổi Nạp/Xả">⇄</span>
               </div>
               <div class="card-body-row">
                 <div class="stat-row-item">
                   <div class="stat-value" id="stat-bat-today">0.00 <span class="unit">kWh</span></div>
-                  <div class="stat-label" id="lbl-bat-today">Xả hôm nay</div>
+                  <div class="stat-label" id="lbl-bat-today">${this._batToggle === 'charge' ? t.charge_today : t.discharge_today}</div>
                 </div>
                 <div class="stat-row-item">
                   <div class="stat-value highlight-orange" id="stat-bat-total">0.00 <span class="unit">kWh</span></div>
-                  <div class="stat-label" id="lbl-bat-total">Tổng xả</div>
+                  <div class="stat-label" id="lbl-bat-total">${this._batToggle === 'charge' ? t.total_charge : t.total_discharge}</div>
                 </div>
               </div>
             </div>
 
-            <!-- Thẻ 3: Phát lên lưới / Nhập lưới (Mặc định: Nhập lưới) -->
+            <!-- Thẻ 3: Phát lên lưới / Nhập lưới -->
             <div class="stat-card">
               <div class="card-header bg-grid">
                 <div class="header-title">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5V14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3.5"></path><path d="M12 14v8"></path><path d="M12 2v4"></path><path d="M8 2v4"></path><path d="M16 2v4"></path></svg>
-                  <span id="lbl-grid-title">Nhập lưới</span>
+                  <span id="lbl-grid-title">${this._gridToggle === 'sell' ? t.grid_export_title : t.grid_import_title}</span>
                 </div>
                 <span class="toggle-btn" id="btn-toggle-grid" title="Chuyển đổi Phát/Nhập">⇄</span>
               </div>
               <div class="card-body-row">
                 <div class="stat-row-item">
                   <div class="stat-value" id="stat-grid-today">0.00 <span class="unit">kWh</span></div>
-                  <div class="stat-label" id="lbl-grid-today">Nhập hôm nay</div>
+                  <div class="stat-label" id="lbl-grid-today">${this._gridToggle === 'sell' ? t.export_today : t.import_today}</div>
                 </div>
                 <div class="stat-row-item">
                   <div class="stat-value highlight-orange" id="stat-grid-total">0.00 <span class="unit">kWh</span></div>
-                  <div class="stat-label" id="lbl-grid-total">Tổng nhập</div>
+                  <div class="stat-label" id="lbl-grid-total">${this._gridToggle === 'sell' ? t.total_export : t.total_import}</div>
                 </div>
               </div>
             </div>
@@ -994,11 +1034,11 @@ class PowerFlowCardInverter extends HTMLElement {
               <div class="card-body-row">
                 <div class="stat-row-item">
                   <div class="stat-value" id="stat-load-today">0.00 <span class="unit">kWh</span></div>
-                  <div class="stat-label">Tiêu thụ hôm nay</div>
+                  <div class="stat-label">${t.load_today}</div>
                 </div>
                 <div class="stat-row-item">
                   <div class="stat-value highlight-orange" id="stat-load-total">0.00 <span class="unit">kWh</span></div>
-                  <div class="stat-label">Tổng tiêu thụ</div>
+                  <div class="stat-label">${t.load_total}</div>
                 </div>
               </div>
             </div>
@@ -1218,10 +1258,10 @@ class PowerFlowCardInverter extends HTMLElement {
                 <rect class="svg-bg-card" x="2" y="5" width="28" height="48" rx="4" fill="#ffffff" stroke="#16a34a" stroke-width="2"/>
                 <rect id="bat-fill" x="4" y="7" width="24" height="43" rx="1.5" fill="#16a34a"/>
 
-                <text id="line-bat-p" x="16" y="0" text-anchor="middle"><tspan id="txt-bat-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
-                <text id="lbl-bat-mode" x="16" y="0" class="svg-txt-sub" text-anchor="middle">${t.bat_standby}</text>
-                <text id="line-bat-v" x="16" y="0" text-anchor="middle"><tspan id="txt-bat-v" class="highlight-val">0.0</tspan><tspan class="unit-lbl" dx="3"> V</tspan></text>
-                <text id="line-bat-soc" x="16" y="0" text-anchor="middle"><tspan id="txt-soc-val" font-size="13px" font-weight="bold" fill="#16a34a">0</tspan><tspan class="unit-lbl" dx="1" fill="#16a34a">%</tspan></text>
+                <text id="line-bat-p" x="0" y="0" text-anchor="start"><tspan id="txt-bat-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+                <text id="lbl-bat-mode" x="0" y="0" class="svg-txt-sub" text-anchor="start">${t.bat_standby}</text>
+                <text id="line-bat-v" x="0" y="0" text-anchor="start"><tspan id="txt-bat-v" class="highlight-val">0.0</tspan><tspan class="unit-lbl" dx="3"> V</tspan></text>
+                <text id="line-bat-soc" x="0" y="0" text-anchor="start"><tspan id="txt-soc-val" font-size="13px" font-weight="bold" fill="#16a34a">0</tspan><tspan class="unit-lbl" dx="1" fill="#16a34a">%</tspan></text>
               </g>
 
               <!-- Khối Pin Lưu Trữ 2 -->
@@ -1230,10 +1270,10 @@ class PowerFlowCardInverter extends HTMLElement {
                 <rect class="svg-bg-card" x="2" y="5" width="28" height="48" rx="4" fill="#ffffff" stroke="#16a34a" stroke-width="2"/>
                 <rect id="bat2-fill" x="4" y="7" width="24" height="43" rx="1.5" fill="#16a34a"/>
 
-                <text id="line-bat2-p" x="16" y="0" text-anchor="middle"><tspan id="txt-bat2-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
-                <text id="lbl-bat2-mode" x="16" y="0" class="svg-txt-sub" text-anchor="middle">${t.bat_standby}</text>
-                <text id="line-bat2-v" x="16" y="0" text-anchor="middle"><tspan id="txt-bat2-v" class="highlight-val">0.0</tspan><tspan class="unit-lbl" dx="3"> V</tspan></text>
-                <text id="line-bat2-soc" x="16" y="0" text-anchor="middle"><tspan id="txt-soc2-val" font-size="13px" font-weight="bold" fill="#16a34a">0</tspan><tspan class="unit-lbl" dx="1" fill="#16a34a">%</tspan></text>
+                <text id="line-bat2-p" x="0" y="0" text-anchor="start"><tspan id="txt-bat2-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+                <text id="lbl-bat2-mode" x="0" y="0" class="svg-txt-sub" text-anchor="start">${t.bat_standby}</text>
+                <text id="line-bat2-v" x="0" y="0" text-anchor="start"><tspan id="txt-bat2-v" class="highlight-val">0.0</tspan><tspan class="unit-lbl" dx="3"> V</tspan></text>
+                <text id="line-bat2-soc" x="0" y="0" text-anchor="start"><tspan id="txt-soc2-val" font-size="13px" font-weight="bold" fill="#16a34a">0</tspan><tspan class="unit-lbl" dx="1" fill="#16a34a">%</tspan></text>
               </g>
 
               <!-- Khối Inverter -->
