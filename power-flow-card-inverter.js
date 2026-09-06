@@ -265,13 +265,16 @@ class PowerFlowCardInverter extends HTMLElement {
       else appCard.classList.remove('dark-mode');
     }
 
-    const isExplicitlyFalse = this.config?.inverter_image === false || String(this.config?.inverter_image).toLowerCase() === 'false';
+    const invImgConfig = this.config?.inverter_image;
+    const isImgConfigTrue = isTrue(invImgConfig);
+    const isImgConfigFalse = invImgConfig === false || String(invImgConfig).toLowerCase() === 'false';
+    const isImgConfigStringPath = typeof invImgConfig === 'string' && !isImgConfigTrue && !isImgConfigFalse && invImgConfig.trim() !== '';
 
-    const customInvImage = this.config?.inverter_icon || 
-                           this.config?.custom_inverter_icon || 
-                           (typeof this.config?.inverter_image === 'string' && !isTrue(this.config?.inverter_image) && !isExplicitlyFalse ? this.config.inverter_image : '');
+    const customInvImage = isImgConfigStringPath 
+      ? invImgConfig 
+      : (this.config?.inverter_icon || this.config?.custom_inverter_icon || '');
 
-    const useCustomImg = !isExplicitlyFalse && (isTrue(this.config?.inverter_image) || Boolean(customInvImage));
+    const useCustomImg = !isImgConfigFalse && (isImgConfigTrue || isImgConfigStringPath) && Boolean(customInvImage && String(customInvImage).trim() !== '');
 
     const invDefaultG = this.getEl('inv-default-graphics');
     const invCustomImg = this.getEl('inv-custom-image');
@@ -290,7 +293,7 @@ class PowerFlowCardInverter extends HTMLElement {
     }
 
     if (invDefaultG && invCustomImg) {
-      if (useCustomImg && customInvImage && String(customInvImage).trim() !== '') {
+      if (useCustomImg) {
         invDefaultG.style.display = 'none';
         invCustomImg.style.display = 'inline';
         invCustomImg.setAttribute('href', customInvImage);
@@ -302,6 +305,9 @@ class PowerFlowCardInverter extends HTMLElement {
       } else {
         invDefaultG.style.display = 'inline';
         invCustomImg.style.display = 'none';
+        const scaleX = invWidth / 58;
+        const scaleY = invHeight / 58;
+        invDefaultG.setAttribute('transform', `scale(${scaleX}, ${scaleY})`);
       }
     }
 
@@ -1517,21 +1523,21 @@ class PowerFlowCardEditor extends HTMLElement {
           }
         }
       },
-      { name: "dark_mode", label: "Giao diện tối    (Dark Mode)", selector: { boolean: {} } },
-      { name: "three_phase", label: "Hệ thống điện 3 pha    (Three_phase)", selector: { boolean: {} } },
-      { name: "single_load_mode", label: "Chế độ 1 tải Load/EPS    (single_load_mode)", selector: { boolean: {} } },
+      { name: "dark_mode", label: "Giao diện tối                              (Dark Mode)", selector: { boolean: {} } },
+      { name: "three_phase", label: "Hệ thống điện 3 pha                      (Three_phase)", selector: { boolean: {} } },
+      { name: "single_load_mode", label: "Chế độ 1 tải Load/EPS               (single_load_mode)", selector: { boolean: {} } },
       { name: "always_show_ac_pv", label: "Luôn hiển thị Hoà lưới/Máy phát    (always_show_ac_pv)", selector: { boolean: {} } },
-      { name: "invert_grid_power", label: "Đảo chiều công suất lưới    (invert_grid_power)", selector: { boolean: {} } },
-      { name: "invert_battery_power", label: "Đảo chiều công suất Pin 1    (invert_battery_power)", selector: { boolean: {} } },
-      { name: "always_show_battery2", label: "Luôn hiển thị Pin lưu trữ 2    (always_show_battery2)", selector: { boolean: {} } },
-      { name: "invert_battery2_power", label: "Đảo chiều công suất Pin 2    (invert_battery2_power)", selector: { boolean: {} } },
-      { name: "inverter_image", label: "Bật tùy chỉnh ảnh Biến tần  (Set true to use custom image)", selector: { boolean: {} } },
-	  { name: "inverter_icon", label: "Icon Biến tần    (inverter_icon)", selector: { icon: {} } },
-      { name: "inverter_icon", label: "Tùy chỉnh ảnh Biến tần  (Đường dẫn / URL)    (inverter_image) ", selector: { text: {} } },
-      { name: "inverter_x", label: "Tọa độ X Biến tần    (Inverter X coordinate)", selector: { number: { min: 0, max: 500, step: 1, mode: "box" } } },
-      { name: "inverter_y", label: "Tọa độ Y Biến tần    (Inverter Y coordinate)", selector: { number: { min: 0, max: 500, step: 1, mode: "box" } } },
-      { name: "inverter_width", label: "Chiều rộng hình ảnh    (Image width)", selector: { number: { min: 0, max: 500, step: 1, mode: "box" } } },
-      { name: "inverter_height", label: "Chiều cao hình ảnh    (Image height)", selector: { number: { min: 0, max: 500, step: 1, mode: "box" } } },
+      { name: "invert_grid_power", label: "Đảo chiều công suất lưới           (invert_grid_power)", selector: { boolean: {} } },
+      { name: "invert_battery_power", label: "Đảo chiều công suất Pin 1       (invert_battery_power)", selector: { boolean: {} } },
+      { name: "always_show_battery2", label: "Luôn hiển thị Pin lưu trữ 2     (always_show_battery2)", selector: { boolean: {} } },
+      { name: "invert_battery2_power", label: "Đảo chiều công suất Pin 2      (invert_battery2_power)", selector: { boolean: {} } },
+      { name: "inverter_image", label: "Bật tùy chỉnh ảnh Biến tần            (Set true to use custom image)", selector: { boolean: {} } },
+	  { name: "inverter_icon", label: "Icon Biến tần                          (inverter_icon)", selector: { icon: {} } },
+      { name: "inverter_icon", label: "Tùy chỉnh ảnh Biến tần                 (Đường dẫn / URL)    (inverter_image) ", selector: { text: {} } },
+      { name: "inverter_x", label: "Tọa độ X Biến tần                         (Inverter X coordinate)(Default: 144)", selector: { number: { min: 0, max: 500, step: 1, mode: "box" } } },
+      { name: "inverter_y", label: "Tọa độ Y Biến tần                         (Inverter Y coordinate)(Default: 74)", selector: { number: { min: 0, max: 500, step: 1, mode: "box" } } },
+      { name: "inverter_width", label: "Chiều rộng hình ảnh                   (Image width)(Default: 58)", selector: { number: { min: 0, max: 500, step: 1, mode: "box" } } },
+      { name: "inverter_height", label: "Chiều cao hình ảnh                   (Image height)(Default: 58)", selector: { number: { min: 0, max: 500, step: 1, mode: "box" } } },
 
       {
         name: "entities",
