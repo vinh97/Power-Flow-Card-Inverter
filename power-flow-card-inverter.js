@@ -212,8 +212,12 @@ class PowerFlowCardInverter extends HTMLElement {
       else appCard.classList.remove('dark-mode');
     }
 
-    const useCustomImg = isTrue(this.config?.inverter_image);
-    const customInvImage = this.config?.inverter_icon || this.config?.custom_inverter_icon || (typeof this.config?.inverter_image === 'string' ? this.config.inverter_image : '');
+    const customInvImage = this.config?.inverter_icon || 
+                           this.config?.custom_inverter_icon || 
+                           (typeof this.config?.inverter_image === 'string' ? this.config.inverter_image : '');
+
+    // Tự động bật custom image nếu inverter_image = true HOẶC nếu có chuỗi đường dẫn ảnh
+    const useCustomImg = isTrue(this.config?.inverter_image) || Boolean(customInvImage);
 
     const invDefaultG = this.getEl('inv-default-graphics');
     const invCustomImg = this.getEl('inv-custom-image');
@@ -235,7 +239,9 @@ class PowerFlowCardInverter extends HTMLElement {
       if (useCustomImg && customInvImage && String(customInvImage).trim() !== '') {
         invDefaultG.style.display = 'none';
         invCustomImg.style.display = 'inline';
+        // Gán cả href lẫn xlink:href để tối ưu tương thích mọi trình duyệt
         invCustomImg.setAttribute('href', customInvImage);
+        invCustomImg.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', customInvImage);
         invCustomImg.setAttribute('width', invWidth);
         invCustomImg.setAttribute('height', invHeight);
         invCustomImg.setAttribute('x', invCustomX);
