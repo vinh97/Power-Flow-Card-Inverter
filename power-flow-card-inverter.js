@@ -1,61 +1,41 @@
 const TRANSLATIONS = {
   vi: {
-    pv_yield: "Sản lượng PV",
-    load_consumption: "Tải tiêu thụ",
-    battery: "Pin Lưu Trữ",
-    grid: "Lưới",
-    today: "Hôm nay",
-    total: "Tổng cộng",
-    charge_today: "Sạc hôm nay",
-    charge_total: "Tổng sạc",
-    discharge_today: "Xả hôm nay",
-    discharge_total: "Tổng xả",
-    buy_today: "Mua hôm nay",
-    buy_total: "Tổng mua",
-    sell_today: "Bán hôm nay",
-    sell_total: "Tổng bán",
-    pv_power_lbl: "Công suất PV",
-    backup_power: "Công suất dự phòng",
-    standby_mode: "Chế độ chờ",
-    consumption: "Tiêu thụ",
-    bat_charging: "Đang sạc",
-    bat_discharging: "Đang xả",
-    bat_full: "Pin đầy",
-    bat_standby: "Pin Chờ",
-    bat_low: "Pin yếu",
-    grid_offline: "Mất Lưới",
-    grid_exporting: "Đẩy Lưới",
-    grid_importing: "Lấy Lưới",
-    grid_ongrid: "Hòa Lưới"
+    pv_yield: "SẢN LƯỢNG PV",
+    load_consumption: "TIÊU THỤ",
+    today: "HÔM NAY",
+    total: "TỔNG",
+    pv_power_lbl: "CÔNG SUẤT PV",
+    backup_power: "CÔNG SUẤT DỰ PHÒNG",
+    standby_mode: "CHẾ ĐỘ CHỜ",
+    consumption: "TIÊU THỤ",
+    bat_charging: "ĐANG SẠC",
+    bat_discharging: "ĐANG XẢ",
+    bat_full: "PIN ĐẦY",
+    bat_standby: "PIN CHỜ",
+    bat_low: "PIN YẾU",
+    grid_offline: "MẤT LƯỚI",
+    grid_exporting: "ĐẨY LƯỚI",
+    grid_importing: "LẤY LƯỚI",
+    grid_ongrid: "HÒA LƯỚI"
   },
   en: {
-    pv_yield: "PV Yield",
-    load_consumption: "Load Power",
-    battery: "Battery Storage",
-    grid: "Grid",
-    today: "Today",
-    total: "Total",
-    charge_today: "Charge Today",
-    charge_total: "Total Charge",
-    discharge_today: "Discharge Today",
-    discharge_total: "Total Discharge",
-    buy_today: "Import Today",
-    buy_total: "Total Import",
-    sell_today: "Export Today",
-    sell_total: "Total Export",
-    pv_power_lbl: "PV Power",
-    backup_power: "Backup Power",
-    standby_mode: "Standby Mode",
-    consumption: "Consumption",
-    bat_charging: "Charging",
-    bat_discharging: "Discharging",
-    bat_full: "Full",
-    bat_standby: "Standby",
-    bat_low: "Low",
-    grid_offline: "Off-Grid",
-    grid_exporting: "Exporting",
-    grid_importing: "Importing",
-    grid_ongrid: "On-Grid"
+    pv_yield: "SOLAR PV",
+    load_consumption: "LOAD POWER",
+    today: "TODAY",
+    total: "TOTAL",
+    pv_power_lbl: "PV POWER",
+    backup_power: "BACKUP POWER",
+    standby_mode: "STANDBY MODE",
+    consumption: "CONSUMPTION",
+    bat_charging: "CHARGING",
+    bat_discharging: "DISCHARGING",
+    bat_full: "FULL",
+    bat_standby: "STANDBY",
+    bat_low: "LOW",
+    grid_offline: "OFF-GRID",
+    grid_exporting: "EXPORTING",
+    grid_importing: "IMPORTING",
+    grid_ongrid: "ON-GRID"
   }
 };
 
@@ -63,6 +43,8 @@ class PowerFlowCardInverter extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
+    this._batToggle = 'discharge';
+    this._gridToggle = 'buy';
   }
 
   getTranslation() {
@@ -87,7 +69,7 @@ class PowerFlowCardInverter extends HTMLElement {
   }
 
   getEl(id) {
-    return this.shadowRoot.getElementById(id);
+    return this.shadowRoot ? this.shadowRoot.getElementById(id) : null;
   }
 
   setDisplay(id, visible) {
@@ -177,13 +159,12 @@ class PowerFlowCardInverter extends HTMLElement {
   }
 
   updateData() {
-    if (!this._hass || !this.config) return;
+    if (!this._hass || !this.config || !this.shadowRoot || !this.shadowRoot.querySelector('.app-card')) return;
 
     const ent = this.config.entities;
     const isTrue = (val) => val === true || String(val).toLowerCase() === 'true';
     const t = this.getTranslation();
 
-    // Xử lý Cấu hình Dark Mode
     const isDarkMode = isTrue(this.config?.dark_mode) || isTrue(this.config?.dark_theme) || isTrue(this.config?.dark);
     const appCard = this.shadowRoot.querySelector('.app-card');
     if (appCard) {
@@ -191,7 +172,6 @@ class PowerFlowCardInverter extends HTMLElement {
       else appCard.classList.remove('dark-mode');
     }
 
-    // 0. Cấu hình Custom Icon / Ảnh PNG, Kích thước & Tọa độ cho Biến tần
     const useCustomImg = isTrue(this.config?.inverter_image);
     const customInvImage = this.config?.inverter_icon || this.config?.custom_inverter_icon || (typeof this.config?.inverter_image === 'string' ? this.config.inverter_image : '');
 
@@ -226,7 +206,6 @@ class PowerFlowCardInverter extends HTMLElement {
       }
     }
 
-    // 0.1 Cấu hình chế độ 3 pha & Single Load Mode
     const configThreePhase = this.config?.three_phase ?? ent?.three_phase;
     const isThreePhase = configThreePhase !== undefined
       ? isTrue(configThreePhase)
@@ -236,7 +215,6 @@ class PowerFlowCardInverter extends HTMLElement {
       ? isTrue(this.config.single_load_mode)
       : (ent?.single_load_mode !== undefined ? isTrue(ent.single_load_mode) : false);
 
-    // 1. Thời gian LCD Inverter
     let latestDate = null;
     if (ent) {
       Object.values(ent).forEach(eId => {
@@ -256,7 +234,6 @@ class PowerFlowCardInverter extends HTMLElement {
       this.setText('inv-lcd-time', timeFormatted);
     }
 
-    // 2. Dữ liệu PV (DC)
     let pvP = 0;
     const activePvGroups = [];
 
@@ -272,19 +249,19 @@ class PowerFlowCardInverter extends HTMLElement {
 
       if (hasP) pvP += pVal;
 
-      const showP = hasP && pVal > 0;
-      const showV = hasV && vVal > 0;
+      const showP = hasP && (pVal > 0 || vVal > 0 || !hasV);
+      const showV = hasV && (vVal > 0 || pVal > 0 || !hasP);
 
-      this.setDisplay(`line-pv${i}-p`, showP);
       this.setDisplay(`line-pv${i}-v`, showV);
+      this.setDisplay(`line-pv${i}-p`, showP);
 
       if (showV) this.setText(`txt-pv${i}-v`, vVal.toFixed(1));
       if (showP) this.setPower(`txt-pv${i}-p`, pVal);
 
+      const lineV = this.getEl(`line-pv${i}-v`);
       const lineP = this.getEl(`line-pv${i}-p`);
-      if (lineP) {
-        lineP.setAttribute('x', showV ? '58' : '0');
-      }
+      if (lineV) lineV.setAttribute('x', '26');
+      if (lineP) lineP.setAttribute('x', showV ? '88' : '26');
 
       const grp = this.getEl(`grp-pv${i}`);
       if (grp) {
@@ -305,22 +282,39 @@ class PowerFlowCardInverter extends HTMLElement {
       ? Math.abs(Math.round(this.getState(ent.pv_power, 0)))
       : pvP;
     this.setPower('txt-pv-total-p', totalPvPower);
+    this.setText('lbl-pv-total-sub', t.pv_power_lbl);
 
-    // Ẩn/hiện tổng công suất và nhãn "Công suất PV" khi công suất <= 0
-    this.setDisplay('grp-pv-total', totalPvPower > 0);
+    const grpTotal = this.getEl('grp-pv-total');
+    const showTotalPv = totalPvPower > 0 || activePvGroups.length > 0;
+    this.setDisplay('grp-pv-total', showTotalPv);
 
-    const pvTotalElements = [this.getEl('line-pv-total-p'), this.getEl('lbl-pv-total-sub')];
-    this.alignTextStack(pvTotalElements, 8, 13, 3.5);
+    const numStrings = activePvGroups.length;
+    const hasTotal = showTotalPv && grpTotal;
 
-    const pvNumLines = activePvGroups.length;
-    if (pvNumLines > 0) {
-      const startPvY = 8 - ((pvNumLines - 1) * 14) / 2;
-      activePvGroups.forEach((grp, idx) => {
-        grp.setAttribute('transform', `translate(0, ${startPvY + idx * 14})`);
-      });
+    if (numStrings > 0 || hasTotal) {
+      const lineSpacing = 16;
+      const pvTotalGap = 22;
+      const iconY = -56;
+      const pvIconBaseY = iconY + 49;
+
+      const pvIconGroup = this.getEl('grp-pv-icon');
+      if (pvIconGroup) {
+        pvIconGroup.setAttribute('transform', `translate(138, ${iconY}) scale(0.57)`);
+      }
+
+      if (hasTotal) {
+        grpTotal.setAttribute('transform', `translate(0, ${pvIconBaseY})`);
+      }
+
+      if (numStrings > 0) {
+        const lastRowY = hasTotal ? (pvIconBaseY - pvTotalGap) : pvIconBaseY;
+        activePvGroups.forEach((grp, idx) => {
+          const grpY = lastRowY - (numStrings - 1 - idx) * lineSpacing;
+          grp.setAttribute('transform', `translate(0, ${grpY})`);
+        });
+      }
     }
 
-    // 3. PV Hòa Lưới / AC PV
     const alwaysShowAcPv = isTrue(this.config?.always_show_ac_pv) || isTrue(this.config?.show_ac_pv) || isTrue(ent?.always_show_ac_pv);
     let acPvP = 0;
     let acPvL1 = 0, acPvL2 = 0, acPvL3 = 0;
@@ -391,9 +385,8 @@ class PowerFlowCardInverter extends HTMLElement {
     this.setDisplay('line-ac-pv-f', showAcPvF);
     if (showAcPvF) acPvElements.push(this.getEl('line-ac-pv-f'));
 
-    this.alignTextStack(acPvElements, 9.5, 12, 3.5);
+    this.alignTextStack(acPvElements, -32.5, 12, 3.5);
 
-    // 4. Điện Lưới
     let gridP = 0;
     let rawGridV = 0.0;
     let rawGridF = 0.0;
@@ -492,7 +485,6 @@ class PowerFlowCardInverter extends HTMLElement {
 
     this.alignTextStack(gridInfoElements, 108, 12, 3.5);
 
-    // 5. Tải tiêu thụ & 6. EPS
     let loadP = 0, loadL1 = 0, loadL2 = 0, loadL3 = 0;
     let epsP = 0, epsL1 = 0, epsL2 = 0, epsL3 = 0;
 
@@ -561,18 +553,16 @@ class PowerFlowCardInverter extends HTMLElement {
       this.setDisplay('line-load-l2', true);
       this.setDisplay('line-load-l3', true);
       loadElements.push(this.getEl('line-load-l1'), this.getEl('line-load-l2'), this.getEl('line-load-l3'));
-      this.alignTextStack(loadElements, 19, 12, 3.5);
-
-      const lblLoadSub = this.getEl('lbl-load-sub');
-      if (lblLoadSub) lblLoadSub.setAttribute('y', '52');
     } else {
       this.setDisplay('line-load-1p', true);
       this.setDisplay('line-load-l1', false);
       this.setDisplay('line-load-l2', false);
       this.setDisplay('line-load-l3', false);
-      loadElements.push(this.getEl('line-load-1p'), this.getEl('lbl-load-sub'));
-      this.alignTextStack(loadElements, 19, 12, 3.5);
+      loadElements.push(this.getEl('line-load-1p'));
     }
+    loadElements.push(this.getEl('lbl-load-sub'));
+    const loadGapIndex = loadElements.length - 2;
+    this.alignTextStack(loadElements, 27, 12, 3.5, loadGapIndex, 5);
 
     if (isThreePhase) {
       this.setPower('txt-eps-l1', epsL1);
@@ -615,12 +605,11 @@ class PowerFlowCardInverter extends HTMLElement {
     this.setDisplay('line-eps-f', showEpsF);
     if (showEpsF) epsElements.push(this.getEl('line-eps-f'));
 
-    this.alignTextStack(epsElements, 19, 12, 3.5);
+    this.alignTextStack(epsElements, 28, 12, 3.5);
 
     const showStandby = isGridConnected && (epsP === 0);
     this.setDisplay('lbl-eps-standby', showStandby);
 
-    // 7. Pin Lưu Trữ 1 & 2
     let batP = Math.round(this.getState(ent.battery_power, 0));
     const batV = this.getState(ent.battery_voltage, 0);
     const soc = Math.round(this.getState(ent.battery_soc, 0));
@@ -655,7 +644,7 @@ class PowerFlowCardInverter extends HTMLElement {
       this.getEl('line-bat-soc')
     ];
 
-    this.alignTextStack(batElements, 29, 12, 3.5);
+    this.alignTextStack(batElements, 80, 12, 3.5);
 
     const batFill = this.getEl('bat-fill');
     const maxH = 43.0;
@@ -722,7 +711,7 @@ class PowerFlowCardInverter extends HTMLElement {
         this.getEl('line-bat2-soc')
       ];
 
-      this.alignTextStack(bat2Elements, 29, 12, 3.5);
+      this.alignTextStack(bat2Elements, 80, 12, 3.5);
 
       const bat2Fill = this.getEl('bat2-fill');
       const h2 = Math.max(1, (soc2 / 100) * maxH);
@@ -741,78 +730,85 @@ class PowerFlowCardInverter extends HTMLElement {
       if (bat2Fill) bat2Fill.setAttribute('fill', bat2Color);
     }
 
-    // 8. Thống kê năng lượng
     this.setEnergyStat('stat-pv-today', this.getState(ent.pv_daily));
     this.setEnergyStat('stat-pv-total', this.getState(ent.pv_total));
     this.setEnergyStat('stat-load-today', this.getState(ent.load_daily));
     this.setEnergyStat('stat-load-total', this.getState(ent.load_total));
 
-    this.setEnergyStat('stat-bat-c-today', this.getState(ent.battery_charge_daily));
-    this.setEnergyStat('stat-bat-c-total', this.getState(ent.battery_charge_total));
-    this.setEnergyStat('stat-bat-d-today', this.getState(ent.battery_discharge_daily));
-    this.setEnergyStat('stat-bat-d-total', this.getState(ent.battery_discharge_total));
+    const isBatCharge = this._batToggle === 'charge';
+    this.setText('lbl-bat-title', isBatCharge ? "Pin nạp" : "Pin xả");
+    this.setText('lbl-bat-today', isBatCharge ? "Nạp hôm nay" : "Xả hôm nay");
+    this.setText('lbl-bat-total', isBatCharge ? "Tổng nạp" : "Tổng xả");
+    this.setEnergyStat('stat-bat-today', this.getState(isBatCharge ? ent.battery_charge_daily : ent.battery_discharge_daily));
+    this.setEnergyStat('stat-bat-total', this.getState(isBatCharge ? ent.battery_charge_total : ent.battery_discharge_total));
 
-    this.setEnergyStat('stat-grid-b-today', this.getState(ent.grid_buy_daily));
-    this.setEnergyStat('stat-grid-b-total', this.getState(ent.grid_buy_total));
-    this.setEnergyStat('stat-grid-s-today', this.getState(ent.grid_sell_daily));
-    this.setEnergyStat('stat-grid-s-total', this.getState(ent.grid_sell_total));
+    const isGridSell = this._gridToggle === 'sell';
+    this.setText('lbl-grid-title', isGridSell ? "Phát lên lưới" : "Nhập lưới");
+    this.setText('lbl-grid-today', isGridSell ? "Phát hôm nay" : "Nhập hôm nay");
+    this.setText('lbl-grid-total', isGridSell ? "Tổng phát" : "Tổng nhập");
+    this.setEnergyStat('stat-grid-today', this.getState(isGridSell ? ent.grid_sell_daily : ent.grid_buy_daily));
+    this.setEnergyStat('stat-grid-total', this.getState(isGridSell ? ent.grid_sell_total : ent.grid_buy_total));
 
-    // 9. Luồng Năng Lượng
-    const isImporting = isGridConnected && gridP < -5;
-    const isExporting = isGridConnected && gridP > 5;
+    const MIN_POWER = 5;
+    const GRID_TOLERANCE = 150;
 
-    const hasLoadPower = loadP > 5;
-    const hasEpsPower = epsP > 5;
-    const hasAcPvPower = hasAcPvP && acPvP > 5;
-    const hasPvPower = pvP > 5;
+    const hasPvPower = pvP > MIN_POWER;
+    const hasAcPvPower = hasAcPvP && acPvP > MIN_POWER;
+    const hasLoadPower = loadP > MIN_POWER;
+    const hasEpsPower = epsP > MIN_POWER;
 
-    this.setFlowVisible('flow-bat-charge', isCharging);
-    this.setFlowVisible('flow-bat-discharge', isDischarging);
+    const isBat1Charging = batP > MIN_POWER;
+    const isBat1Discharging = batP < -MIN_POWER;
+    const isBat2Charging = showBat2 && bat2P > MIN_POWER;
+    const isBat2Discharging = showBat2 && bat2P < -MIN_POWER;
 
-    this.setFlowVisible('flow-bat2-charge', showBat2 && isCharging2);
-    this.setFlowVisible('flow-bat2-discharge', showBat2 && isDischarging2);
-
-    const activeBat1P = (isCharging || isDischarging) ? batP : 0;
-    const activeBat2P = (showBat2 && (isCharging2 || isDischarging2)) ? bat2P : 0;
+    const activeBat1P = (isBat1Charging || isBat1Discharging) ? batP : 0;
+    const activeBat2P = (showBat2 && (isBat2Charging || isBat2Discharging)) ? bat2P : 0;
     const netBatP = activeBat1P + activeBat2P;
 
-    const isNetDischarging = netBatP < -5;
-    const isNetCharging = netBatP > 5;
+    const isNetCharging = netBatP > MIN_POWER;
+    const isNetDischarging = netBatP < -MIN_POWER;
+    const batChargePower = isNetCharging ? netBatP : 0;
+    const batDischargePower = isNetDischarging ? Math.abs(netBatP) : 0;
 
-    this.setFlowVisible('flow-bat-trunk-discharge', isNetDischarging);
+    const isExporting = isGridConnected && gridP > MIN_POWER;
+    const isImporting = isGridConnected && gridP < -MIN_POWER;
+
+    this.setFlowVisible('flow-bat-charge', isBat1Charging);
+    this.setFlowVisible('flow-bat-discharge', isBat1Discharging);
+    this.setFlowVisible('flow-bat2-charge', showBat2 && isBat2Charging);
+    this.setFlowVisible('flow-bat2-discharge', showBat2 && isBat2Discharging);
     this.setFlowVisible('flow-bat-trunk-charge', isNetCharging);
-
-    const showLoadFlow = isGridConnected && hasLoadPower;
-    this.setFlowVisible('flow-bus-to-load', showLoadFlow);
-    this.setFlowVisible('flow-eps', hasEpsPower);
-
-    this.setFlowVisible('flow-grid-import', isImporting);
-    this.setFlowVisible('flow-grid-export', isExporting);
+    this.setFlowVisible('flow-bat-trunk-discharge', isNetDischarging);
 
     this.setFlowVisible('flow-pv', hasPvPower);
 
     const showAcPvFlow = hasAcPvPower && (
       isGridConnected 
-        ? (hasLoadPower || isExporting || isNetCharging) 
+        ? (hasLoadPower || hasEpsPower || isNetCharging || isExporting)
         : (hasEpsPower || isNetCharging)
     );
     this.setFlowVisible('flow-ac-pv', showAcPvFlow);
 
-    // Tính công suất AC thuần của Inverter: PV + Xả Pin - Sạc Pin - Tải EPS
-    const batDischargePower = isNetDischarging ? Math.abs(netBatP) : 0;
-    const batChargePower = isNetCharging ? netBatP : 0;
+    this.setFlowVisible('flow-bus-to-load', isGridConnected && hasLoadPower);
+    this.setFlowVisible('flow-eps', hasEpsPower);
+
+    this.setFlowVisible('flow-grid-import', isImporting);
+    this.setFlowVisible('flow-grid-export', isExporting);
+
     const invNetAcPower = pvP + batDischargePower - batChargePower - epsP;
+    const hasAcSource = isImporting || hasAcPvPower;
 
     if (isGridConnected) {
-      const isInvSupplyingAC = invNetAcPower > 5 && (hasLoadPower || isExporting);
-      const isBusChargingInv = invNetAcPower < -5;
+      const isInvSupplyingAc = invNetAcPower > MIN_POWER && (hasLoadPower || isExporting);
+      const isGridOrAcPvChargingBat = isNetCharging && ((pvP + GRID_TOLERANCE) < batChargePower) && hasAcSource;
+      const isBusChargingInv = (invNetAcPower < -MIN_POWER || isGridOrAcPvChargingBat) && hasAcSource;
 
-      this.setFlowVisible('flow-inv-to-bus', isInvSupplyingAC);
+      this.setFlowVisible('flow-inv-to-bus', isInvSupplyingAc);
       this.setFlowVisible('flow-bus-to-inv', isBusChargingInv);
     } else {
-      const isAcPvToInvOffGrid = hasAcPvPower && (isNetCharging || hasEpsPower);
-
       this.setFlowVisible('flow-inv-to-bus', false);
+      const isAcPvToInvOffGrid = hasAcPvPower && (isNetCharging || hasEpsPower);
       this.setFlowVisible('flow-bus-to-inv', isAcPvToInvOffGrid);
     }
 
@@ -857,50 +853,58 @@ class PowerFlowCardInverter extends HTMLElement {
     const t = this.getTranslation();
     this.shadowRoot.innerHTML = `
       <style>
-        :host { display: block; width: 100%; aspect-ratio: 480 / 408; box-sizing: border-box; -webkit-text-size-adjust: 100%; -webkit-font-smoothing: antialiased; }
+        :host { display: block; width: 100%; box-sizing: border-box; -webkit-text-size-adjust: 100%; -webkit-font-smoothing: antialiased; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         
-        .app-card { width: 100%; background: #ffffff; border-radius: 14px; border: 1px solid #e2e8f0; padding: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); transition: all 0.3s ease; }
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 8px; }
-        .stat-card { background: #ffffff; border-radius: 8px; border: 1px solid #e2e8f0; overflow: hidden; transition: all 0.3s ease; }
-        .card-header { padding: 4px 6px; font-size: 11px; color: #ffffff; font-weight: 800; white-space: nowrap; letter-spacing: 0.2px; }
-        .bg-pv { background: #0284c7; } .bg-bat { background: #16a34a; } .bg-grid { background: #d97706; } .bg-load { background: #e11d48; } 
-        .card-body { display: flex; justify-content: space-between; align-items: center; padding: 5px 3px; gap: 2px; }
-        .stat-dual-wrap { display: flex; gap: 2px; flex: 1; min-width: 0; }
-        .stat-dual-wrap > div { flex: 1; min-width: 0; }
-        .stat-val { font-size: 9.5px; font-weight: 800; color: #0f172a; line-height: 1.1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .unit { font-size: 7.5px; font-weight: 600; color: #475569; }
-        .stat-lbl { font-size: 6.8px; color: #64748b; margin-bottom: 1px; text-transform: uppercase; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .stat-icon { flex-shrink: 0; width: 20px; height: 24px; display: flex; align-items: center; justify-content: center; }
+        .app-card { width: 100%; background: #ffffff; border-radius: 14px; border: 1px solid #e2e8f0; padding: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); transition: all 0.3s ease; }
+        
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-bottom: 4px; }
+        .stat-card { background: #f8fafc; border-radius: 6px; border: 1px solid #e2e8f0; overflow: hidden; transition: all 0.3s ease; }
+        
+        .card-header { padding: 2px 6px; font-size: 11px; color: #ffffff; font-weight: 800; white-space: nowrap; letter-spacing: 0.3px; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; }
+        .card-header svg { width: 12px; height: 12px; }
+        .header-title { display: flex; align-items: center; gap: 3px; }
+        .bg-pv { background: #0284c7; } .bg-bat { background: #ec4899; } .bg-grid { background: #f97316; } .bg-load { background: #10b981; } 
+        
+        .toggle-btn { cursor: pointer; user-select: none; font-size: 12px; padding: 0 2px; transition: transform 0.2s; }
+        .toggle-btn:hover { transform: scale(1.2); }
+
+        .card-body-row { display: flex; flex-direction: column; gap: 1px; padding: 3px 6px; text-align: left; }
+        .stat-row-item { display: flex; flex-direction: column; align-items: flex-start; }
+        .stat-value { font-size: 14px; font-weight: 800; color: #0f172a; line-height: 1.0; }
+        .stat-value.highlight-orange { color: #f97316; }
+        .stat-value .unit { font-size: 10px; font-weight: 700; color: #64748b; margin-left: 1px; text-transform: none; }
+        .stat-label { font-size: 9.5px; color: #64748b; font-weight: 600; text-transform: uppercase; margin-top: 0px; }
+
         .diagram-card { background: #ffffff; padding: 8px 4px 6px 4px; border-radius: 10px; border: 1px solid #e2e8f0; position: relative; transition: all 0.3s ease; }
         
-        .status-pill { position: absolute; right: 4px; top: 4px; width: fit-content; white-space: nowrap; background: #f8fafc; color: #334155; font-size: 7.5px; padding: 1.5px 5px; border-radius: 10px; font-weight: 800; display: inline-flex; align-items: center; gap: 3px; z-index: 10; pointer-events: none; border: 1px solid #e2e8f0; }
-        .status-dot { width: 4px; height: 4px; border-radius: 50%; }
+        .status-pill { position: absolute; right: 4px; top: 4px; width: fit-content; white-space: nowrap; background: #f8fafc; color: #334155; font-size: 9.5px; padding: 1.5px 6px; border-radius: 8px; font-weight: 800; display: inline-flex; align-items: center; gap: 3px; z-index: 10; pointer-events: none; border: 1px solid #e2e8f0; text-transform: uppercase; letter-spacing: 0.3px; }
+        .status-dot { width: 5px; height: 5px; border-radius: 50%; }
         .status-pill.ongrid { background: #f0fdf4; color: #15803d; border-color: #bbf7d0; } .status-pill.ongrid .status-dot { background: #16a34a; }
         .status-pill.offline { background: #fef2f2; color: #b91c1c; border-color: #fecaca; } .status-pill.offline .status-dot { background: #dc2626; }
         .status-pill.exporting { background: #f0f9ff; color: #0369a1; border-color: #bae6fd; } .status-pill.exporting .status-dot { background: #0284c7; }
         .status-pill.importing { background: #fffbe6; color: #b45309; border-color: #fde68a; } .status-pill.importing .status-dot { background: #d97706; }
         
-        .diagram-svg { width: 100%; height: auto; aspect-ratio: 480 / 408; display: block; overflow: visible; }
+        .diagram-svg { width: 100%; height: auto; aspect-ratio: 420 / 450; display: block; overflow: visible; }
         .svg-txt-bold { font-size: 12.5px; font-weight: 800; fill: #0f172a; }
         .svg-txt-sub  { font-size: 9.5px; fill: #475569; font-weight: 700; }
         .highlight-val { font-size: 11.5px; font-weight: 800; fill: #0f172a; }
         .highlight-freq { font-size: 11.5px; font-weight: 800; fill: #0f172a; }
         .unit-lbl { font-size: 9.5px; font-weight: 700; fill: #64748b; }
-        .chv-block { fill: #eab308; stroke: #fef08a; stroke-width: 0.5; animation: block-wave 1.4s infinite ease-in-out; }
-        @keyframes block-wave { 0% { fill: #fef08a; opacity: 0.25; } 50% { fill: #eab308; opacity: 1; } 100% { fill: #fef08a; opacity: 0.25; } }
+        .chv-block { fill: #eab308; stroke: #fef08a; stroke-width: 0.5; animation: block-wave 1.2s infinite ease-in-out; }
+        @keyframes block-wave { 0% { fill: #fef08a; opacity: 0.2; } 50% { fill: #eab308; opacity: 1; } 100% { fill: #fef08a; opacity: 0.2; } }
 
         .app-card.dark-mode { background: #0f172a; border-color: #1e293b; }
         .dark-mode .stat-card { background: #1e293b; border-color: #334155; }
         .dark-mode .diagram-card { background: #1e293b; border-color: #334155; }
         
-        .dark-mode .stat-val, 
+        .dark-mode .stat-value, 
         .dark-mode .svg-txt-bold, 
         .dark-mode .highlight-val, 
         .dark-mode .highlight-freq { color: #f8fafc; fill: #f8fafc; }
         
-        .dark-mode .unit, 
-        .dark-mode .stat-lbl, 
+        .dark-mode .stat-label,
+        .dark-mode .stat-value .unit, 
         .dark-mode .svg-txt-sub, 
         .dark-mode .unit-lbl { color: #94a3b8; fill: #94a3b8; }
 
@@ -917,135 +921,84 @@ class PowerFlowCardInverter extends HTMLElement {
       <ha-card>
         <div class="app-card">
           <div class="stats-grid">
+            <!-- Thẻ 1: PV -->
             <div class="stat-card">
-              <div class="card-header bg-pv">${t.pv_yield}</div>
-              <div class="card-body">
-                <div style="flex:1; min-width:0;">
-                  <div class="stat-val" id="stat-pv-today">0.00 <span class="unit">kWh</span></div>
-                  <div class="stat-lbl">${t.today}</div>
-                  <div class="stat-val" id="stat-pv-total" style="margin-top:1px;">0.00 <span class="unit">kWh</span></div>
-                  <div class="stat-lbl">${t.total}</div>
+              <div class="card-header bg-pv">
+                <div class="header-title">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>
+                  <span>Sản lượng PV</span>
                 </div>
-                <div class="stat-icon">
-                  <svg width="22" height="24" viewBox="0 0 100 100">
-                    <g stroke="#52b788" stroke-width="4.5" stroke-linecap="round" fill="none">
-                      <circle cx="34" cy="34" r="14" />
-                      <line x1="34" y1="12" x2="34" y2="5" />
-                      <line x1="18" y1="18" x2="13" y2="13" />
-                      <line x1="12" y1="34" x2="5" y2="34" />
-                      <line x1="18" y1="50" x2="13" y2="55" />
-                      <line x1="50" y1="18" x2="55" y2="13" />
-                      <line x1="56" y1="34" x2="63" y2="34" />
-                    </g>
-                    <polygon points="32,42 86,42 96,86 18,86" fill="#52b788" stroke="#52b788" stroke-width="4" stroke-linejoin="round"/>
-                    <g stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.9">
-                      <line x1="28.5" y1="53" x2="88.5" y2="53" />
-                      <line x1="25" y1="64" x2="91" y2="64" />
-                      <line x1="21.5" y1="75" x2="93.5" y2="75" />
-                      <line x1="45.5" y1="42" x2="37.5" y2="86" />
-                      <line x1="59" y1="42" x2="57" y2="86" />
-                      <line x1="72.5" y1="42" x2="76.5" y2="86" />
-                    </g>
-                  </svg>
+              </div>
+              <div class="card-body-row">
+                <div class="stat-row-item">
+                  <div class="stat-value" id="stat-pv-today">0.00 <span class="unit">kWh</span></div>
+                  <div class="stat-label">Sản lượng hôm nay</div>
+                </div>
+                <div class="stat-row-item">
+                  <div class="stat-value highlight-orange" id="stat-pv-total">0.00 <span class="unit">kWh</span></div>
+                  <div class="stat-label">Tổng sản lượng</div>
                 </div>
               </div>
             </div>
 
+            <!-- Thẻ 2: Pin nạp / Pin xả (Mặc định: Pin xả) -->
             <div class="stat-card">
-              <div class="card-header bg-load">${t.load_consumption}</div>
-              <div class="card-body">
-                <div style="flex:1; min-width:0;">
-                  <div class="stat-val" id="stat-load-today">0.00 <span class="unit">kWh</span></div>
-                  <div class="stat-lbl">${t.today}</div>
-                  <div class="stat-val" id="stat-load-total" style="margin-top:1px;">0.00 <span class="unit">kWh</span></div>
-                  <div class="stat-lbl">${t.total}</div>
+              <div class="card-header bg-bat">
+                <div class="header-title">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="10" x="2" y="7" rx="2" ry="2"></rect><line x1="22" x2="22" y1="11" y2="13"></line></svg>
+                  <span id="lbl-bat-title">Pin xả</span>
                 </div>
-                <div class="stat-icon">
-                  <svg width="20" height="22" viewBox="0 0 100 100">
-                    <rect x="27" y="14" width="10" height="20" rx="1" fill="#52b788"/>
-                    <path d="M 10 50 L 50 21 L 90 50" fill="none" stroke="#52b788" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M 50 29.5 L 82 52.5 L 82 85 C 82 86.5 80.5 88 79 88 L 21 88 C 19.5 88 18 86.5 18 85 L 18 52.5 Z" fill="#52b788"/>
-                    <polygon points="52,45.5 42,60.5 49.5,60.5 46.5,78.5 58,59.5 50.5,59.5" fill="#ffffff"/>
-                  </svg>
+                <span class="toggle-btn" id="btn-toggle-bat" title="Chuyển đổi Nạp/Xả">⇄</span>
+              </div>
+              <div class="card-body-row">
+                <div class="stat-row-item">
+                  <div class="stat-value" id="stat-bat-today">0.00 <span class="unit">kWh</span></div>
+                  <div class="stat-label" id="lbl-bat-today">Xả hôm nay</div>
+                </div>
+                <div class="stat-row-item">
+                  <div class="stat-value highlight-orange" id="stat-bat-total">0.00 <span class="unit">kWh</span></div>
+                  <div class="stat-label" id="lbl-bat-total">Tổng xả</div>
                 </div>
               </div>
             </div>
 
+            <!-- Thẻ 3: Phát lên lưới / Nhập lưới (Mặc định: Nhập lưới) -->
             <div class="stat-card">
-              <div class="card-header bg-bat">${t.battery}</div>
-              <div class="card-body">
-                <div class="stat-dual-wrap">
-                  <div>
-                    <div class="stat-val" id="stat-bat-c-today">0.00 <span class="unit">kWh</span></div>
-                    <div class="stat-lbl">${t.charge_today}</div>
-                    <div class="stat-val" id="stat-bat-c-total" style="margin-top:1px;">0.00 <span class="unit">kWh</span></div>
-                    <div class="stat-lbl">${t.charge_total}</div>
-                  </div>
-                  <div>
-                    <div class="stat-val" id="stat-bat-d-today">0.00 <span class="unit">kWh</span></div>
-                    <div class="stat-lbl">${t.discharge_today}</div>
-                    <div class="stat-val" id="stat-bat-d-total" style="margin-top:1px;">0.00 <span class="unit">kWh</span></div>
-                    <div class="stat-lbl">${t.discharge_total}</div>
-                  </div>
+              <div class="card-header bg-grid">
+                <div class="header-title">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5V14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3.5"></path><path d="M12 14v8"></path><path d="M12 2v4"></path><path d="M8 2v4"></path><path d="M16 2v4"></path></svg>
+                  <span id="lbl-grid-title">Nhập lưới</span>
                 </div>
-                <div class="stat-icon">
-                  <svg width="18" height="22" viewBox="0 0 30 40">
-                    <rect x="5" y="6" width="20" height="30" rx="3" fill="#52b788"/>
-                    <rect x="11" y="2" width="8" height="4" rx="1" fill="#52b788"/>
-                    <path d="M16 12L10 21H15L14 28L20 19H15Z" fill="#ffffff"/>
-                  </svg>
+                <span class="toggle-btn" id="btn-toggle-grid" title="Chuyển đổi Phát/Nhập">⇄</span>
+              </div>
+              <div class="card-body-row">
+                <div class="stat-row-item">
+                  <div class="stat-value" id="stat-grid-today">0.00 <span class="unit">kWh</span></div>
+                  <div class="stat-label" id="lbl-grid-today">Nhập hôm nay</div>
+                </div>
+                <div class="stat-row-item">
+                  <div class="stat-value highlight-orange" id="stat-grid-total">0.00 <span class="unit">kWh</span></div>
+                  <div class="stat-label" id="lbl-grid-total">Tổng nhập</div>
                 </div>
               </div>
             </div>
 
+            <!-- Thẻ 4: Tiêu thụ -->
             <div class="stat-card">
-              <div class="card-header bg-grid">${t.grid}</div>
-              <div class="card-body">
-                <div class="stat-dual-wrap">
-                  <div>
-                    <div class="stat-val" id="stat-grid-b-today">0.00 <span class="unit">kWh</span></div>
-                    <div class="stat-lbl">${t.buy_today}</div>
-                    <div class="stat-val" id="stat-grid-b-total" style="margin-top:1px;">0.00 <span class="unit">kWh</span></div>
-                    <div class="stat-lbl">${t.buy_total}</div>
-                  </div>
-                  <div>
-                    <div class="stat-val" id="stat-grid-s-today">0.00 <span class="unit">kWh</span></div>
-                    <div class="stat-lbl">${t.sell_today}</div>
-                    <div class="stat-val" id="stat-grid-s-total" style="margin-top:1px;">0.00 <span class="unit">kWh</span></div>
-                    <div class="stat-lbl">${t.sell_total}</div>
-                  </div>
+              <div class="card-header bg-load">
+                <div class="header-title">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                  <span>${t.load_consumption}</span>
                 </div>
-                <div class="stat-icon">
-                  <svg width="18" height="22" viewBox="0 0 100 160">
-                    <g fill="none" stroke="#50b984" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M 50,6 L 18,152 M 50,6 L 82,152" stroke-width="7" />
-                      <path d="M 22,42 L 78,42" stroke-width="7" />
-                      <path d="M 22,46 L 78,46" stroke-width="4.5" />
-                      <circle cx="20" cy="50" r="4" fill="#50b984" />
-                      <circle cx="80" cy="50" r="4" fill="#50b984" />
-                      <path d="M 10,72 L 90,72" stroke-width="8" />
-                      <path d="M 10,77 L 90,77" stroke-width="4.5" />
-                      <circle cx="8" cy="82" r="4.5" fill="#50b984" />
-                      <circle cx="92" cy="82" r="4.5" fill="#50b984" />
-                      <line x1="43" y1="24" x2="57" y2="24" stroke-width="4.5" />
-                      <line x1="38" y1="42" x2="62" y2="42" stroke-width="4.5" />
-                      <line x1="33" y1="72" x2="67" y2="72" stroke-width="4.5" />
-                      <line x1="29" y1="95" x2="71" y2="95" stroke-width="4.5" />
-                      <line x1="25" y1="118" x2="75" y2="118" stroke-width="5" />
-                      <line x1="19" y1="138" x2="81" y2="138" stroke-width="6" />
-                      <line x1="43" y1="24" x2="57" y2="42" stroke-width="3.5" />
-                      <line x1="57" y1="24" x2="43" y2="42" stroke-width="3.5" />
-                      <line x1="38" y1="42" x2="67" y2="72" stroke-width="3.5" />
-                      <line x1="62" y1="42" x2="33" y2="72" stroke-width="3.5" />
-                      <line x1="33" y1="72" x2="71" y2="95" stroke-width="3.5" />
-                      <line x1="67" y1="72" x2="29" y2="95" stroke-width="3.5" />
-                      <line x1="29" y1="95" x2="75" y2="118" stroke-width="3.5" />
-                      <line x1="71" y1="95" x2="25" y2="118" stroke-width="3.5" />
-                      <line x1="25" y1="118" x2="79" y2="138" stroke-width="4.5" />
-                      <line x1="75" y1="118" x2="21" y2="138" stroke-width="4.5" />
-                      <path d="M 18,152 L 50,138 L 82,152" stroke-width="5" />
-                    </g>
-                  </svg>
+              </div>
+              <div class="card-body-row">
+                <div class="stat-row-item">
+                  <div class="stat-value" id="stat-load-today">0.00 <span class="unit">kWh</span></div>
+                  <div class="stat-label">Tiêu thụ hôm nay</div>
+                </div>
+                <div class="stat-row-item">
+                  <div class="stat-value highlight-orange" id="stat-load-total">0.00 <span class="unit">kWh</span></div>
+                  <div class="stat-label">Tổng tiêu thụ</div>
                 </div>
               </div>
             </div>
@@ -1056,7 +1009,7 @@ class PowerFlowCardInverter extends HTMLElement {
               <span class="status-dot"></span> <span id="sys-status-text">${t.grid_ongrid}</span>
             </div>
 
-            <svg class="diagram-svg" viewBox="0 0 420 245">
+            <svg class="diagram-svg" viewBox="0 -95 420 450">
               <defs>
                 <path id="chv-block-r" d="M 0,0 L 8.5,0 L 12,5 L 8.5,10 L 0,10 L 3.5,5 Z"/>
                 <path id="chv-block-l" d="M 12,0 L 3.5,0 L 0,5 L 3.5,10 L 12,10 L 8.5,5 Z"/>
@@ -1065,125 +1018,151 @@ class PowerFlowCardInverter extends HTMLElement {
               </defs>
 
               <g id="flow-pv">
-                <use href="#chv-block-d" x="168" y="28" class="chv-block" style="animation-delay: 0.00s;" />
-                <use href="#chv-block-d" x="168" y="41" class="chv-block" style="animation-delay: 0.35s;" />
-                <use href="#chv-block-d" x="168" y="54" class="chv-block" style="animation-delay: 0.70s;" />
+                <use href="#chv-block-d" x="168" y="-4"  class="chv-block" style="animation-delay: 0.00s;" />
+                <use href="#chv-block-d" x="168" y="12"  class="chv-block" style="animation-delay: 0.12s;" />
+                <use href="#chv-block-d" x="168" y="28"  class="chv-block" style="animation-delay: 0.24s;" />
+                <use href="#chv-block-d" x="168" y="44"  class="chv-block" style="animation-delay: 0.36s;" />
               </g>
 
               <g id="flow-ac-pv">
-                <use href="#chv-block-d" x="305" y="42" class="chv-block" style="animation-delay: 0.00s;" />
-                <use href="#chv-block-d" x="305" y="56" class="chv-block" style="animation-delay: 0.22s;" />
-                <use href="#chv-block-d" x="305" y="70" class="chv-block" style="animation-delay: 0.44s;" />
-                <use href="#chv-block-d" x="305" y="84" class="chv-block" style="animation-delay: 0.66s;" />
+                <use href="#chv-block-d" x="291" y="4"   class="chv-block" style="animation-delay: 0.00s;" />
+                <use href="#chv-block-d" x="291" y="20"  class="chv-block" style="animation-delay: 0.12s;" />
+                <use href="#chv-block-d" x="291" y="36"  class="chv-block" style="animation-delay: 0.24s;" />
+                <use href="#chv-block-d" x="291" y="52"  class="chv-block" style="animation-delay: 0.36s;" />
+                <use href="#chv-block-d" x="291" y="68"  class="chv-block" style="animation-delay: 0.48s;" />
+                <use href="#chv-block-d" x="291" y="84"  class="chv-block" style="animation-delay: 0.60s;" />
               </g>
 
               <g id="flow-eps">
-                <use href="#chv-block-d" x="168" y="136" class="chv-block" style="animation-delay: 0.00s;" />
-                <use href="#chv-block-d" x="168" y="148" class="chv-block" style="animation-delay: 0.35s;" />
-                <use href="#chv-block-d" x="168" y="160" class="chv-block" style="animation-delay: 0.70s;" />
+                <use href="#chv-block-d" x="168" y="154" class="chv-block" style="animation-delay: 0.00s;" />
+                <use href="#chv-block-d" x="168" y="170" class="chv-block" style="animation-delay: 0.12s;" />
+                <use href="#chv-block-d" x="168" y="186" class="chv-block" style="animation-delay: 0.24s;" />
+                <use href="#chv-block-d" x="168" y="202" class="chv-block" style="animation-delay: 0.36s;" />
               </g>
 
               <g id="flow-bus-to-load">
-                <use href="#chv-block-d" x="305" y="109" class="chv-block" style="animation-delay: 0.00s;" />
-                <use href="#chv-block-d" x="305" y="122" class="chv-block" style="animation-delay: 0.20s;" />
-                <use href="#chv-block-d" x="305" y="135" class="chv-block" style="animation-delay: 0.40s;" />
-                <use href="#chv-block-d" x="305" y="148" class="chv-block" style="animation-delay: 0.60s;" />
-                <use href="#chv-block-d" x="305" y="161" class="chv-block" style="animation-delay: 0.80s;" />
+                <use href="#chv-block-d" x="291" y="112" class="chv-block" style="animation-delay: 0.00s;" />
+                <use href="#chv-block-d" x="291" y="127" class="chv-block" style="animation-delay: 0.12s;" />
+                <use href="#chv-block-d" x="291" y="142" class="chv-block" style="animation-delay: 0.24s;" />
+                <use href="#chv-block-d" x="291" y="157" class="chv-block" style="animation-delay: 0.48s;" />
+                <use href="#chv-block-d" x="291" y="172" class="chv-block" style="animation-delay: 0.48s;" />
+                <use href="#chv-block-d" x="291" y="187" class="chv-block" style="animation-delay: 0.60s;" />
+                <use href="#chv-block-d" x="291" y="202" class="chv-block" style="animation-delay: 0.72s;" />
               </g>
 
               <g id="flow-bat-discharge">
-                <use href="#chv-block-r" x="84" y="98" class="chv-block" style="animation-delay: 0.00s;" />
-                <use href="#chv-block-r" x="98" y="98" class="chv-block" style="animation-delay: 0.25s;" />
+                <use href="#chv-block-r" x="42" y="98" class="chv-block" style="animation-delay: 0.00s;" />
+                <use href="#chv-block-r" x="56" y="98" class="chv-block" style="animation-delay: 0.12s;" />
+                <use href="#chv-block-r" x="70" y="98" class="chv-block" style="animation-delay: 0.24s;" />
               </g>
 
               <g id="flow-bat-charge">
-                <use href="#chv-block-l" x="98" y="98" class="chv-block" style="animation-delay: 0.00s;" />
-                <use href="#chv-block-l" x="84" y="98" class="chv-block" style="animation-delay: 0.25s;" />
+                <use href="#chv-block-l" x="70" y="98" class="chv-block" style="animation-delay: 0.00s;" />
+                <use href="#chv-block-l" x="56" y="98" class="chv-block" style="animation-delay: 0.12s;" />
+                <use href="#chv-block-l" x="42" y="98" class="chv-block" style="animation-delay: 0.24s;" />
               </g>
 
               <g id="flow-bat2-discharge">
-                <use href="#chv-block-r" x="84" y="174" class="chv-block" style="animation-delay: 0.00s;" />
-                <use href="#chv-block-r" x="98" y="174" class="chv-block" style="animation-delay: 0.15s;" />
-                <use href="#chv-block-u" x="108" y="159" class="chv-block" style="animation-delay: 0.30s;" />
-                <use href="#chv-block-u" x="108" y="143" class="chv-block" style="animation-delay: 0.45s;" />
-                <use href="#chv-block-u" x="108" y="127" class="chv-block" style="animation-delay: 0.60s;" />
-                <use href="#chv-block-u" x="108" y="111" class="chv-block" style="animation-delay: 0.75s;" />
+                <use href="#chv-block-r" x="42" y="222" class="chv-block" style="animation-delay: 0.00s;" />
+                <use href="#chv-block-r" x="56" y="222" class="chv-block" style="animation-delay: 0.12s;" />
+                <use href="#chv-block-r" x="70" y="222" class="chv-block" style="animation-delay: 0.24s;" />
+                <use href="#chv-block-u" x="80" y="207" class="chv-block" style="animation-delay: 0.36s;" />
+                <use href="#chv-block-u" x="80" y="191" class="chv-block" style="animation-delay: 0.48s;" />
+                <use href="#chv-block-u" x="80" y="175" class="chv-block" style="animation-delay: 0.60s;" />
+                <use href="#chv-block-u" x="80" y="159" class="chv-block" style="animation-delay: 0.72s;" />
+                <use href="#chv-block-u" x="80" y="143" class="chv-block" style="animation-delay: 0.84s;" />
+                <use href="#chv-block-u" x="80" y="127" class="chv-block" style="animation-delay: 0.96s;" />
+                <use href="#chv-block-u" x="80" y="111" class="chv-block" style="animation-delay: 1.08s;" />
               </g>
 
               <g id="flow-bat2-charge">
-                <use href="#chv-block-d" x="108" y="111" class="chv-block" style="animation-delay: 0.00s;" />
-                <use href="#chv-block-d" x="108" y="127" class="chv-block" style="animation-delay: 0.15s;" />
-                <use href="#chv-block-d" x="108" y="143" class="chv-block" style="animation-delay: 0.30s;" />
-                <use href="#chv-block-d" x="108" y="159" class="chv-block" style="animation-delay: 0.45s;" />
-                <use href="#chv-block-l" x="98" y="174" class="chv-block" style="animation-delay: 0.60s;" />
-                <use href="#chv-block-l" x="84" y="174" class="chv-block" style="animation-delay: 0.75s;" />
+                <use href="#chv-block-d" x="80" y="111" class="chv-block" style="animation-delay: 0.00s;" />
+                <use href="#chv-block-d" x="80" y="127" class="chv-block" style="animation-delay: 0.12s;" />
+                <use href="#chv-block-d" x="80" y="143" class="chv-block" style="animation-delay: 0.24s;" />
+                <use href="#chv-block-d" x="80" y="159" class="chv-block" style="animation-delay: 0.36s;" />
+                <use href="#chv-block-d" x="80" y="175" class="chv-block" style="animation-delay: 0.48s;" />
+                <use href="#chv-block-d" x="80" y="191" class="chv-block" style="animation-delay: 0.60s;" />
+                <use href="#chv-block-d" x="80" y="207" class="chv-block" style="animation-delay: 0.72s;" />
+                <use href="#chv-block-l" x="70" y="222" class="chv-block" style="animation-delay: 0.84s;" />
+                <use href="#chv-block-l" x="56" y="222" class="chv-block" style="animation-delay: 0.96s;" />
+                <use href="#chv-block-l" x="42" y="222" class="chv-block" style="animation-delay: 1.08s;" />
               </g>
 
               <g id="flow-bat-trunk-discharge">
-                <use href="#chv-block-r" x="114" y="98" class="chv-block" style="animation-delay: 0.00s;" />
-                <use href="#chv-block-r" x="128" y="98" class="chv-block" style="animation-delay: 0.25s;" />
+                <use href="#chv-block-r" x="86" y="98" class="chv-block" style="animation-delay: 0.00s;" />
+                <use href="#chv-block-r" x="100" y="98" class="chv-block" style="animation-delay: 0.12s;" />
+                <use href="#chv-block-r" x="114" y="98" class="chv-block" style="animation-delay: 0.24s;" />
               </g>
 
               <g id="flow-bat-trunk-charge">
-                <use href="#chv-block-l" x="128" y="98" class="chv-block" style="animation-delay: 0.00s;" />
-                <use href="#chv-block-l" x="114" y="98" class="chv-block" style="animation-delay: 0.25s;" />
+                <use href="#chv-block-l" x="114" y="98" class="chv-block" style="animation-delay: 0.00s;" />
+                <use href="#chv-block-l" x="100" y="98" class="chv-block" style="animation-delay: 0.12s;" />
+                <use href="#chv-block-l" x="86" y="98" class="chv-block" style="animation-delay: 0.24s;" />
               </g>
 
               <g id="flow-inv-to-bus">
-                <use href="#chv-block-r" x="206" y="98" class="chv-block" style="animation-delay: 0.00s;" />
-                <use href="#chv-block-r" x="220" y="98" class="chv-block" style="animation-delay: 0.20s;" />
-                <use href="#chv-block-r" x="234" y="98" class="chv-block" style="animation-delay: 0.40s;" />
-                <use href="#chv-block-r" x="248" y="98" class="chv-block" style="animation-delay: 0.60s;" />
-                <use href="#chv-block-r" x="262" y="98" class="chv-block" style="animation-delay: 0.80s;" />
-                <use href="#chv-block-r" x="276" y="98" class="chv-block" style="animation-delay: 1.00s;" />
-                <use href="#chv-block-r" x="290" y="98" class="chv-block" style="animation-delay: 1.20s;" />
+                <use href="#chv-block-r" x="220" y="98" class="chv-block" style="animation-delay: 0.00s;" />
+                <use href="#chv-block-r" x="234" y="98" class="chv-block" style="animation-delay: 0.12s;" />
+                <use href="#chv-block-r" x="248" y="98" class="chv-block" style="animation-delay: 0.24s;" />
+                <use href="#chv-block-r" x="262" y="98" class="chv-block" style="animation-delay: 0.36s;" />
+                <use href="#chv-block-r" x="276" y="98" class="chv-block" style="animation-delay: 0.48s;" />
               </g>
 
               <g id="flow-bus-to-inv">
-                <use href="#chv-block-l" x="290" y="98" class="chv-block" style="animation-delay: 0.00s;" />
-                <use href="#chv-block-l" x="276" y="98" class="chv-block" style="animation-delay: 0.20s;" />
-                <use href="#chv-block-l" x="262" y="98" class="chv-block" style="animation-delay: 0.40s;" />
-                <use href="#chv-block-l" x="248" y="98" class="chv-block" style="animation-delay: 0.60s;" />
-                <use href="#chv-block-l" x="234" y="98" class="chv-block" style="animation-delay: 0.80s;" />
-                <use href="#chv-block-l" x="218" y="98" class="chv-block" style="animation-delay: 1.00s;" />
-                <use href="#chv-block-l" x="206" y="98" class="chv-block" style="animation-delay: 1.20s;" />
+                <use href="#chv-block-l" x="276" y="98" class="chv-block" style="animation-delay: 0.00s;" />
+                <use href="#chv-block-l" x="262" y="98" class="chv-block" style="animation-delay: 0.12s;" />
+                <use href="#chv-block-l" x="248" y="98" class="chv-block" style="animation-delay: 0.24s;" />
+                <use href="#chv-block-l" x="234" y="98" class="chv-block" style="animation-delay: 0.36s;" />
+                <use href="#chv-block-l" x="220" y="98" class="chv-block" style="animation-delay: 0.48s;" />
               </g>
 
               <g id="flow-grid-import">
-                <use href="#chv-block-l" x="360" y="98" class="chv-block" style="animation-delay: 0.00s;" />
-                <use href="#chv-block-l" x="346" y="98" class="chv-block" style="animation-delay: 0.25s;" />
-                <use href="#chv-block-l" x="332" y="98" class="chv-block" style="animation-delay: 0.50s;" />
-                <use href="#chv-block-l" x="318" y="98" class="chv-block" style="animation-delay: 0.75s;" />
+                <use href="#chv-block-l" x="346" y="98" class="chv-block" style="animation-delay: 0.00s;" />
+                <use href="#chv-block-l" x="332" y="98" class="chv-block" style="animation-delay: 0.12s;" />
+                <use href="#chv-block-l" x="318" y="98" class="chv-block" style="animation-delay: 0.24s;" />
+                <use href="#chv-block-l" x="304" y="98" class="chv-block" style="animation-delay: 0.36s;" />
               </g>
 
               <g id="flow-grid-export">
-                <use href="#chv-block-r" x="318" y="98" class="chv-block" style="animation-delay: 0.00s;" />
-                <use href="#chv-block-r" x="332" y="98" class="chv-block" style="animation-delay: 0.25s;" />
-                <use href="#chv-block-r" x="346" y="98" class="chv-block" style="animation-delay: 0.50s;" />
-                <use href="#chv-block-r" x="360" y="98" class="chv-block" style="animation-delay: 0.75s;" />
+                <use href="#chv-block-r" x="304" y="98" class="chv-block" style="animation-delay: 0.00s;" />
+                <use href="#chv-block-r" x="318" y="98" class="chv-block" style="animation-delay: 0.12s;" />
+                <use href="#chv-block-r" x="332" y="98" class="chv-block" style="animation-delay: 0.24s;" />
+                <use href="#chv-block-r" x="346" y="98" class="chv-block" style="animation-delay: 0.48s;" />
               </g>
 
-              <circle id="ac-bus-node" cx="310" cy="103" r="5" fill="#16a34a" stroke="#ffffff" stroke-width="1.5"/>
+              <circle id="ac-bus-node" cx="296" cy="103" r="5" fill="#16a34a" stroke="#ffffff" stroke-width="1.5"/>
 
-              <g id="grp-pv" transform="translate(34, -6)">
+              <!-- Khối PV DC -->
+              <g id="grp-pv" transform="translate(4, -12)">
                 <g id="grp-pv1">
-                  <text id="line-pv1-v" x="0" y="0" text-anchor="start"><tspan id="txt-pv1-v" class="svg-txt-bold">0.0</tspan><tspan class="unit-lbl" dx="3"> V</tspan></text>
-                  <text id="line-pv1-p" x="58" y="0" text-anchor="start"><tspan id="txt-pv1-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+                  <text id="lbl-pv1" x="0" y="0" class="svg-txt-sub" text-anchor="start">PV1</text>
+                  <text id="line-pv1-v" x="26" y="0" text-anchor="start"><tspan id="txt-pv1-v" class="svg-txt-bold">0.0</tspan><tspan class="unit-lbl" dx="3"> V</tspan></text>
+                  <text id="line-pv1-p" x="88" y="0" text-anchor="start"><tspan id="txt-pv1-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
                 </g>
                 <g id="grp-pv2">
-                  <text id="line-pv2-v" x="0" y="0" text-anchor="start"><tspan id="txt-pv2-v" class="svg-txt-bold">0.0</tspan><tspan class="unit-lbl" dx="3"> V</tspan></text>
-                  <text id="line-pv2-p" x="58" y="0" text-anchor="start"><tspan id="txt-pv2-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+                  <text id="lbl-pv2" x="0" y="0" class="svg-txt-sub" text-anchor="start">PV2</text>
+                  <text id="line-pv2-v" x="26" y="0" text-anchor="start"><tspan id="txt-pv2-v" class="svg-txt-bold">0.0</tspan><tspan class="unit-lbl" dx="3"> V</tspan></text>
+                  <text id="line-pv2-p" x="88" y="0" text-anchor="start"><tspan id="txt-pv2-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
                 </g>
                 <g id="grp-pv3">
-                  <text id="line-pv3-v" x="0" y="0" text-anchor="start"><tspan id="txt-pv3-v" class="svg-txt-bold">0.0</tspan><tspan class="unit-lbl" dx="3"> V</tspan></text>
-                  <text id="line-pv3-p" x="58" y="0" text-anchor="start"><tspan id="txt-pv3-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+                  <text id="lbl-pv3" x="0" y="0" class="svg-txt-sub" text-anchor="start">PV3</text>
+                  <text id="line-pv3-v" x="26" y="0" text-anchor="start"><tspan id="txt-pv3-v" class="svg-txt-bold">0.0</tspan><tspan class="unit-lbl" dx="3"> V</tspan></text>
+                  <text id="line-pv3-p" x="88" y="0" text-anchor="start"><tspan id="txt-pv3-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
                 </g>
                 <g id="grp-pv4">
-                  <text id="line-pv4-v" x="0" y="0" text-anchor="start"><tspan id="txt-pv4-v" class="svg-txt-bold">0.0</tspan><tspan class="unit-lbl" dx="3"> V</tspan></text>
-                  <text id="line-pv4-p" x="58" y="0" text-anchor="start"><tspan id="txt-pv4-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+                  <text id="lbl-pv4" x="0" y="0" class="svg-txt-sub" text-anchor="start">PV4</text>
+                  <text id="line-pv4-v" x="26" y="0" text-anchor="start"><tspan id="txt-pv4-v" class="svg-txt-bold">0.0</tspan><tspan class="unit-lbl" dx="3"> V</tspan></text>
+                  <text id="line-pv4-p" x="88" y="0" text-anchor="start"><tspan id="txt-pv4-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
                 </g>
 
-                <g transform="translate(108, -16) scale(0.55)">
+                <g id="grp-pv-total">
+                  <text id="lbl-pv-total-sub" x="0" y="0" class="svg-txt-sub" text-anchor="start">${t.pv_power_lbl}</text>
+                  <text id="line-pv-total-p" x="88" y="0" text-anchor="start">
+                    <tspan id="txt-pv-total-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan>
+                  </text>
+                </g>
+
+                <g id="grp-pv-icon" transform="translate(138, -56) scale(0.57)">
                   <g stroke="#52b788" stroke-width="4.5" stroke-linecap="round" fill="none">
                     <circle cx="34" cy="34" r="14" />
                     <line x1="34" y1="12" x2="34" y2="5" />
@@ -1203,62 +1182,61 @@ class PowerFlowCardInverter extends HTMLElement {
                     <line x1="72.5" y1="42" x2="76.5" y2="86" />
                   </g>
                 </g>
-
-                <g id="grp-pv-total" transform="translate(168, 0)">
-                  <text id="line-pv-total-p" x="0" y="0" text-anchor="start">
-                    <tspan id="txt-pv-total-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan>
-                  </text>
-                  <text id="lbl-pv-total-sub" x="0" y="0" class="svg-txt-sub" text-anchor="start">${t.pv_power_lbl}</text>
-                </g>
               </g>
 
+              <!-- Khối PV AC -->
               <g id="grp-pv-ac">
-                <text id="line-ac-pv-1p" x="347" y="0" text-anchor="start"><tspan id="txt-ac-pv-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
-                <text id="line-ac-pv-l1" x="347" y="0" text-anchor="start" style="display:none;"><tspan id="txt-ac-pv-l1" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
-                <text id="line-ac-pv-l2" x="347" y="0" text-anchor="start" style="display:none;"><tspan id="txt-ac-pv-l2" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
-                <text id="line-ac-pv-l3" x="347" y="0" text-anchor="start" style="display:none;"><tspan id="txt-ac-pv-l3" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
-                <text id="line-ac-pv-v" x="347" y="0" text-anchor="start"><tspan id="txt-ac-pv-v" class="highlight-val">0.0</tspan><tspan class="unit-lbl" dx="3"> V</tspan></text>
-                <text id="line-ac-pv-f" x="347" y="0" text-anchor="start"><tspan id="txt-ac-pv-f" class="highlight-freq">0.00</tspan><tspan class="unit-lbl" dx="3"> Hz</tspan></text>
+                <text id="line-ac-pv-1p" x="320" y="0" text-anchor="start"><tspan id="txt-ac-pv-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+                <text id="line-ac-pv-l1" x="320" y="0" text-anchor="start" style="display:none;"><tspan id="txt-ac-pv-l1" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+                <text id="line-ac-pv-l2" x="320" y="0" text-anchor="start" style="display:none;"><tspan id="txt-ac-pv-l2" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+                <text id="line-ac-pv-l3" x="320" y="0" text-anchor="start" style="display:none;"><tspan id="txt-ac-pv-l3" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+                <text id="line-ac-pv-v" x="320" y="0" text-anchor="start"><tspan id="txt-ac-pv-v" class="highlight-val">0.0</tspan><tspan class="unit-lbl" dx="3"> V</tspan></text>
+                <text id="line-ac-pv-f" x="320" y="0" text-anchor="start"><tspan id="txt-ac-pv-f" class="highlight-freq">0.00</tspan><tspan class="unit-lbl" dx="3"> Hz</tspan></text>
 
-                <g transform="translate(285, -16)">
-                  <rect class="svg-bg-card" x="0" y="0" width="54" height="51" rx="6" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.8" stroke-dasharray="3.5,3"/>
-                  <g fill="#10b981">
-                    <polygon points="18,5 42,5 36,11 12,11" />
-                    <polygon points="18,12 42,12 36,18 12,18" />
-                  </g>
-                  <g>
-                    <rect class="svg-bg-card" x="9" y="24" width="36" height="22" rx="4" fill="#ffffff" stroke="#10b981" stroke-width="2"/>
-                    <line x1="11" y1="43" x2="43" y2="27" stroke="#cbd5e1" stroke-width="1.2"/>
-                    <line class="svg-stroke-dark" x1="13" y1="29" x2="21" y2="29" stroke="#0f172a" stroke-width="1.8" stroke-linecap="round"/>
-                    <line class="svg-stroke-dark" x1="13" y1="33" x2="21" y2="33" stroke="#0f172a" stroke-width="1.8" stroke-linecap="round"/>
-                    <path class="svg-stroke-dark" d="M 31 35 Q 33.5 33, 36 35 T 41 35" fill="none" stroke="#0f172a" stroke-width="1.5" stroke-linecap="round"/>
-                    <path class="svg-stroke-dark" d="M 31 39 Q 33.5 37, 36 39 T 41 39" fill="none" stroke="#0f172a" stroke-width="1.5" stroke-linecap="round"/>
+                <g transform="translate(274, -58) scale(0.925)">
+                  <rect class="svg-bg-card" x="0" y="0" width="44" height="49" rx="6" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.8" stroke-dasharray="3.5,3"/>
+                  <g transform="translate(-5, -1)">
+                    <g fill="#10b981">
+                      <polygon points="18,5 42,5 36,11 12,11" />
+                      <polygon points="18,12 42,12 36,18 12,18" />
+                    </g>
+                    <g>
+                      <rect class="svg-bg-card" x="9" y="24" width="36" height="22" rx="4" fill="#ffffff" stroke="#10b981" stroke-width="2"/>
+                      <line x1="11" y1="43" x2="43" y2="27" stroke="#cbd5e1" stroke-width="1.2"/>
+                      <line class="svg-stroke-dark" x1="13" y1="29" x2="21" y2="29" stroke="#0f172a" stroke-width="1.8" stroke-linecap="round"/>
+                      <line class="svg-stroke-dark" x1="13" y1="33" x2="21" y2="33" stroke="#0f172a" stroke-width="1.8" stroke-linecap="round"/>
+                      <path class="svg-stroke-dark" d="M 31 35 Q 33.5 33, 36 35 T 41 35" fill="none" stroke="#0f172a" stroke-width="1.5" stroke-linecap="round"/>
+                      <path class="svg-stroke-dark" d="M 31 39 Q 33.5 37, 36 39 T 41 39" fill="none" stroke="#0f172a" stroke-width="1.5" stroke-linecap="round"/>
+                    </g>
                   </g>
                 </g>
               </g>
 
-              <g id="grp-bat1" transform="translate(52, 72)">
+              <!-- Khối Pin Lưu Trữ 1 -->
+              <g id="grp-bat1" transform="translate(5, 72)">
                 <rect x="11" y="1" width="10" height="4" rx="1.5" fill="#16a34a"/>
                 <rect class="svg-bg-card" x="2" y="5" width="28" height="48" rx="4" fill="#ffffff" stroke="#16a34a" stroke-width="2"/>
                 <rect id="bat-fill" x="4" y="7" width="24" height="43" rx="1.5" fill="#16a34a"/>
 
-                <text id="line-bat-p" x="-8" y="0" text-anchor="end"><tspan id="txt-bat-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
-                <text id="lbl-bat-mode" x="-8" y="0" class="svg-txt-sub" text-anchor="end">${t.bat_standby}</text>
-                <text id="line-bat-v" x="-8" y="0" text-anchor="end"><tspan id="txt-bat-v" class="highlight-val">0.0</tspan><tspan class="unit-lbl" dx="3"> V</tspan></text>
-                <text id="line-bat-soc" x="-8" y="0" text-anchor="end"><tspan id="txt-soc-val" font-size="13px" font-weight="bold" fill="#16a34a">0</tspan><tspan class="unit-lbl" dx="1" fill="#16a34a">%</tspan></text>
+                <text id="line-bat-p" x="16" y="0" text-anchor="middle"><tspan id="txt-bat-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+                <text id="lbl-bat-mode" x="16" y="0" class="svg-txt-sub" text-anchor="middle">${t.bat_standby}</text>
+                <text id="line-bat-v" x="16" y="0" text-anchor="middle"><tspan id="txt-bat-v" class="highlight-val">0.0</tspan><tspan class="unit-lbl" dx="3"> V</tspan></text>
+                <text id="line-bat-soc" x="16" y="0" text-anchor="middle"><tspan id="txt-soc-val" font-size="13px" font-weight="bold" fill="#16a34a">0</tspan><tspan class="unit-lbl" dx="1" fill="#16a34a">%</tspan></text>
               </g>
 
-              <g id="grp-bat2" transform="translate(52, 148)" style="display: none;">
+              <!-- Khối Pin Lưu Trữ 2 -->
+              <g id="grp-bat2" transform="translate(5, 196)" style="display: none;">
                 <rect x="11" y="1" width="10" height="4" rx="1.5" fill="#16a34a"/>
                 <rect class="svg-bg-card" x="2" y="5" width="28" height="48" rx="4" fill="#ffffff" stroke="#16a34a" stroke-width="2"/>
                 <rect id="bat2-fill" x="4" y="7" width="24" height="43" rx="1.5" fill="#16a34a"/>
 
-                <text id="line-bat2-p" x="-8" y="0" text-anchor="end"><tspan id="txt-bat2-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
-                <text id="lbl-bat2-mode" x="-8" y="0" class="svg-txt-sub" text-anchor="end">${t.bat_standby}</text>
-                <text id="line-bat2-v" x="-8" y="0" text-anchor="end"><tspan id="txt-bat2-v" class="highlight-val">0.0</tspan><tspan class="unit-lbl" dx="3"> V</tspan></text>
-                <text id="line-bat2-soc" x="-8" y="0" text-anchor="end"><tspan id="txt-soc2-val" font-size="13px" font-weight="bold" fill="#16a34a">0</tspan><tspan class="unit-lbl" dx="1" fill="#16a34a">%</tspan></text>
+                <text id="line-bat2-p" x="16" y="0" text-anchor="middle"><tspan id="txt-bat2-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+                <text id="lbl-bat2-mode" x="16" y="0" class="svg-txt-sub" text-anchor="middle">${t.bat_standby}</text>
+                <text id="line-bat2-v" x="16" y="0" text-anchor="middle"><tspan id="txt-bat2-v" class="highlight-val">0.0</tspan><tspan class="unit-lbl" dx="3"> V</tspan></text>
+                <text id="line-bat2-soc" x="16" y="0" text-anchor="middle"><tspan id="txt-soc2-val" font-size="13px" font-weight="bold" fill="#16a34a">0</tspan><tspan class="unit-lbl" dx="1" fill="#16a34a">%</tspan></text>
               </g>
 
+              <!-- Khối Inverter -->
               <g transform="translate(144, 74)">
                 <g id="inv-default-graphics">
                   <rect class="svg-inv-bg" x="0" y="0" width="58" height="58" rx="6" fill="#ffffff" stroke="#334155" stroke-width="2"/>
@@ -1270,40 +1248,43 @@ class PowerFlowCardInverter extends HTMLElement {
                 <image id="inv-custom-image" x="0" y="0" width="58" height="58" preserveAspectRatio="xMidYMid meet" style="display: none;" />
               </g>
 
-              <g id="grp-grid" transform="translate(374, 28)">
+              <!-- Khối Điện Lưới -->
+              <g id="grp-grid" transform="translate(374, 32.5)">
                 <text id="line-grid-1p" x="21" y="0" text-anchor="middle"><tspan id="txt-grid-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
                 <text id="line-grid-l1" x="21" y="0" text-anchor="middle" style="display:none;"><tspan id="txt-grid-l1" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
                 <text id="line-grid-l2" x="21" y="0" text-anchor="middle" style="display:none;"><tspan id="txt-grid-l2" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
                 <text id="line-grid-l3" x="21" y="0" text-anchor="middle" style="display:none;"><tspan id="txt-grid-l3" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
 
-                <svg x="0" y="38" width="42" height="54" viewBox="0 0 100 160">
-                  <g fill="none" stroke="#50b984" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M 50,6 L 18,152 M 50,6 L 82,152" stroke-width="7" />
-                    <path d="M 22,42 L 78,42" stroke-width="7" />
-                    <path d="M 22,46 L 78,46" stroke-width="4.5" />
-                    <circle cx="20" cy="50" r="4" fill="#50b984" />
-                    <circle cx="80" cy="50" r="4" fill="#50b984" />
-                    <path d="M 10,72 L 90,72" stroke-width="8" />
-                    <path d="M 10,77 L 90,77" stroke-width="4.5" />
-                    <circle cx="8" cy="82" r="4.5" fill="#50b984" />
-                    <circle cx="92" cy="82" r="4.5" fill="#50b984" />
-                    <line x1="43" y1="24" x2="57" y2="24" stroke-width="4.5" />
-                    <line x1="38" y1="42" x2="62" y2="42" stroke-width="4.5" />
-                    <line x1="33" y1="72" x2="67" y2="72" stroke-width="4.5" />
-                    <line x1="29" y1="95" x2="71" y2="95" stroke-width="4.5" />
-                    <line x1="25" y1="118" x2="75" y2="118" stroke-width="5" />
-                    <line x1="19" y1="138" x2="81" y2="138" stroke-width="6" />
-                    <line x1="43" y1="24" x2="57" y2="42" stroke-width="3.5" />
-                    <line x1="57" y1="24" x2="43" y2="42" stroke-width="3.5" />
-                    <line x1="38" y1="42" x2="67" y2="72" stroke-width="3.5" />
-                    <line x1="62" y1="42" x2="33" y2="72" stroke-width="3.5" />
-                    <line x1="33" y1="72" x2="71" y2="95" stroke-width="3.5" />
-                    <line x1="67" y1="72" x2="29" y2="95" stroke-width="3.5" />
-                    <line x1="29" y1="95" x2="75" y2="118" stroke-width="3.5" />
-                    <line x1="71" y1="95" x2="25" y2="118" stroke-width="3.5" />
-                    <line x1="25" y1="118" x2="79" y2="138" stroke-width="4.5" />
-                    <line x1="75" y1="118" x2="21" y2="138" stroke-width="4.5" />
-                    <path d="M 18,152 L 50,138 L 82,152" stroke-width="5" />
+                <svg x="-9" y="38" width="65" height="65" viewBox="0 0 500 600">
+                  <g fill="#61C68C" stroke="#61C68C" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M 250 40 L 140 550 M 250 40 L 360 550" fill="none" stroke-width="22" />
+                    <path d="M 242 80 L 258 80 M 250 40 L 258 80 M 250 40 L 242 80" fill="none" stroke-width="3" />
+                    <path d="M 235 120 L 265 120 M 242 80 L 265 120 M 258 80 L 235 120" fill="none" stroke-width="4.5" />
+                    <path d="M 228 160 L 272 160 M 235 120 L 272 160 M 265 120 L 228 160" fill="none" stroke-width="6" />
+                    <path d="M 220 205 L 280 205 M 228 160 L 280 205 M 272 160 L 220 205" fill="none" stroke-width="7.5" />
+                    <path d="M 212 250 L 288 250 M 220 205 L 288 250 M 280 205 L 212 250" fill="none" stroke-width="9" />
+                    <path d="M 200 305 L 300 305 M 212 250 L 300 305 M 288 250 L 200 305" fill="none" stroke-width="10.5" />
+                    <path d="M 186 365 L 314 365 M 200 305 L 314 365 M 300 305 L 186 365" fill="none" stroke-width="12" />
+                    <path d="M 170 430 L 330 430 M 186 365 L 330 430 M 314 365 L 170 430" fill="none" stroke-width="13.5" />
+                    <path d="M 152 490 L 348 490 M 170 430 L 348 490 M 330 430 L 152 490 M 152 490 L 360 550 M 348 490 L 140 550" fill="none" stroke-width="15" />
+                    <path d="M 228 160 L 145 190 Q 138 193 145 200 L 220 205 Z" stroke-width="3" />
+                    <path d="M 272 160 L 355 190 Q 362 193 355 200 L 280 205 Z" stroke-width="3" />
+                    <path d="M 152 202 A 12 12 0 0 0 176 202" fill="none" stroke-width="4.5" />
+                    <path d="M 152 210 A 12 12 0 0 0 176 210" fill="none" stroke-width="4.5" />
+                    <path d="M 152 218 A 12 12 0 0 0 176 218" fill="none" stroke-width="4.5" />
+                    <path d="M 324 202 A 12 12 0 0 0 348 202" fill="none" stroke-width="4.5" />
+                    <path d="M 324 210 A 12 12 0 0 0 348 210" fill="none" stroke-width="4.5" />
+                    <path d="M 324 218 A 12 12 0 0 0 348 218" fill="none" stroke-width="4.5" />
+                    <path d="M 212 250 L 68 280 Q 60 283 68 295 L 200 305 Z M 140 265 L 140 295" stroke-width="3" />
+                    <path d="M 288 250 L 432 280 Q 440 283 432 295 L 300 305 Z M 360 265 L 360 295" stroke-width="3" />
+                    <path d="M 95 292 A 12 12 0 0 0 119 292" fill="none" stroke-width="4.5" />
+                    <path d="M 95 300 A 12 12 0 0 0 119 300" fill="none" stroke-width="4.5" />
+                    <path d="M 95 308 A 12 12 0 0 0 119 308" fill="none" stroke-width="4.5" />
+                    <path d="M 100 310 Q 130 350 160 310" fill="none" stroke-width="4.5" />
+                    <path d="M 381 292 A 12 12 0 0 0 405 292" fill="none" stroke-width="4.5" />
+                    <path d="M 381 300 A 12 12 0 0 0 405 300" fill="none" stroke-width="4.5" />
+                    <path d="M 381 308 A 12 12 0 0 0 405 308" fill="none" stroke-width="4.5" />
+                    <path d="M 340 310 Q 370 350 400 310" fill="none" stroke-width="4.5" />
                   </g>
                 </svg>
 
@@ -1311,8 +1292,9 @@ class PowerFlowCardInverter extends HTMLElement {
                 <text id="line-grid-f" x="21" y="0" text-anchor="middle"><tspan id="txt-grid-f" class="highlight-freq">0.00</tspan><tspan class="unit-lbl" dx="1">Hz</tspan></text>
               </g>
 
-              <g id="grp-eps" transform="translate(160, 175)">
-                <svg id="icon-eps" x="0" y="0" width="38" height="38" viewBox="0 0 60 60">
+              <!-- Khối EPS -->
+              <g id="grp-eps" transform="translate(154, 232)">
+                <svg id="icon-eps" x="0" y="0" width="56" height="56" viewBox="0 0 60 60">
                   <g stroke="#52b788" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="8" y="8" width="23" height="12" rx="3"/>
                     <text x="19.5" y="16.5" font-size="7.5" font-weight="bold" fill="#52b788" stroke="none" text-anchor="middle" font-family="sans-serif">UPS</text>
@@ -1329,42 +1311,63 @@ class PowerFlowCardInverter extends HTMLElement {
                   </g>
                 </svg>
 
-                <text id="line-eps-1p" x="44" y="0"><tspan id="txt-eps-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
-                <text id="line-eps-l1" x="44" y="0" style="display:none;"><tspan id="txt-eps-l1" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
-                <text id="line-eps-l2" x="44" y="0" style="display:none;"><tspan id="txt-eps-l2" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
-                <text id="line-eps-l3" x="44" y="0" style="display:none;"><tspan id="txt-eps-l3" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+                <text id="line-eps-1p" x="52" y="0"><tspan id="txt-eps-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+                <text id="line-eps-l1" x="52" y="0" style="display:none;"><tspan id="txt-eps-l1" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+                <text id="line-eps-l2" x="52" y="0" style="display:none;"><tspan id="txt-eps-l2" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+                <text id="line-eps-l3" x="52" y="0" style="display:none;"><tspan id="txt-eps-l3" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
 
-                <text id="line-eps-v" x="44" y="0"><tspan id="txt-eps-v" class="highlight-val">0.0</tspan><tspan class="unit-lbl" dx="1">Vac</tspan></text>
-                <text id="line-eps-f" x="44" y="0"><tspan id="txt-eps-f" class="highlight-freq">0.00</tspan><tspan class="unit-lbl" dx="3"> Hz</tspan></text>
+                <text id="line-eps-v" x="52" y="0"><tspan id="txt-eps-v" class="highlight-val">0.0</tspan><tspan class="unit-lbl" dx="1">Vac</tspan></text>
+                <text id="line-eps-f" x="52" y="0"><tspan id="txt-eps-f" class="highlight-freq">0.00</tspan><tspan class="unit-lbl" dx="3"> Hz</tspan></text>
 
-                <text x="0" y="52" id="lbl-eps-sub" class="svg-txt-sub">${t.backup_power}</text>
-                <text x="0" y="63" id="lbl-eps-standby" style="font-size: 9px; fill: #16a34a; font-weight: 800; display: none;">${t.standby_mode}</text>
+                <text x="0" y="64" id="lbl-eps-sub" class="svg-txt-sub">${t.backup_power}</text>
+                <text x="0" y="75" id="lbl-eps-standby" style="font-size: 9px; fill: #16a34a; font-weight: 800; display: none;">${t.standby_mode}</text>
               </g>
 
-              <g transform="translate(293, 175)">
-                <svg id="icon-load" x="0" y="0" width="38" height="38" viewBox="0 0 100 100">
+              <!-- Khối tiêu thụ -->
+              <g transform="translate(273, 232)">
+                <svg id="icon-load" x="0" y="0" width="54" height="54" viewBox="0 0 100 100">
                   <rect class="load-icon-color" x="27" y="14" width="10" height="20" rx="1" fill="#52b788"/>
                   <path class="load-icon-stroke" d="M 10 50 L 50 21 L 90 50" fill="none" stroke="#52b788" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
                   <path class="load-icon-color" d="M 50 29.5 L 82 52.5 L 82 85 C 82 86.5 80.5 88 79 88 L 21 88 C 19.5 88 18 86.5 18 85 L 18 52.5 Z" fill="#52b788"/>
                   <polygon points="52,45.5 42,60.5 49.5,60.5 46.5,78.5 58,59.5 50.5,59.5" fill="#ffffff"/>
                 </svg>
 
-                <text id="line-load-1p" x="44" y="0"><tspan id="txt-load-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
-                <text id="line-load-l1" x="44" y="0" style="display:none;"><tspan id="txt-load-l1" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
-                <text id="line-load-l2" x="44" y="0" style="display:none;"><tspan id="txt-load-l2" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
-                <text id="line-load-l3" x="44" y="0" style="display:none;"><tspan id="txt-load-l3" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+                <text id="line-load-1p" x="56" y="0"><tspan id="txt-load-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+                <text id="line-load-l1" x="56" y="0" style="display:none;"><tspan id="txt-load-l1" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+                <text id="line-load-l2" x="56" y="0" style="display:none;"><tspan id="txt-load-l2" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+                <text id="line-load-l3" x="56" y="0" style="display:none;"><tspan id="txt-load-l3" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
 
-                <text id="lbl-load-sub" x="44" y="0" class="svg-txt-sub">${t.consumption}</text>
+                <text id="lbl-load-sub" x="56" y="0" class="svg-txt-sub">${t.consumption}</text>
               </g>
             </svg>
           </div>
         </div>
       </ha-card>
     `;
+
+    const batBtn = this.shadowRoot.getElementById('btn-toggle-bat');
+    if (batBtn) {
+      batBtn.onclick = (e) => {
+        e.stopPropagation();
+        this._batToggle = this._batToggle === 'charge' ? 'discharge' : 'charge';
+        this.updateData();
+      };
+    }
+
+    const gridBtn = this.shadowRoot.getElementById('btn-toggle-grid');
+    if (gridBtn) {
+      gridBtn.onclick = (e) => {
+        e.stopPropagation();
+        this._gridToggle = this._gridToggle === 'sell' ? 'buy' : 'sell';
+        this.updateData();
+      };
+    }
+
+    this.updateData();
   }
 
   getCardSize() {
-    return 6;
+    return 5;
   }
 }
 
