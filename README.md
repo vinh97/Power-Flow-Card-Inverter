@@ -34,7 +34,7 @@ Thẻ Lovelace tùy chỉnh hiển thị sơ đồ luồng năng lượng và th
 
      Nhập:
 
-     URL: /local/community/power-flow-card/power-flow-card.js?ver=1.0.0.0.0
+     URL: /local/community/power-flow-card-inverter/power-flow-card-inverter.js?ver=1.0.0.0.0
 
      Resource type: JavaScript Module
 
