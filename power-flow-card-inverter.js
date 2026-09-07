@@ -104,10 +104,10 @@ class PowerFlowCardInverter extends HTMLElement {
       invert_battery2_power: false,
       inverter_image: false,
       inverter_icon: "/local/community/inverter.png",
-      inverter_x: 134,
-      inverter_y: 65,
-      inverter_width: 78,
-      inverter_height: 78,
+      inverter_x: 136,
+      inverter_y: 68,
+      inverter_width: 75,
+      inverter_height: 75,
       entities: {
         pv_power: "sensor.pv_total_power",
         pv_daily: "sensor.pv_energy_today",
@@ -632,22 +632,31 @@ class PowerFlowCardInverter extends HTMLElement {
       epsP = Math.abs(Math.round(this.getState(ent.eps_power, 0)));
     }
 
+    // --- XỬ LÝ CHẾ ĐỘ SINGLE LOAD MODE & TẢI TẮT/MỞ ---
     if (singleLoadMode) {
+      // Tự động nhận giá trị công suất lớn nhất từ 1 trong 2 sensor (tránh nhiễu sensor)
+      const activeP = Math.max(loadP, epsP);
+      const activeL1 = Math.max(loadL1, epsL1);
+      const activeL2 = Math.max(loadL2, epsL2);
+      const activeL3 = Math.max(loadL3, epsL3);
+
       if (isGridConnected) {
+        // CÓ LƯỚI: Tiêu thụ chạy, ẩn hoàn toàn công suất EPS
+        loadP = activeP;
+        loadL1 = activeL1;
+        loadL2 = activeL2;
+        loadL3 = activeL3;
+
         epsP = 0;
         epsL1 = 0;
         epsL2 = 0;
         epsL3 = 0;
       } else {
-        const activeEpsP = epsP > 0 ? epsP : loadP;
-        const activeEpsL1 = epsL1 > 0 ? epsL1 : loadL1;
-        const activeEpsL2 = epsL2 > 0 ? epsL2 : loadL2;
-        const activeEpsL3 = epsL3 > 0 ? epsL3 : loadL3;
-
-        epsP = activeEpsP;
-        epsL1 = activeEpsL1;
-        epsL2 = activeEpsL2;
-        epsL3 = activeEpsL3;
+        // MẤT LƯỚI: EPS chạy, ẩn hoàn toàn công suất tiêu thụ
+        epsP = activeP;
+        epsL1 = activeL1;
+        epsL2 = activeL2;
+        epsL3 = activeL3;
 
         loadP = 0;
         loadL1 = 0;
@@ -899,31 +908,29 @@ class PowerFlowCardInverter extends HTMLElement {
     this.setEnergyStat('stat-grid-today', this.getState(isGridSell ? ent.grid_sell_daily : ent.grid_buy_daily));
     this.setEnergyStat('stat-grid-total', this.getState(isGridSell ? ent.grid_sell_total : ent.grid_buy_total));
 
+    // Ngưỡng công suất tối thiểu (Watts) để kích hoạt chuyển động mũi tên
     const MIN_POWER = 5;
-    const GRID_TOLERANCE = 150;
 
-    const hasPvPower = pvP > MIN_POWER;
-    const hasAcPvPower = hasAcPvP && acPvP > MIN_POWER;
-    const hasLoadPower = loadP > MIN_POWER;
-    const hasEpsPower = epsP > MIN_POWER;
-
+    // 1. Trạng thái Sạc / Xả Pin
     const isBat1Charging = batP > MIN_POWER;
     const isBat1Discharging = batP < -MIN_POWER;
     const isBat2Charging = showBat2 && bat2P > MIN_POWER;
     const isBat2Discharging = showBat2 && bat2P < -MIN_POWER;
 
-    const activeBat1P = (isBat1Charging || isBat1Discharging) ? batP : 0;
-    const activeBat2P = (showBat2 && (isBat2Charging || isBat2Discharging)) ? bat2P : 0;
-    const netBatP = activeBat1P + activeBat2P;
+    const isNetCharging = isBat1Charging || isBat2Charging;
+    const isNetDischarging = isBat1Discharging || isBat2Discharging;
 
-    const isNetCharging = netBatP > MIN_POWER;
-    const isNetDischarging = netBatP < -MIN_POWER;
-    const batChargePower = isNetCharging ? netBatP : 0;
-    const batDischargePower = isNetDischarging ? Math.abs(netBatP) : 0;
+    // 2. Trạng thái Lấy / Đẩy Lưới
+    const isImporting = isGridConnected && gridP < -MIN_POWER; // Lấy lưới
+    const isExporting = isGridConnected && gridP > MIN_POWER;  // Đẩy lưới
 
-    const isExporting = isGridConnected && gridP > MIN_POWER;
-    const isImporting = isGridConnected && gridP < -MIN_POWER;
+    // 3. Trạng thái PV và Tải Tiêu Thụ
+    const hasPvPower = pvP > MIN_POWER;
+    const hasAcPvPower = hasAcPvP && acPvP > MIN_POWER;
+    const hasLoadPower = loadP > MIN_POWER;
+    const hasEpsPower = epsP > MIN_POWER;
 
+    // --- CẶP MŨI TÊN PIN ---
     this.setFlowVisible('flow-bat-charge', isBat1Charging);
     this.setFlowVisible('flow-bat-discharge', isBat1Discharging);
     this.setFlowVisible('flow-bat2-charge', showBat2 && isBat2Charging);
@@ -931,36 +938,25 @@ class PowerFlowCardInverter extends HTMLElement {
     this.setFlowVisible('flow-bat-trunk-charge', isNetCharging);
     this.setFlowVisible('flow-bat-trunk-discharge', isNetDischarging);
 
-    this.setFlowVisible('flow-pv', hasPvPower);
-
-    const showAcPvFlow = hasAcPvPower && (
-      isGridConnected 
-        ? (hasLoadPower || hasEpsPower || isNetCharging || isExporting)
-        : (hasEpsPower || isNetCharging)
-    );
-    this.setFlowVisible('flow-ac-pv', showAcPvFlow);
-
-    this.setFlowVisible('flow-bus-to-load', isGridConnected && hasLoadPower);
-    this.setFlowVisible('flow-eps', hasEpsPower);
-
+    // --- CẶP MŨI TÊN LƯỚI ---
     this.setFlowVisible('flow-grid-import', isImporting);
     this.setFlowVisible('flow-grid-export', isExporting);
 
-    const invNetAcPower = pvP + batDischargePower - batChargePower - epsP;
-    const hasAcSource = isImporting || hasAcPvPower;
+    // --- CẶP MŨI TÊN TẢI & EPS & PV ---
+    this.setFlowVisible('flow-pv', hasPvPower);
+    this.setFlowVisible('flow-ac-pv', hasAcPvPower);
+    this.setFlowVisible('flow-bus-to-load', hasLoadPower);
+    this.setFlowVisible('flow-eps', hasEpsPower);
 
-    if (isGridConnected) {
-      const isInvSupplyingAc = invNetAcPower > MIN_POWER && (hasLoadPower || isExporting);
-      const isGridOrAcPvChargingBat = isNetCharging && ((pvP + GRID_TOLERANCE) < batChargePower) && hasAcSource;
-      const isBusChargingInv = (invNetAcPower < -MIN_POWER || isGridOrAcPvChargingBat) && hasAcSource;
+    // --- CHUYỂN ĐỔI GIỮA INVERTER VÀ THANH CÁI AC (BUS) ---
+    // Inverter đẩy điện ra Bus: Khi có PV phát điện hoặc Pin đang xả ĐẾN TẢI / LƯỚI
+    const isInvSupplyingBus = (hasPvPower || isNetDischarging) && (hasLoadPower || isExporting);
 
-      this.setFlowVisible('flow-inv-to-bus', isInvSupplyingAc);
-      this.setFlowVisible('flow-bus-to-inv', isBusChargingInv);
-    } else {
-      this.setFlowVisible('flow-inv-to-bus', false);
-      const isAcPvToInvOffGrid = hasAcPvPower && (isNetCharging || hasEpsPower);
-      this.setFlowVisible('flow-bus-to-inv', isAcPvToInvOffGrid);
-    }
+    // Bus cấp điện ngược lại Inverter: Khi điện lưới (hoặc AC PV) đang lấy vào để sạc pin
+    const isBusChargingInv = (isImporting || hasAcPvPower) && isNetCharging;
+
+    this.setFlowVisible('flow-inv-to-bus', isInvSupplyingBus);
+    this.setFlowVisible('flow-bus-to-inv', isBusChargingInv);
 
     const loadIconColor = isGridConnected ? '#52b788' : (hasLoadPower ? '#e11d48' : '#94a3b8');
     const loadIcons = this.shadowRoot.querySelectorAll('#icon-load .load-icon-color');
@@ -1194,7 +1190,7 @@ class PowerFlowCardInverter extends HTMLElement {
                 <use href="#chv-block-d" x="291" y="112" class="chv-block" style="animation-delay: 0.00s;" />
                 <use href="#chv-block-d" x="291" y="127" class="chv-block" style="animation-delay: 0.12s;" />
                 <use href="#chv-block-d" x="291" y="142" class="chv-block" style="animation-delay: 0.24s;" />
-                <use href="#chv-block-d" x="291" y="157" class="chv-block" style="animation-delay: 0.48s;" />
+                <use href="#chv-block-d" x="291" y="157" class="chv-block" style="animation-delay: 0.36s;" />
                 <use href="#chv-block-d" x="291" y="172" class="chv-block" style="animation-delay: 0.48s;" />
                 <use href="#chv-block-d" x="291" y="187" class="chv-block" style="animation-delay: 0.60s;" />
                 <use href="#chv-block-d" x="291" y="202" class="chv-block" style="animation-delay: 0.72s;" />
@@ -1207,9 +1203,9 @@ class PowerFlowCardInverter extends HTMLElement {
               </g>
 
               <g id="flow-bat-charge">
-                <use href="#chv-block-l" x="70" y="98" class="chv-block" style="animation-delay: 0.00s;" />
-                <use href="#chv-block-l" x="56" y="98" class="chv-block" style="animation-delay: 0.12s;" />
-                <use href="#chv-block-l" x="42" y="98" class="chv-block" style="animation-delay: 0.00s;" />
+                <use href="#chv-block-l" x="70" y="98" class="chv-block" style="animation-delay: 0.36s;" />
+                <use href="#chv-block-l" x="56" y="98" class="chv-block" style="animation-delay: 0.48s;" />
+                <use href="#chv-block-l" x="42" y="98" class="chv-block" style="animation-delay: 0.60s;" />
               </g>
 
               <g id="flow-bat2-discharge">
@@ -1226,22 +1222,22 @@ class PowerFlowCardInverter extends HTMLElement {
               </g>
 
               <g id="flow-bat2-charge">
-                <use href="#chv-block-d" x="80" y="111" class="chv-block" style="animation-delay: 0.00s;" />
-                <use href="#chv-block-d" x="80" y="127" class="chv-block" style="animation-delay: 0.12s;" />
-                <use href="#chv-block-d" x="80" y="143" class="chv-block" style="animation-delay: 0.24s;" />
-                <use href="#chv-block-d" x="80" y="159" class="chv-block" style="animation-delay: 0.36s;" />
-                <use href="#chv-block-d" x="80" y="175" class="chv-block" style="animation-delay: 0.48s;" />
-                <use href="#chv-block-d" x="80" y="191" class="chv-block" style="animation-delay: 0.60s;" />
-                <use href="#chv-block-d" x="80" y="207" class="chv-block" style="animation-delay: 0.72s;" />
-                <use href="#chv-block-l" x="70" y="222" class="chv-block" style="animation-delay: 0.84s;" />
-                <use href="#chv-block-l" x="56" y="222" class="chv-block" style="animation-delay: 0.96s;" />
-                <use href="#chv-block-l" x="42" y="222" class="chv-block" style="animation-delay: 1.08s;" />
+                <use href="#chv-block-d" x="80" y="111" class="chv-block" style="animation-delay: 0.36s;" />
+                <use href="#chv-block-d" x="80" y="127" class="chv-block" style="animation-delay: 0.48s;" />
+                <use href="#chv-block-d" x="80" y="143" class="chv-block" style="animation-delay: 0.60s;" />
+                <use href="#chv-block-d" x="80" y="159" class="chv-block" style="animation-delay: 0.72s;" />
+                <use href="#chv-block-d" x="80" y="175" class="chv-block" style="animation-delay: 0.84s;" />
+                <use href="#chv-block-d" x="80" y="191" class="chv-block" style="animation-delay: 0.96s;" />
+                <use href="#chv-block-d" x="80" y="207" class="chv-block" style="animation-delay: 1.08s;" />
+                <use href="#chv-block-l" x="70" y="222" class="chv-block" style="animation-delay: 0.00s;" />
+                <use href="#chv-block-l" x="56" y="222" class="chv-block" style="animation-delay: 0.12s;" />
+                <use href="#chv-block-l" x="42" y="222" class="chv-block" style="animation-delay: 0.24s;" />
               </g>
 
               <g id="flow-bat-trunk-discharge">
-                <use href="#chv-block-r" x="86" y="98" class="chv-block" style="animation-delay: 0.00s;" />
-                <use href="#chv-block-r" x="100" y="98" class="chv-block" style="animation-delay: 0.12s;" />
-                <use href="#chv-block-r" x="114" y="98" class="chv-block" style="animation-delay: 0.24s;" />
+                <use href="#chv-block-r" x="86" y="98" class="chv-block" style="animation-delay: 0.36s;" />
+                <use href="#chv-block-r" x="100" y="98" class="chv-block" style="animation-delay: 0.48s;" />
+                <use href="#chv-block-r" x="114" y="98" class="chv-block" style="animation-delay: 0.60s;" />
               </g>
 
               <g id="flow-bat-trunk-charge">
@@ -1277,7 +1273,7 @@ class PowerFlowCardInverter extends HTMLElement {
                 <use href="#chv-block-r" x="304" y="98" class="chv-block" style="animation-delay: 0.00s;" />
                 <use href="#chv-block-r" x="318" y="98" class="chv-block" style="animation-delay: 0.12s;" />
                 <use href="#chv-block-r" x="332" y="98" class="chv-block" style="animation-delay: 0.24s;" />
-                <use href="#chv-block-r" x="346" y="98" class="chv-block" style="animation-delay: 0.48s;" />
+                <use href="#chv-block-r" x="346" y="98" class="chv-block" style="animation-delay: 0.36s;" />
               </g>
 
               <circle id="ac-bus-node" cx="296" cy="103" r="5" fill="#16a34a" stroke="#ffffff" stroke-width="1.5"/>
