@@ -1573,68 +1573,68 @@ class PowerFlowCardEditor extends HTMLElement {
         type: "expandable",
         schema: [
           // PV DC
-          { name: "pv_power", label: "PV - Tổng công suất", selector: entitySelector },
-          { name: "pv_daily", label: "PV - Sản lượng hôm nay", selector: entitySelector },
-          { name: "pv_total", label: "PV - Tổng sản lượng", selector: entitySelector },
-          { name: "pv1_power", label: "PV1 - Công suất", selector: entitySelector },
-          { name: "pv1_voltage", label: "PV1 - Điện áp", selector: entitySelector },
-          { name: "pv2_power", label: "PV2 - Công suất", selector: entitySelector },
-          { name: "pv2_voltage", label: "PV2 - Điện áp", selector: entitySelector },
-          { name: "pv3_power", label: "PV3 - Công suất", selector: entitySelector },
-          { name: "pv3_voltage", label: "PV3 - Điện áp", selector: entitySelector },
-          { name: "pv4_power", label: "PV4 - Công suất", selector: entitySelector },
-          { name: "pv4_voltage", label: "PV4 - Điện áp", selector: entitySelector },
+{ name: "pv_power", label: "PV Tổng công suất - PV Total Power", selector: entitySelector },
+{ name: "pv_daily", label: "PV Sản lượng hôm nay - PV Today's Production", selector: entitySelector },
+{ name: "pv_total", label: "PV Tổng sản lượng - PV Total Production", selector: entitySelector },
+{ name: "pv1_power", label: "PV1 Công suất - PV1 Power Output", selector: entitySelector },
+{ name: "pv1_voltage", label: "PV1 Điện áp - PV1 Voltage", selector: entitySelector },
+{ name: "pv2_power", label: "PV2 Công suất - PV2 Power Capacity", selector: entitySelector },
+{ name: "pv2_voltage", label: "PV2 Điện áp - PV2 Voltage", selector: entitySelector },
+{ name: "pv3_power", label: "PV3 Công suất - PV3 Power Capacity", selector: entitySelector },
+{ name: "pv3_voltage", label: "PV3 Điện áp - PV3 Voltage", selector: entitySelector },
+{ name: "pv4_power", label: "PV4 Công suất - PV4 Power Capacity", selector: entitySelector },
+{ name: "pv4_voltage", label: "PV4 Điện áp - PV4 Voltage", selector: entitySelector },
 
-          // Hoà lưới/Máy phát
-          { name: "ac_pv_power", label: "Hoà lưới/Máy phát - Công suất", selector: entitySelector },
-          { name: "ac_pv_voltage", label: "Hoà lưới/Máy phát - Điện áp", selector: entitySelector },
-          { name: "ac_pv_frequency", label: "Hoà lưới/Máy phát - Tần số", selector: entitySelector },
-          { name: "ac_pv_power_l1", label: "Hoà lưới/Máy phát - Công suất L1", selector: entitySelector },
-          { name: "ac_pv_power_l2", label: "Hoà lưới/Máy phát - Công suất L2", selector: entitySelector },
-          { name: "ac_pv_power_l3", label: "Hoà lưới/Máy phát - Công suất L3", selector: entitySelector },
+// Hoà lưới/Máy phát
+{ name: "ac_pv_power", label: "Hoà lưới/Máy phát Công suất - AC PV/Generator Power", selector: entitySelector },
+{ name: "ac_pv_voltage", label: "Hoà lưới/Máy phát Điện áp - AC PV/Generator Voltage", selector: entitySelector },
+{ name: "ac_pv_frequency", label: "Hoà lưới/Máy phát Tần số - AC PV/Generator Frequency", selector: entitySelector },
+{ name: "ac_pv_power_l1", label: "Hoà lưới/Máy phát Công suất L1 - AC PV/Generator L1 Power", selector: entitySelector },
+{ name: "ac_pv_power_l2", label: "Hoà lưới/Máy phát Công suất L2 - AC PV/Generator L2 Power", selector: entitySelector },
+{ name: "ac_pv_power_l3", label: "Hoà lưới/Máy phát Công suất L3 - AC PV/Generator L3 Power", selector: entitySelector },
 
-          // Grid
-          { name: "grid_power", label: "Lưới - Công suất 1 pha", selector: entitySelector },
-          { name: "grid_voltage", label: "Lưới - Điện áp", selector: entitySelector },
-          { name: "grid_frequency", label: "Lưới - Tần số", selector: entitySelector },
-          { name: "grid_buy_daily", label: "Lưới - Nhập hôm nay", selector: entitySelector },
-          { name: "grid_buy_total", label: "Lưới - Tổng nhập", selector: entitySelector },
-          { name: "grid_sell_daily", label: "Lưới - Phát hôm nay", selector: entitySelector },
-          { name: "grid_sell_total", label: "Lưới - Tổng phát", selector: entitySelector },
-          { name: "grid_power_l1", label: "Lưới - Công suất L1", selector: entitySelector },
-          { name: "grid_power_l2", label: "Lưới - Công suất L2", selector: entitySelector },
-          { name: "grid_power_l3", label: "Lưới - Công suất L3", selector: entitySelector },
-          { name: "grid_voltage_l1", label: "Lưới - Điện áp L1", selector: entitySelector },
+// Grid
+{ name: "grid_power", label: "Lưới Công suất 1 pha - Grid Single-phase Power", selector: entitySelector },
+{ name: "grid_voltage", label: "Lưới Điện áp - Grid Voltage", selector: entitySelector },
+{ name: "grid_frequency", label: "Lưới Tần số - Grid Frequency", selector: entitySelector },
+{ name: "grid_buy_daily", label: "Lưới Nhập hôm nay - Grid Import Today", selector: entitySelector },
+{ name: "grid_buy_total", label: "Lưới Tổng nhập - Grid Total Import", selector: entitySelector },
+{ name: "grid_sell_daily", label: "Lưới Phát hôm nay - Grid Export Today", selector: entitySelector },
+{ name: "grid_sell_total", label: "Lưới Tổng phát - Grid Total Export", selector: entitySelector },
+{ name: "grid_power_l1", label: "Lưới Công suất L1 - Grid L1 Power", selector: entitySelector },
+{ name: "grid_power_l2", label: "Lưới Công suất L2 - Grid L2 Power", selector: entitySelector },
+{ name: "grid_power_l3", label: "Lưới Công suất L3 - Grid L3 Power", selector: entitySelector },
+{ name: "grid_voltage_l1", label: "Lưới Điện áp L1 - Grid L1 Voltage", selector: entitySelector },
 
-          // Load
-          { name: "load_power", label: "Tải - Công suất 1 pha", selector: entitySelector },
-          { name: "load_daily", label: "Tải - Tiêu thụ hôm nay", selector: entitySelector },
-          { name: "load_total", label: "Tải - Tổng tiêu thụ", selector: entitySelector },
-          { name: "load_power_l1", label: "Tải - Công suất L1", selector: entitySelector },
-          { name: "load_power_l2", label: "Tải - Công suất L2", selector: entitySelector },
-          { name: "load_power_l3", label: "Tải - Công suất L3", selector: entitySelector },
+// Load
+{ name: "load_power", label: "Tải Công suất 1 pha - Load Single-phase Power", selector: entitySelector },
+{ name: "load_daily", label: "Tải Tiêu thụ hôm nay - Load Consumption Today", selector: entitySelector },
+{ name: "load_total", label: "Tải Tổng tiêu thụ - Load Total Consumption", selector: entitySelector },
+{ name: "load_power_l1", label: "Tải Công suất L1 - Load L1 Power", selector: entitySelector },
+{ name: "load_power_l2", label: "Tải Công suất L2 - Load L2 Power", selector: entitySelector },
+{ name: "load_power_l3", label: "Tải Công suất L3 - Load L3 Power", selector: entitySelector },
 
-          // EPS
-          { name: "eps_power", label: "UPS - Công suất 1 pha", selector: entitySelector },
-          { name: "eps_voltage", label: "UPS - Điện áp", selector: entitySelector },
-          { name: "eps_frequency", label: "UPS - Tần số", selector: entitySelector },
-          { name: "eps_power_l1", label: "UPS - Công suất L1", selector: entitySelector },
-          { name: "eps_power_l2", label: "UPS - Công suất L2", selector: entitySelector },
-          { name: "eps_power_l3", label: "UPS - Công suất L3", selector: entitySelector },
+// EPS
+{ name: "eps_power", label: "UPS Công suất 1 pha - UPS Single-phase Power", selector: entitySelector },
+{ name: "eps_voltage", label: "UPS Điện áp - UPS Voltage", selector: entitySelector },
+{ name: "eps_frequency", label: "UPS Tần số - UPS Frequency", selector: entitySelector },
+{ name: "eps_power_l1", label: "UPS Công suất L1 - UPS L1 Power", selector: entitySelector },
+{ name: "eps_power_l2", label: "UPS Công suất L2 - UPS L2 Power", selector: entitySelector },
+{ name: "eps_power_l3", label: "UPS Công suất L3 - UPS L3 Power", selector: entitySelector },
 
-          // Battery 1
-          { name: "battery_power", label: "Pin 1 - Công suất", selector: entitySelector },
-          { name: "battery_voltage", label: "Pin 1 - Điện áp", selector: entitySelector },
-          { name: "battery_soc", label: "Pin 1 - Dung lượng SOC (%)", selector: entitySelector },
-          { name: "battery_charge_daily", label: "Pin Lưu Trữ - Nạp hôm nay", selector: entitySelector },
-          { name: "battery_charge_total", label: "Pin Lưu Trữ - Tổng nạp", selector: entitySelector },
-          { name: "battery_discharge_daily", label: "Pin Lưu Trữ - Xả hôm nay", selector: entitySelector },
-          { name: "battery_discharge_total", label: "Pin Lưu Trữ - Tổng xả", selector: entitySelector },
+// Battery 1
+{ name: "battery_power", label: "Pin 1 Công suất - Battery 1 Power", selector: entitySelector },
+{ name: "battery_voltage", label: "Pin 1 Điện áp - Battery 1 Voltage", selector: entitySelector },
+{ name: "battery_soc", label: "Pin 1 Dung lượng SOC (%) - Battery 1 SOC (%)", selector: entitySelector },
+{ name: "battery_charge_daily", label: "Pin Lưu Trữ Nạp hôm nay - Battery Charge Today", selector: entitySelector },
+{ name: "battery_charge_total", label: "Pin Lưu Trữ Tổng nạp - Battery Total Charge", selector: entitySelector },
+{ name: "battery_discharge_daily", label: "Pin Lưu Trữ Xả hôm nay - Battery Discharge Today", selector: entitySelector },
+{ name: "battery_discharge_total", label: "Pin Lưu Trữ Tổng xả - Battery Total Discharge", selector: entitySelector },
 
-          // Battery 2
-          { name: "battery2_power", label: "Pin 2 - Công suất", selector: entitySelector },
-          { name: "battery2_voltage", label: "Pin 2 - Điện áp", selector: entitySelector },
-          { name: "battery2_soc", label: "Pin 2 - Dung lượng SOC (%)", selector: entitySelector }
+// Battery 2
+{ name: "battery2_power", label: "Pin 2 Công suất - Battery 2 Power", selector: entitySelector },
+{ name: "battery2_voltage", label: "Pin 2 Điện áp - Battery 2 Voltage", selector: entitySelector },
+{ name: "battery2_soc", label: "Pin 2 Dung lượng SOC (%) - Battery 2 SOC (%)", selector: entitySelector },
         ]
       }
     ];
