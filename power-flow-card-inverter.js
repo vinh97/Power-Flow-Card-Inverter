@@ -610,6 +610,9 @@ class PowerFlowCardInverter extends HTMLElement {
 
     this.alignTextStack(gridInfoElements, 117, 12, 3.5);
 
+    // =========================================================================
+    // XỬ LÝ DỮ LIỆU TẢI TIÊU THỤ (LOAD & EPS)
+    // =========================================================================
     let loadP = 0, loadL1 = 0, loadL2 = 0, loadL3 = 0;
     let epsP = 0, epsL1 = 0, epsL2 = 0, epsL3 = 0;
 
@@ -632,6 +635,7 @@ class PowerFlowCardInverter extends HTMLElement {
       epsP = Math.abs(Math.round(this.getState(ent.eps_power, 0)));
     }
 
+    // --- XỬ LÝ LOGIC SINGLE LOAD MODE ---
     if (singleLoadMode) {
       const activeP = Math.max(loadP, epsP);
       const activeL1 = Math.max(loadL1, epsL1);
@@ -639,6 +643,7 @@ class PowerFlowCardInverter extends HTMLElement {
       const activeL3 = Math.max(loadL3, epsL3);
 
       if (isGridConnected) {
+        // CÓ LƯỚI: Tải tiêu thụ (Load) chạy, EPS ẩn hoàn toàn
         loadP = activeP;
         loadL1 = activeL1;
         loadL2 = activeL2;
@@ -649,6 +654,7 @@ class PowerFlowCardInverter extends HTMLElement {
         epsL2 = 0;
         epsL3 = 0;
       } else {
+        // MẤT LƯỚI: EPS chạy, Tải tiêu thụ (Load) ẩn hoàn toàn
         epsP = activeP;
         epsL1 = activeL1;
         epsL2 = activeL2;
@@ -664,6 +670,7 @@ class PowerFlowCardInverter extends HTMLElement {
     this.setDisplay('grp-eps', true);
     this.setDisplay('grp-load', true);
 
+    // Ghi công suất Load
     if (isThreePhase) {
       this.setPower('txt-load-l1', loadL1);
       this.setPower('txt-load-l2', loadL2);
@@ -672,6 +679,7 @@ class PowerFlowCardInverter extends HTMLElement {
       this.setPower('txt-load-p', loadP);
     }
 
+    // Ẩn/hiện thông số công suất W khối Load
     const showLoadPowerLines = !singleLoadMode || isGridConnected;
 
     const loadElements = [];
@@ -710,6 +718,7 @@ class PowerFlowCardInverter extends HTMLElement {
       }
     }
 
+    // Ghi công suất EPS
     if (isThreePhase) {
       this.setPower('txt-eps-l1', epsL1);
       this.setPower('txt-eps-l2', epsL2);
@@ -724,6 +733,7 @@ class PowerFlowCardInverter extends HTMLElement {
     const epsV = hasEpsV ? this.getState(ent.eps_voltage, 0.0) : 0;
     const epsF = hasEpsF ? this.getState(ent.eps_frequency, 0.0) : 0;
 
+    // Ẩn/hiện thông số Vac, Hz, W khối EPS
     const showEpsV = (!singleLoadMode || !isGridConnected) && !isThreePhase && hasEpsV && epsV > 0;
     const showEpsF = (!singleLoadMode || !isGridConnected) && !isThreePhase && hasEpsF && epsF > 0;
 
@@ -762,6 +772,7 @@ class PowerFlowCardInverter extends HTMLElement {
 
     this.alignTextStack(epsElements, 28, 12, 3.5);
 
+    // Hiển thị nhãn CHẾ ĐỘ CHỜ khi có lưới và epsP = 0
     const showStandby = isGridConnected && (epsP === 0);
     this.setDisplay('lbl-eps-standby', showStandby);
 
@@ -904,24 +915,31 @@ class PowerFlowCardInverter extends HTMLElement {
     this.setEnergyStat('stat-grid-today', this.getState(isGridSell ? ent.grid_sell_daily : ent.grid_buy_daily));
     this.setEnergyStat('stat-grid-total', this.getState(isGridSell ? ent.grid_sell_total : ent.grid_buy_total));
 
+    // Ngưỡng công suất tối thiểu (Watts) để kích hoạt chuyển động mũi tên
     const MIN_POWER = 5;
 
+    // 1. Trạng thái Sạc / Xả Pin từng bộ riêng lẻ
     const isBat1Charging = batP > MIN_POWER;
     const isBat1Discharging = batP < -MIN_POWER;
     const isBat2Charging = showBat2 && bat2P > MIN_POWER;
     const isBat2Discharging = showBat2 && bat2P < -MIN_POWER;
 
-    const isNetCharging = isBat1Charging || isBat2Charging;
-    const isNetDischarging = isBat1Discharging || isBat2Discharging;
+    // Cập nhật: Tính tổng công suất nạp/xả ròng (netBatPower) cho Trục Pin chính
+    const netBatPower = batP + (showBat2 ? bat2P : 0);
+    const isNetCharging = netBatPower > MIN_POWER;
+    const isNetDischarging = netBatPower < -MIN_POWER;
 
+    // 2. Trạng thái Lấy / Đẩy Lưới
     const isImporting = isGridConnected && gridP < -MIN_POWER;
     const isExporting = isGridConnected && gridP > MIN_POWER;
 
+    // 3. Trạng thái PV và Tải Tiêu Thụ
     const hasPvPower = pvP > MIN_POWER;
     const hasAcPvPower = hasAcPvP && acPvP > MIN_POWER;
     const hasLoadPower = loadP > MIN_POWER;
     const hasEpsPower = epsP > MIN_POWER;
 
+    // --- CẶP MŨI TÊN PIN ---
     this.setFlowVisible('flow-bat-charge', isBat1Charging);
     this.setFlowVisible('flow-bat-discharge', isBat1Discharging);
     this.setFlowVisible('flow-bat2-charge', showBat2 && isBat2Charging);
@@ -929,21 +947,27 @@ class PowerFlowCardInverter extends HTMLElement {
     this.setFlowVisible('flow-bat-trunk-charge', isNetCharging);
     this.setFlowVisible('flow-bat-trunk-discharge', isNetDischarging);
 
+    // --- CẶP MŨI TÊN LƯỚI ---
     this.setFlowVisible('flow-grid-import', isImporting);
     this.setFlowVisible('flow-grid-export', isExporting);
 
+    // --- CẶP MŨI TÊN TẢI & EPS & PV ---
     this.setFlowVisible('flow-pv', hasPvPower);
     
+    // PV hòa lưới (AC PV) hiển thị khi có lưới HOẶC khi mất lưới mà có tải EPS / Sạc Pin
     const showAcPvFlow = hasAcPvPower && (isGridConnected || hasEpsPower || isNetCharging);
     this.setFlowVisible('flow-ac-pv', showAcPvFlow);
     
     this.setFlowVisible('flow-bus-to-load', hasLoadPower);
     this.setFlowVisible('flow-eps', hasEpsPower);
 
-    const isInvSupplyingBus = (hasPvPower || isNetDischarging) && (hasLoadPower || isExporting);
-
+    // --- CHUYỂN ĐỔI GIỮA INVERTER VÀ THANH CÁI AC (BUS) ---
+    // 1. Bus cấp điện ngược lại Inverter (khi nạp pin từ lưới/AC PV hoặc chạy EPS offgrid):
     const isAcPvOffgridSupply = !isGridConnected && hasAcPvPower && (hasEpsPower || isNetCharging);
     const isBusChargingInv = ((isImporting || hasAcPvPower) && isNetCharging) || isAcPvOffgridSupply;
+
+    // 2. Inverter đẩy điện ra Bus: Thêm điều kiện loại trừ tương hỗ (!isBusChargingInv)
+    const isInvSupplyingBus = !isBusChargingInv && isGridConnected && (hasPvPower || isNetDischarging) && (hasLoadPower || isExporting);
 
     this.setFlowVisible('flow-inv-to-bus', isInvSupplyingBus);
     this.setFlowVisible('flow-bus-to-inv', isBusChargingInv);
@@ -1473,7 +1497,7 @@ class PowerFlowCardInverter extends HTMLElement {
                 <text id="line-load-l2" x="60" y="0" style="display:none;"><tspan id="txt-load-l2" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
                 <text id="line-load-l3" x="60" y="0" style="display:none;"><tspan id="txt-load-l3" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
 
-                <text id="lbl-load-sub" x="60" y="40.5" class="svg-txt-sub">${t.consumption}</text>
+                <text x="60" y="40.5" id="lbl-load-sub" class="svg-txt-sub">${t.consumption}</text>
               </g>
             </svg>
           </div>
