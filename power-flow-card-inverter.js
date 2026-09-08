@@ -1,3 +1,12 @@
+// Register Visual Card with Home Assistant Card Picker
+window.customCards = window.customCards || [];
+window.customCards.push({
+  type: "power-flow-card-inverter",
+  name: "Power Flow Card Inverter",
+  description: "Thẻ hiển thị sơ đồ dòng công suất và sản lượng Inverter cho Home Assistant",
+  preview: true
+});
+
 const TRANSLATIONS = {
   vi: {
     pv_yield: "SẢN LƯỢNG PV",
@@ -229,7 +238,8 @@ class PowerFlowCardInverter extends HTMLElement {
   }
 
   setFlowVisible(id, visible) {
-    this.setDisplay(id, visible);
+    const targetId = (id === 'flow-load') ? 'flow-bus-to-load' : id;
+    this.setDisplay(targetId, visible);
   }
 
   alignTextStack(elements, centerY, lineHeight = 12, baselineOffset = 3.5, gapIndex = -1, gapAmount = 0) {
@@ -632,39 +642,6 @@ class PowerFlowCardInverter extends HTMLElement {
       epsP = Math.abs(Math.round(this.getState(ent.eps_power, 0)));
     }
 
-    // --- XỬ LÝ CHẾ ĐỘ SINGLE LOAD MODE & TẢI TẮT/MỞ ---
-    if (singleLoadMode) {
-      // Tự động nhận giá trị công suất lớn nhất từ 1 trong 2 sensor (tránh nhiễu sensor)
-      const activeP = Math.max(loadP, epsP);
-      const activeL1 = Math.max(loadL1, epsL1);
-      const activeL2 = Math.max(loadL2, epsL2);
-      const activeL3 = Math.max(loadL3, epsL3);
-
-      if (isGridConnected) {
-        // CÓ LƯỚI: Tiêu thụ chạy, ẩn hoàn toàn công suất EPS
-        loadP = activeP;
-        loadL1 = activeL1;
-        loadL2 = activeL2;
-        loadL3 = activeL3;
-
-        epsP = 0;
-        epsL1 = 0;
-        epsL2 = 0;
-        epsL3 = 0;
-      } else {
-        // MẤT LƯỚI: EPS chạy, ẩn hoàn toàn công suất tiêu thụ
-        epsP = activeP;
-        epsL1 = activeL1;
-        epsL2 = activeL2;
-        epsL3 = activeL3;
-
-        loadP = 0;
-        loadL1 = 0;
-        loadL2 = 0;
-        loadL3 = 0;
-      }
-    }
-
     this.setDisplay('grp-eps', true);
     this.setDisplay('grp-load', true);
 
@@ -676,28 +653,19 @@ class PowerFlowCardInverter extends HTMLElement {
       this.setPower('txt-load-p', loadP);
     }
 
-    const showLoadPowerLines = !singleLoadMode || isGridConnected;
-
     const loadElements = [];
-    if (showLoadPowerLines) {
-      if (isThreePhase) {
-        this.setDisplay('line-load-1p', false);
-        this.setDisplay('line-load-l1', true);
-        this.setDisplay('line-load-l2', true);
-        this.setDisplay('line-load-l3', true);
-        loadElements.push(this.getEl('line-load-l1'), this.getEl('line-load-l2'), this.getEl('line-load-l3'));
-      } else {
-        this.setDisplay('line-load-1p', true);
-        this.setDisplay('line-load-l1', false);
-        this.setDisplay('line-load-l2', false);
-        this.setDisplay('line-load-l3', false);
-        loadElements.push(this.getEl('line-load-1p'));
-      }
-    } else {
+    if (isThreePhase) {
       this.setDisplay('line-load-1p', false);
+      this.setDisplay('line-load-l1', true);
+      this.setDisplay('line-load-l2', true);
+      this.setDisplay('line-load-l3', true);
+      loadElements.push(this.getEl('line-load-l1'), this.getEl('line-load-l2'), this.getEl('line-load-l3'));
+    } else {
+      this.setDisplay('line-load-1p', true);
       this.setDisplay('line-load-l1', false);
       this.setDisplay('line-load-l2', false);
       this.setDisplay('line-load-l3', false);
+      loadElements.push(this.getEl('line-load-1p'));
     }
 
     const loadCenterY = isThreePhase ? 27 : 13.5;
@@ -728,34 +696,25 @@ class PowerFlowCardInverter extends HTMLElement {
     const epsV = hasEpsV ? this.getState(ent.eps_voltage, 0.0) : 0;
     const epsF = hasEpsF ? this.getState(ent.eps_frequency, 0.0) : 0;
 
-    const showEpsV = (!singleLoadMode || !isGridConnected) && !isThreePhase && hasEpsV && epsV > 0;
-    const showEpsF = (!singleLoadMode || !isGridConnected) && !isThreePhase && hasEpsF && epsF > 0;
+    const showEpsV = !isThreePhase && hasEpsV && epsV > 0;
+    const showEpsF = !isThreePhase && hasEpsF && epsF > 0;
 
     if (showEpsV) this.setText('txt-eps-v', epsV.toFixed(1));
     if (showEpsF) this.setText('txt-eps-f', epsF.toFixed(2));
 
-    const showEpsPowerLines = !singleLoadMode || !isGridConnected;
-
     const epsElements = [];
-    if (showEpsPowerLines) {
-      if (isThreePhase) {
-        this.setDisplay('line-eps-1p', false);
-        this.setDisplay('line-eps-l1', true);
-        this.setDisplay('line-eps-l2', true);
-        this.setDisplay('line-eps-l3', true);
-        epsElements.push(this.getEl('line-eps-l1'), this.getEl('line-eps-l2'), this.getEl('line-eps-l3'));
-      } else {
-        this.setDisplay('line-eps-1p', true);
-        this.setDisplay('line-eps-l1', false);
-        this.setDisplay('line-eps-l2', false);
-        this.setDisplay('line-eps-l3', false);
-        epsElements.push(this.getEl('line-eps-1p'));
-      }
-    } else {
+    if (isThreePhase) {
       this.setDisplay('line-eps-1p', false);
+      this.setDisplay('line-eps-l1', true);
+      this.setDisplay('line-eps-l2', true);
+      this.setDisplay('line-eps-l3', true);
+      epsElements.push(this.getEl('line-eps-l1'), this.getEl('line-eps-l2'), this.getEl('line-eps-l3'));
+    } else {
+      this.setDisplay('line-eps-1p', true);
       this.setDisplay('line-eps-l1', false);
       this.setDisplay('line-eps-l2', false);
       this.setDisplay('line-eps-l3', false);
+      epsElements.push(this.getEl('line-eps-1p'));
     }
 
     this.setDisplay('line-eps-v', showEpsV);
@@ -908,10 +867,8 @@ class PowerFlowCardInverter extends HTMLElement {
     this.setEnergyStat('stat-grid-today', this.getState(isGridSell ? ent.grid_sell_daily : ent.grid_buy_daily));
     this.setEnergyStat('stat-grid-total', this.getState(isGridSell ? ent.grid_sell_total : ent.grid_buy_total));
 
-    // Ngưỡng công suất tối thiểu (Watts) để kích hoạt chuyển động mũi tên
     const MIN_POWER = 5;
 
-    // 1. Trạng thái Sạc / Xả Pin
     const isBat1Charging = batP > MIN_POWER;
     const isBat1Discharging = batP < -MIN_POWER;
     const isBat2Charging = showBat2 && bat2P > MIN_POWER;
@@ -920,17 +877,18 @@ class PowerFlowCardInverter extends HTMLElement {
     const isNetCharging = isBat1Charging || isBat2Charging;
     const isNetDischarging = isBat1Discharging || isBat2Discharging;
 
-    // 2. Trạng thái Lấy / Đẩy Lưới
-    const isImporting = isGridConnected && gridP < -MIN_POWER; // Lấy lưới
-    const isExporting = isGridConnected && gridP > MIN_POWER;  // Đẩy lưới
+    const totalBatChargePower = (isBat1Charging ? batP : 0) + (isBat2Charging ? bat2P : 0);
 
-    // 3. Trạng thái PV và Tải Tiêu Thụ
+    const isImporting = isGridConnected && gridP < -MIN_POWER;
+    const isExporting = isGridConnected && gridP > MIN_POWER;
+    const gridImportPower = isImporting ? Math.abs(gridP) : 0;
+
     const hasPvPower = pvP > MIN_POWER;
     const hasAcPvPower = hasAcPvP && acPvP > MIN_POWER;
     const hasLoadPower = loadP > MIN_POWER;
     const hasEpsPower = epsP > MIN_POWER;
+    const hasBatPower = isNetCharging || isNetDischarging;
 
-    // --- CẶP MŨI TÊN PIN ---
     this.setFlowVisible('flow-bat-charge', isBat1Charging);
     this.setFlowVisible('flow-bat-discharge', isBat1Discharging);
     this.setFlowVisible('flow-bat2-charge', showBat2 && isBat2Charging);
@@ -938,32 +896,73 @@ class PowerFlowCardInverter extends HTMLElement {
     this.setFlowVisible('flow-bat-trunk-charge', isNetCharging);
     this.setFlowVisible('flow-bat-trunk-discharge', isNetDischarging);
 
-    // --- CẶP MŨI TÊN LƯỚI ---
     this.setFlowVisible('flow-grid-import', isImporting);
     this.setFlowVisible('flow-grid-export', isExporting);
 
-    // --- CẶP MŨI TÊN TẢI & EPS & PV ---
-    this.setFlowVisible('flow-pv', hasPvPower);
+    const showPvFlow = isGridConnected 
+      ? hasPvPower 
+      : (hasPvPower && (hasEpsPower || hasBatPower));
+    this.setFlowVisible('flow-pv', showPvFlow);
     
-    // PV hòa lưới (AC PV) hiển thị khi có lưới HOẶC khi mất lưới mà có tải EPS / Sạc Pin
-    const showAcPvFlow = hasAcPvPower && (isGridConnected || hasEpsPower || isNetCharging);
+    const showAcPvFlow = isGridConnected 
+      ? hasAcPvPower 
+      : (hasAcPvPower && (hasEpsPower || hasBatPower));
     this.setFlowVisible('flow-ac-pv', showAcPvFlow);
-    
-    this.setFlowVisible('flow-bus-to-load', hasLoadPower);
-    this.setFlowVisible('flow-eps', hasEpsPower);
 
-    // --- CHUYỂN ĐỔI GIỮA INVERTER VÀ THANH CÁI AC (BUS) ---
-    // Inverter đẩy điện ra Bus: Khi có PV phát điện hoặc Pin đang xả ĐẾN TẢI / LƯỚI
-    const isInvSupplyingBus = (hasPvPower || isNetDischarging) && (hasLoadPower || isExporting);
+    let isInvSupplyingBus = false;
+    if (isGridConnected) {
+      const hasConsumption = hasLoadPower || isExporting;
+      const pvExceedsCharge = (pvP - totalBatChargePower) > MIN_POWER;
+      isInvSupplyingBus = hasConsumption && (isNetDischarging || pvExceedsCharge);
+    } else {
+      isInvSupplyingBus = (hasPvPower || isNetDischarging) && (hasEpsPower || hasLoadPower);
+    }
 
-    // Bus cấp điện ngược lại Inverter:
-    // 1. Khi điện lưới (hoặc AC PV) đang lấy vào để sạc pin
-    // 2. Khi mất lưới (!isGridConnected) mà PV hòa lưới có công suất (hasAcPvPower) cấp cho Tải EPS hoặc Sạc Pin
-    const isAcPvOffgridSupply = !isGridConnected && hasAcPvPower && (hasEpsPower || isNetCharging);
-    const isBusChargingInv = ((isImporting || hasAcPvPower) && isNetCharging) || isAcPvOffgridSupply;
+    let isBusChargingInv = false;
+    if (isGridConnected) {
+      const importExceedsLoad = (gridImportPower - loadP) > MIN_POWER;
+      const acPvSupplyingInv = !isImporting && hasAcPvPower;
+      isBusChargingInv = isNetCharging && (importExceedsLoad || acPvSupplyingInv);
+    } else {
+      isBusChargingInv = hasAcPvPower && (hasEpsPower || hasBatPower);
+    }
 
     this.setFlowVisible('flow-inv-to-bus', isInvSupplyingBus);
     this.setFlowVisible('flow-bus-to-inv', isBusChargingInv);
+
+    const toggleValuesOnly = (parentSelector, show) => {
+      const parent = this.shadowRoot?.querySelector(parentSelector);
+      if (!parent) return;
+      
+      const valueElements = parent.querySelectorAll('.power, .voltage, .frequency, .value, .sub-value');
+      valueElements.forEach(el => {
+        el.style.display = show ? '' : 'none';
+      });
+    };
+
+    if (singleLoadMode) {
+      if (isGridConnected) {
+        this.setFlowVisible('flow-load', hasLoadPower);
+        toggleValuesOnly('.load', true);
+
+        this.setFlowVisible('flow-eps', false);
+        toggleValuesOnly('.eps', false);
+
+      } else {
+        this.setFlowVisible('flow-load', false);
+        toggleValuesOnly('.load', false);
+
+        this.setFlowVisible('flow-eps', hasEpsPower);
+        toggleValuesOnly('.eps', true);
+      }
+
+    } else {
+      this.setFlowVisible('flow-load', hasLoadPower);
+      this.setFlowVisible('flow-eps', hasEpsPower);
+      
+      toggleValuesOnly('.load', true);
+      toggleValuesOnly('.eps', true);
+    }
 
     const loadIconColor = isGridConnected ? '#52b788' : (hasLoadPower ? '#e11d48' : '#94a3b8');
     const loadIcons = this.shadowRoot.querySelectorAll('#icon-load .load-icon-color');
@@ -1229,16 +1228,16 @@ class PowerFlowCardInverter extends HTMLElement {
               </g>
 
               <g id="flow-bat2-charge">
-                <use href="#chv-block-d" x="80" y="111" class="chv-block" style="animation-delay: 0.36s;" />
-                <use href="#chv-block-d" x="80" y="127" class="chv-block" style="animation-delay: 0.48s;" />
-                <use href="#chv-block-d" x="80" y="143" class="chv-block" style="animation-delay: 0.60s;" />
-                <use href="#chv-block-d" x="80" y="159" class="chv-block" style="animation-delay: 0.72s;" />
-                <use href="#chv-block-d" x="80" y="175" class="chv-block" style="animation-delay: 0.84s;" />
-                <use href="#chv-block-d" x="80" y="191" class="chv-block" style="animation-delay: 0.96s;" />
-                <use href="#chv-block-d" x="80" y="207" class="chv-block" style="animation-delay: 1.08s;" />
-                <use href="#chv-block-l" x="70" y="222" class="chv-block" style="animation-delay: 0.00s;" />
-                <use href="#chv-block-l" x="56" y="222" class="chv-block" style="animation-delay: 0.12s;" />
-                <use href="#chv-block-l" x="42" y="222" class="chv-block" style="animation-delay: 0.24s;" />
+                <use href="#chv-block-d" x="80" y="111" class="chv-block" style="animation-delay: 0.00s;" />
+                <use href="#chv-block-d" x="80" y="127" class="chv-block" style="animation-delay: 0.12s;" />
+                <use href="#chv-block-d" x="80" y="143" class="chv-block" style="animation-delay: 0.24s;" />
+                <use href="#chv-block-d" x="80" y="159" class="chv-block" style="animation-delay: 0.36s;" />
+                <use href="#chv-block-d" x="80" y="175" class="chv-block" style="animation-delay: 0.48s;" />
+                <use href="#chv-block-d" x="80" y="191" class="chv-block" style="animation-delay: 0.60s;" />
+                <use href="#chv-block-d" x="80" y="207" class="chv-block" style="animation-delay: 0.72s;" />
+                <use href="#chv-block-l" x="70" y="222" class="chv-block" style="animation-delay: 0.84s;" />
+                <use href="#chv-block-l" x="56" y="222" class="chv-block" style="animation-delay: 0.96s;" />
+                <use href="#chv-block-l" x="42" y="222" class="chv-block" style="animation-delay: 1.08s;" />
               </g>
 
               <g id="flow-bat-trunk-discharge">
@@ -1446,7 +1445,7 @@ class PowerFlowCardInverter extends HTMLElement {
               </g>
 
               <!-- Khối EPS -->
-              <g id="grp-eps" transform="translate(154, 232)">
+              <g id="grp-eps" class="eps" transform="translate(154, 232)">
                 <svg id="icon-eps" x="0" y="0" width="56" height="56" viewBox="0 0 60 60">
                   <g stroke="#52b788" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="8" y="8" width="23" height="12" rx="3"/>
@@ -1464,33 +1463,33 @@ class PowerFlowCardInverter extends HTMLElement {
                   </g>
                 </svg>
 
-                <text id="line-eps-1p" x="52" y="0"><tspan id="txt-eps-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
-                <text id="line-eps-l1" x="52" y="0" style="display:none;"><tspan id="txt-eps-l1" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
-                <text id="line-eps-l2" x="52" y="0" style="display:none;"><tspan id="txt-eps-l2" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
-                <text id="line-eps-l3" x="52" y="0" style="display:none;"><tspan id="txt-eps-l3" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+                <text id="line-eps-1p" class="power" x="52" y="0"><tspan id="txt-eps-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+                <text id="line-eps-l1" class="power" x="52" y="0" style="display:none;"><tspan id="txt-eps-l1" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+                <text id="line-eps-l2" class="power" x="52" y="0" style="display:none;"><tspan id="txt-eps-l2" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+                <text id="line-eps-l3" class="power" x="52" y="0" style="display:none;"><tspan id="txt-eps-l3" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
 
-                <text id="line-eps-v" x="52" y="0"><tspan id="txt-eps-v" class="highlight-val">0.0</tspan><tspan class="unit-lbl" dx="1">Vac</tspan></text>
-                <text id="line-eps-f" x="52" y="0"><tspan id="txt-eps-f" class="highlight-freq">0.00</tspan><tspan class="unit-lbl" dx="3"> Hz</tspan></text>
+                <text id="line-eps-v" class="voltage" x="52" y="0"><tspan id="txt-eps-v" class="highlight-val">0.0</tspan><tspan class="unit-lbl" dx="1">Vac</tspan></text>
+                <text id="line-eps-f" class="frequency" x="52" y="0"><tspan id="txt-eps-f" class="highlight-freq">0.00</tspan><tspan class="unit-lbl" dx="3"> Hz</tspan></text>
 
                 <text x="0" y="64" id="lbl-eps-sub" class="svg-txt-sub">${t.backup_power}</text>
-                <text x="0" y="75" id="lbl-eps-standby" style="font-size: 9px; fill: #16a34a; font-weight: 800; display: none;">${t.standby_mode}</text>
+                <text x="0" y="75" id="lbl-eps-standby" class="sub-value" style="font-size: 9px; fill: #16a34a; font-weight: 800; display: none;">${t.standby_mode}</text>
               </g>
 
               <!-- Khối tiêu thụ -->
-              <g id="grp-load" transform="translate(269, 232)">
+              <g id="grp-load" class="load" transform="translate(269, 232)">
                 <svg id="icon-load" x="0" y="0" width="54" height="54" viewBox="0 0 100 100">
                   <rect class="load-icon-color" x="27" y="14" width="10" height="20" rx="1" fill="#52b788"/>
                   <path class="load-icon-stroke" d="M 10 50 L 50 21 L 90 50" fill="none" stroke="#52b788" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
-                  <path class="load-icon-color" d="M 50 29.5 L 82 52.5 L 82 85 C 82 86.5 80.5 88 79 88 L 21 88 C 19.5 88 18 86.5 18 85 L 18 52.5 Z" fill="#52b788"/>
-                  <polygon points="52,45.5 42,60.5 49.5,60.5 46.5,78.5 58,59.5 50.5,59.5" fill="#ffffff"/>
+                  <path class="load-icon-stroke" d="M 23 45 L 23 82 Q 23 86 27 86 L 73 86 Q 77 86 77 82 L 77 45" fill="none" stroke="#52b788" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+                  <rect class="load-icon-stroke" x="42" y="58" width="16" height="28" rx="2" fill="none" stroke="#52b788" stroke-width="6"/>
                 </svg>
 
-                <text id="line-load-1p" x="60" y="0"><tspan id="txt-load-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
-                <text id="line-load-l1" x="60" y="0" style="display:none;"><tspan id="txt-load-l1" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
-                <text id="line-load-l2" x="60" y="0" style="display:none;"><tspan id="txt-load-l2" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
-                <text id="line-load-l3" x="60" y="0" style="display:none;"><tspan id="txt-load-l3" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+                <text id="line-load-1p" class="power" x="52" y="0"><tspan id="txt-load-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+                <text id="line-load-l1" class="power" x="52" y="0" style="display:none;"><tspan id="txt-load-l1" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+                <text id="line-load-l2" class="power" x="52" y="0" style="display:none;"><tspan id="txt-load-l2" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+                <text id="line-load-l3" class="power" x="52" y="0" style="display:none;"><tspan id="txt-load-l3" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
 
-                <text id="lbl-load-sub" x="60" y="40.5" class="svg-txt-sub">${t.consumption}</text>
+                <text x="60" y="40.5" id="lbl-load-sub" class="svg-txt-sub">${t.consumption}</text>
               </g>
             </svg>
           </div>
@@ -1503,155 +1502,319 @@ class PowerFlowCardInverter extends HTMLElement {
   }
 }
 
-/* ==================================================================== */
-/*                    VISUAL CARD EDITOR COMPONENT                      */
-/* ==================================================================== */
-
-class PowerFlowCardEditor extends HTMLElement {
+// Custom Visual Card Editor Class
+class PowerFlowCardInverterEditor extends HTMLElement {
   constructor() {
     super();
-    this.attachShadow({ mode: "open" });
-    this._config = {};
-    this._hass = null;
+    this.attachShadow({ mode: 'open' });
   }
 
   setConfig(config) {
     this._config = config || {};
-    this._render();
+    this.render();
   }
 
   set hass(hass) {
     this._hass = hass;
-    if (this._form) {
-      this._form.hass = hass;
-    } else {
-      this._render();
-    }
+    this.render();
   }
 
-  _render() {
-    if (!this.shadowRoot) return;
+  render() {
+    if (!this._hass || !this._config) return;
 
-    if (!this._form) {
-      this.shadowRoot.innerHTML = '';
-      this._form = document.createElement('ha-form');
-      this._form.addEventListener('value-changed', (ev) => this._valueChanged(ev));
-      this.shadowRoot.appendChild(this._form);
+    if (this.shadowRoot.activeElement && this.shadowRoot.activeElement.tagName.toLowerCase() === 'input') {
+      return;
     }
 
-    const entitySelector = { entity: {} };
+    const config = this._config;
+    const ent = config.entities || {};
 
-    const schema = [
-      {
-        name: "language",
-        label: "Ngôn ngữ / Language",
-        selector: {
-          select: {
-            options: [
-              { value: "vi", label: "Tiếng Việt" },
-              { value: "en", label: "English" }
-            ]
-          }
+    this.shadowRoot.innerHTML = `
+      <style>
+        :host { display: block; padding: 4px; }
+        .form-row { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+        .form-row-inline { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
+        .form-label { font-size: 13px; font-weight: 600; color: var(--primary-text-color, #0f172a); }
+        .form-sublabel { font-size: 11px; color: var(--secondary-text-color, #64748b); }
+        input[type="text"], input[type="number"], select {
+          width: 100%; box-sizing: border-box; padding: 8px 10px; border: 1px solid var(--divider-color, #cbd5e1); border-radius: 6px; background: var(--card-background-color, #ffffff); color: var(--primary-text-color, #0f172a); font-size: 13px;
         }
-      },
-      { name: "dark_mode", label: "Giao diện tối                              (Dark mode)", selector: { boolean: {} } },
-      { name: "three_phase", label: "Hệ thống điện 3 pha                      (Three phase)", selector: { boolean: {} } },
-      { name: "single_load_mode", label: "Chế độ 1 tải Load/EPS               (Single load mode)", selector: { boolean: {} } },
-      { name: "always_show_ac_pv", label: "Luôn hiển thị Hoà lưới/Máy phát    (Always show Draw/Generator)", selector: { boolean: {} } },
-      { name: "invert_grid_power", label: "Đảo chiều công suất lưới           (Invert grid power)", selector: { boolean: {} } },
-      { name: "invert_battery_power", label: "Đảo chiều công suất Pin 1       (Invert battery power)", selector: { boolean: {} } },
-      { name: "always_show_battery2", label: "Luôn hiển thị Pin lưu trữ 2     (Always show battery2)", selector: { boolean: {} } },
-      { name: "invert_battery2_power", label: "Đảo chiều công suất Pin 2      (Invert battery2 power)", selector: { boolean: {} } },
-      { name: "inverter_image", label: "Bật tùy chỉnh ảnh Biến tần            (Set true to use custom image)", selector: { boolean: {} } },
-	  { name: "inverter_icon", label: "Icon Biến tần                          (Inverter icon)", selector: { icon: {} } },
-      { name: "inverter_icon", label: "Tùy chỉnh ảnh Biến tần                 (Đường dẫn / URL-Inverter image) ", selector: { text: {} } },
-      { name: "inverter_x", label: "Tọa độ X Biến tần                         (Inverter X coordinate-Default: 136)", selector: { number: { min: 0, max: 800, step: 1, mode: "box" } } },
-      { name: "inverter_y", label: "Tọa độ Y Biến tần                         (Inverter Y coordinate-Default: 68)", selector: { number: { min: 0, max: 800, step: 1, mode: "box" } } },
-      { name: "inverter_width", label: "Chiều rộng hình ảnh                   (Image width-Default: 75)", selector: { number: { min: 0, max: 800, step: 1, mode: "box" } } },
-      { name: "inverter_height", label: "Chiều cao hình ảnh                   (Image height-Default: 75)", selector: { number: { min: 0, max: 800, step: 1, mode: "box" } } },
+        ha-switch { cursor: pointer; }
+        details { margin-bottom: 8px; border: 1px solid var(--divider-color, #e2e8f0); border-radius: 8px; overflow: hidden; background: var(--card-background-color, #ffffff); }
+        summary { font-weight: bold; font-size: 13px; padding: 10px 12px; cursor: pointer; background: var(--secondary-background-color, #f1f5f9); color: var(--primary-text-color, #0f172a); user-select: none; }
+        .details-body { padding: 12px; display: flex; flex-direction: column; gap: 4px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+      </style>
 
-      {
-        name: "entities",
-        title: "Khai báo Thực thể / Entities",
-        type: "expandable",
-        schema: [
-          // PV DC
-{ name: "pv_power", label: "PV Tổng công suất - PV Total Power", selector: entitySelector },
-{ name: "pv_daily", label: "PV Sản lượng hôm nay - PV Today's Production", selector: entitySelector },
-{ name: "pv_total", label: "PV Tổng sản lượng - PV Total Production", selector: entitySelector },
-{ name: "pv1_power", label: "PV1 Công suất - PV1 Power Output", selector: entitySelector },
-{ name: "pv1_voltage", label: "PV1 Điện áp - PV1 Voltage", selector: entitySelector },
-{ name: "pv2_power", label: "PV2 Công suất - PV2 Power Capacity", selector: entitySelector },
-{ name: "pv2_voltage", label: "PV2 Điện áp - PV2 Voltage", selector: entitySelector },
-{ name: "pv3_power", label: "PV3 Công suất - PV3 Power Capacity", selector: entitySelector },
-{ name: "pv3_voltage", label: "PV3 Điện áp - PV3 Voltage", selector: entitySelector },
-{ name: "pv4_power", label: "PV4 Công suất - PV4 Power Capacity", selector: entitySelector },
-{ name: "pv4_voltage", label: "PV4 Điện áp - PV4 Voltage", selector: entitySelector },
+      <div class="card-config">
+        <details open>
+          <summary>⚙️ Cấu Hình Chung (General Options)</summary>
+          <div class="details-body">
+            <div class="form-row">
+              <label class="form-label">Ngôn ngữ (Language)</label>
+              <select class="config-input" configValue="language">
+                <option value="vi" ${config.language === 'vi' ? 'selected' : ''}>Tiếng Việt</option>
+                <option value="en" ${config.language === 'en' ? 'selected' : ''}>English</option>
+              </select>
+            </div>
 
-// Hoà lưới/Máy phát
-{ name: "ac_pv_power", label: "Hoà lưới/Máy phát Công suất - AC PV/Generator Power", selector: entitySelector },
-{ name: "ac_pv_voltage", label: "Hoà lưới/Máy phát Điện áp - AC PV/Generator Voltage", selector: entitySelector },
-{ name: "ac_pv_frequency", label: "Hoà lưới/Máy phát Tần số - AC PV/Generator Frequency", selector: entitySelector },
-{ name: "ac_pv_power_l1", label: "Hoà lưới/Máy phát Công suất L1 - AC PV/Generator L1 Power", selector: entitySelector },
-{ name: "ac_pv_power_l2", label: "Hoà lưới/Máy phát Công suất L2 - AC PV/Generator L2 Power", selector: entitySelector },
-{ name: "ac_pv_power_l3", label: "Hoà lưới/Máy phát Công suất L3 - AC PV/Generator L3 Power", selector: entitySelector },
+            <div class="form-row-inline">
+              <span class="form-label">Giao diện tối (Dark Mode)</span>
+              <ha-switch class="config-switch" configValue="dark_mode" .checked=${Boolean(config.dark_mode)}></ha-switch>
+            </div>
 
-// Grid
-{ name: "grid_power", label: "Lưới Công suất 1 pha - Grid Single-phase Power", selector: entitySelector },
-{ name: "grid_voltage", label: "Lưới Điện áp - Grid Voltage", selector: entitySelector },
-{ name: "grid_frequency", label: "Lưới Tần số - Grid Frequency", selector: entitySelector },
-{ name: "grid_buy_daily", label: "Lưới Nhập hôm nay - Grid Import Today", selector: entitySelector },
-{ name: "grid_buy_total", label: "Lưới Tổng nhập - Grid Total Import", selector: entitySelector },
-{ name: "grid_sell_daily", label: "Lưới Phát hôm nay - Grid Export Today", selector: entitySelector },
-{ name: "grid_sell_total", label: "Lưới Tổng phát - Grid Total Export", selector: entitySelector },
-{ name: "grid_power_l1", label: "Lưới Công suất L1 - Grid L1 Power", selector: entitySelector },
-{ name: "grid_power_l2", label: "Lưới Công suất L2 - Grid L2 Power", selector: entitySelector },
-{ name: "grid_power_l3", label: "Lưới Công suất L3 - Grid L3 Power", selector: entitySelector },
-{ name: "grid_voltage_l1", label: "Lưới Điện áp L1 - Grid L1 Voltage", selector: entitySelector },
+            <div class="form-row-inline">
+              <span class="form-label">Điện 3 Pha (Three Phase)</span>
+              <ha-switch class="config-switch" configValue="three_phase" .checked=${Boolean(config.three_phase)}></ha-switch>
+            </div>
 
-// Load
-{ name: "load_power", label: "Tải Công suất 1 pha - Load Single-phase Power", selector: entitySelector },
-{ name: "load_daily", label: "Tải Tiêu thụ hôm nay - Load Consumption Today", selector: entitySelector },
-{ name: "load_total", label: "Tải Tổng tiêu thụ - Load Total Consumption", selector: entitySelector },
-{ name: "load_power_l1", label: "Tải Công suất L1 - Load L1 Power", selector: entitySelector },
-{ name: "load_power_l2", label: "Tải Công suất L2 - Load L2 Power", selector: entitySelector },
-{ name: "load_power_l3", label: "Tải Công suất L3 - Load L3 Power", selector: entitySelector },
+            <div class="form-row-inline">
+              <div>
+                <div class="form-label">Chế độ 1 Tải (Single Load Mode)</div>
+                <div class="form-sublabel">Tự động chuyển tải sang EPS khi mất lưới</div>
+              </div>
+              <ha-switch class="config-switch" configValue="single_load_mode" .checked=${Boolean(config.single_load_mode)}></ha-switch>
+            </div>
 
-// EPS
-{ name: "eps_power", label: "UPS Công suất 1 pha - UPS Single-phase Power", selector: entitySelector },
-{ name: "eps_voltage", label: "UPS Điện áp - UPS Voltage", selector: entitySelector },
-{ name: "eps_frequency", label: "UPS Tần số - UPS Frequency", selector: entitySelector },
-{ name: "eps_power_l1", label: "UPS Công suất L1 - UPS L1 Power", selector: entitySelector },
-{ name: "eps_power_l2", label: "UPS Công suất L2 - UPS L2 Power", selector: entitySelector },
-{ name: "eps_power_l3", label: "UPS Công suất L3 - UPS L3 Power", selector: entitySelector },
+            <div class="form-row-inline">
+              <span class="form-label">Luôn hiển thị nguồn AC PV</span>
+              <ha-switch class="config-switch" configValue="always_show_ac_pv" .checked=${Boolean(config.always_show_ac_pv)}></ha-switch>
+            </div>
 
-// Battery 1
-{ name: "battery_power", label: "Pin 1 Công suất - Battery 1 Power", selector: entitySelector },
-{ name: "battery_voltage", label: "Pin 1 Điện áp - Battery 1 Voltage", selector: entitySelector },
-{ name: "battery_soc", label: "Pin 1 Dung lượng SOC (%) - Battery 1 SOC (%)", selector: entitySelector },
-{ name: "battery_charge_daily", label: "Pin Lưu Trữ Nạp hôm nay - Battery Charge Today", selector: entitySelector },
-{ name: "battery_charge_total", label: "Pin Lưu Trữ Tổng nạp - Battery Total Charge", selector: entitySelector },
-{ name: "battery_discharge_daily", label: "Pin Lưu Trữ Xả hôm nay - Battery Discharge Today", selector: entitySelector },
-{ name: "battery_discharge_total", label: "Pin Lưu Trữ Tổng xả - Battery Total Discharge", selector: entitySelector },
+            <div class="form-row-inline">
+              <span class="form-label">Đảo chiều công suất Lưới (+/-)</span>
+              <ha-switch class="config-switch" configValue="invert_grid_power" .checked=${Boolean(config.invert_grid_power)}></ha-switch>
+            </div>
 
-// Battery 2
-{ name: "battery2_power", label: "Pin 2 Công suất - Battery 2 Power", selector: entitySelector },
-{ name: "battery2_voltage", label: "Pin 2 Điện áp - Battery 2 Voltage", selector: entitySelector },
-{ name: "battery2_soc", label: "Pin 2 Dung lượng SOC (%) - Battery 2 SOC (%)", selector: entitySelector },
-        ]
-      }
-    ];
+            <div class="form-row-inline">
+              <span class="form-label">Đảo chiều công suất Pin 1 (+/-)</span>
+              <ha-switch class="config-switch" configValue="invert_battery_power" .checked=${Boolean(config.invert_battery_power)}></ha-switch>
+            </div>
 
-    this._form.hass = this._hass;
-    this._form.data = this._config;
-    this._form.schema = schema;
-    this._form.computeLabel = (s) => s.label || s.name;
+            <div class="form-row-inline">
+              <span class="form-label">Luôn hiển thị Pin lưu trữ 2</span>
+              <ha-switch class="config-switch" configValue="always_show_battery2" .checked=${Boolean(config.always_show_battery2)}></ha-switch>
+            </div>
+
+            <div class="form-row-inline">
+              <span class="form-label">Đảo chiều công suất Pin 2 (+/-)</span>
+              <ha-switch class="config-switch" configValue="invert_battery2_power" .checked=${Boolean(config.invert_battery2_power)}></ha-switch>
+            </div>
+
+            <div class="form-row-inline">
+              <span class="form-label">Sử dụng ảnh Inverter riêng</span>
+              <ha-switch class="config-switch" configValue="inverter_image" .checked=${Boolean(config.inverter_image)}></ha-switch>
+            </div>
+
+            <div class="form-row">
+              <label class="form-label">Đường dẫn Icon/Ảnh Inverter</label>
+              <input type="text" class="config-input" configValue="inverter_icon" value="${config.inverter_icon || ''}" placeholder="/local/community/inverter.png" />
+            </div>
+
+            <div class="grid-2">
+              <div class="form-row">
+                <label class="form-label">Tọa độ X Inverter</label>
+                <input type="number" class="config-input" configValue="inverter_x" value="${config.inverter_x ?? 136}" />
+              </div>
+              <div class="form-row">
+                <label class="form-label">Tọa độ Y Inverter</label>
+                <input type="number" class="config-input" configValue="inverter_y" value="${config.inverter_y ?? 68}" />
+              </div>
+              <div class="form-row">
+                <label class="form-label">Chiều rộng (Width)</label>
+                <input type="number" class="config-input" configValue="inverter_width" value="${config.inverter_width ?? 75}" />
+              </div>
+              <div class="form-row">
+                <label class="form-label">Chiều cao (Height)</label>
+                <input type="number" class="config-input" configValue="inverter_height" value="${config.inverter_height ?? 75}" />
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <!-- 1. PV DC -->
+        <details>
+          <summary>☀️ Năng Lượng Mặt Trời (PV DC)</summary>
+          <div class="details-body">
+            ${this._renderEntityPicker("Tổng công suất PV (pv_power)", "pv_power", ent.pv_power)}
+            ${this._renderEntityPicker("Sản lượng PV hôm nay (pv_daily)", "pv_daily", ent.pv_daily)}
+            ${this._renderEntityPicker("Tổng sản lượng PV (pv_total)", "pv_total", ent.pv_total)}
+            ${this._renderEntityPicker("Công suất PV1 (pv1_power)", "pv1_power", ent.pv1_power)}
+            ${this._renderEntityPicker("Điện áp PV1 (pv1_voltage)", "pv1_voltage", ent.pv1_voltage)}
+            ${this._renderEntityPicker("Công suất PV2 (pv2_power)", "pv2_power", ent.pv2_power)}
+            ${this._renderEntityPicker("Điện áp PV2 (pv2_voltage)", "pv2_voltage", ent.pv2_voltage)}
+            ${this._renderEntityPicker("Công suất PV3 (pv3_power)", "pv3_power", ent.pv3_power)}
+            ${this._renderEntityPicker("Điện áp PV3 (pv3_voltage)", "pv3_voltage", ent.pv3_voltage)}
+            ${this._renderEntityPicker("Công suất PV4 (pv4_power)", "pv4_power", ent.pv4_power)}
+            ${this._renderEntityPicker("Điện áp PV4 (pv4_voltage)", "pv4_voltage", ent.pv4_voltage)}
+          </div>
+        </details>
+
+        <!-- 2. PV AC -->
+        <details>
+          <summary>⚡ PV AC (Microinverter / Hòa Lưới Phụ)</summary>
+          <div class="details-body">
+            ${this._renderEntityPicker("Tổng công suất PV AC (ac_pv_power)", "ac_pv_power", ent.ac_pv_power)}
+            ${this._renderEntityPicker("Công suất PV AC L1 (ac_pv_power_l1)", "ac_pv_power_l1", ent.ac_pv_power_l1)}
+            ${this._renderEntityPicker("Công suất PV AC L2 (ac_pv_power_l2)", "ac_pv_power_l2", ent.ac_pv_power_l2)}
+            ${this._renderEntityPicker("Công suất PV AC L3 (ac_pv_power_l3)", "ac_pv_power_l3", ent.ac_pv_power_l3)}
+            ${this._renderEntityPicker("Điện áp PV AC (ac_pv_voltage)", "ac_pv_voltage", ent.ac_pv_voltage)}
+            ${this._renderEntityPicker("Tần số PV AC (ac_pv_frequency)", "ac_pv_frequency", ent.ac_pv_frequency)}
+          </div>
+        </details>
+
+        <!-- 3. GRID -->
+        <details>
+          <summary>🔌 Điện Lưới (Grid)</summary>
+          <div class="details-body">
+            ${this._renderEntityPicker("Công suất Lưới (grid_power)", "grid_power", ent.grid_power)}
+            ${this._renderEntityPicker("Điện áp Lưới (grid_voltage)", "grid_voltage", ent.grid_voltage)}
+            ${this._renderEntityPicker("Tần số Lưới (grid_frequency)", "grid_frequency", ent.grid_frequency)}
+            ${this._renderEntityPicker("Phát lưới hôm nay (grid_sell_daily)", "grid_sell_daily", ent.grid_sell_daily)}
+            ${this._renderEntityPicker("Tổng phát lưới (grid_sell_total)", "grid_sell_total", ent.grid_sell_total)}
+            ${this._renderEntityPicker("Nhập lưới hôm nay (grid_buy_daily)", "grid_buy_daily", ent.grid_buy_daily)}
+            ${this._renderEntityPicker("Tổng nhập lưới (grid_buy_total)", "grid_buy_total", ent.grid_buy_total)}
+            ${this._renderEntityPicker("Công suất Lưới L1 (grid_power_l1)", "grid_power_l1", ent.grid_power_l1)}
+            ${this._renderEntityPicker("Công suất Lưới L2 (grid_power_l2)", "grid_power_l2", ent.grid_power_l2)}
+            ${this._renderEntityPicker("Công suất Lưới L3 (grid_power_l3)", "grid_power_l3", ent.grid_power_l3)}
+            ${this._renderEntityPicker("Điện áp Lưới L1 (grid_voltage_l1)", "grid_voltage_l1", ent.grid_voltage_l1)}
+          </div>
+        </details>
+
+        <!-- 4. LOAD -->
+        <details>
+          <summary>💡 Tải Tiêu Thụ (Load)</summary>
+          <div class="details-body">
+            ${this._renderEntityPicker("Công suất Tiêu thụ (load_power)", "load_power", ent.load_power)}
+            ${this._renderEntityPicker("Tiêu thụ hôm nay (load_daily)", "load_daily", ent.load_daily)}
+            ${this._renderEntityPicker("Tổng tiêu thụ (load_total)", "load_total", ent.load_total)}
+            ${this._renderEntityPicker("Tiêu thụ L1 (load_power_l1)", "load_power_l1", ent.load_power_l1)}
+            ${this._renderEntityPicker("Tiêu thụ L2 (load_power_l2)", "load_power_l2", ent.load_power_l2)}
+            ${this._renderEntityPicker("Tiêu thụ L3 (load_power_l3)", "load_power_l3", ent.load_power_l3)}
+          </div>
+        </details>
+
+        <!-- 5. EPS -->
+        <details>
+          <summary>🛡️ Nguồn Dự Phòng (EPS / Backup)</summary>
+          <div class="details-body">
+            ${this._renderEntityPicker("Công suất Dự phòng EPS (eps_power)", "eps_power", ent.eps_power)}
+            ${this._renderEntityPicker("Điện áp EPS (eps_voltage)", "eps_voltage", ent.eps_voltage)}
+            ${this._renderEntityPicker("Tần số EPS (eps_frequency)", "eps_frequency", ent.eps_frequency)}
+            ${this._renderEntityPicker("EPS L1 (eps_power_l1)", "eps_power_l1", ent.eps_power_l1)}
+            ${this._renderEntityPicker("EPS L2 (eps_power_l2)", "eps_power_l2", ent.eps_power_l2)}
+            ${this._renderEntityPicker("EPS L3 (eps_power_l3)", "eps_power_l3", ent.eps_power_l3)}
+          </div>
+        </details>
+
+        <!-- 6. BATTERY 1 -->
+        <details>
+          <summary>🔋 Pin Lưu Trữ 1 (Battery 1)</summary>
+          <div class="details-body">
+            ${this._renderEntityPicker("Công suất Pin 1 (battery_power)", "battery_power", ent.battery_power)}
+            ${this._renderEntityPicker("Điện áp Pin 1 (battery_voltage)", "battery_voltage", ent.battery_voltage)}
+            ${this._renderEntityPicker("Dung lượng Pin 1 % (battery_soc)", "battery_soc", ent.battery_soc)}
+            ${this._renderEntityPicker("Sạc Pin 1 hôm nay (battery_charge_daily)", "battery_charge_daily", ent.battery_charge_daily)}
+            ${this._renderEntityPicker("Tổng sạc Pin 1 (battery_charge_total)", "battery_charge_total", ent.battery_charge_total)}
+            ${this._renderEntityPicker("Xả Pin 1 hôm nay (battery_discharge_daily)", "battery_discharge_daily", ent.battery_discharge_daily)}
+            ${this._renderEntityPicker("Tổng xả Pin 1 (battery_discharge_total)", "battery_discharge_total", ent.battery_discharge_total)}
+          </div>
+        </details>
+
+        <!-- 7. BATTERY 2 -->
+        <details>
+          <summary>🔋 Pin Lưu Trữ 2 (Battery 2)</summary>
+          <div class="details-body">
+            ${this._renderEntityPicker("Công suất Pin 2 (battery2_power)", "battery2_power", ent.battery2_power)}
+            ${this._renderEntityPicker("Điện áp Pin 2 (battery2_voltage)", "battery2_voltage", ent.battery2_voltage)}
+            ${this._renderEntityPicker("Dung lượng Pin 2 % (battery2_soc)", "battery2_soc", ent.battery2_soc)}
+          </div>
+        </details>
+      </div>
+    `;
+
+    this._attachEvents();
   }
 
-  _valueChanged(ev) {
-    const newConfig = ev.detail.value;
+  _renderEntityPicker(label, key, val) {
+    return `
+      <div class="form-row">
+        <label class="form-label">${label}</label>
+        <ha-entity-picker
+          class="entity-picker-input"
+          data-key="${key}"
+          .hass=${this._hass}
+          .value=${val || ''}
+          allow-custom-entity
+        ></ha-entity-picker>
+      </div>
+    `;
+  }
+
+  _attachEvents() {
+    const root = this.shadowRoot;
+
+    const entityPickers = root.querySelectorAll('ha-entity-picker');
+    entityPickers.forEach(picker => {
+      picker.hass = this._hass;
+      const key = picker.getAttribute('data-key');
+      picker.addEventListener('value-changed', (e) => {
+        e.stopPropagation();
+        const newVal = e.detail.value;
+        this._updateEntityConfig(key, newVal);
+      });
+    });
+
+    const inputs = root.querySelectorAll('.config-input');
+    inputs.forEach(input => {
+      const key = input.getAttribute('configValue');
+      input.addEventListener('change', () => {
+        let val = input.value;
+        if (input.type === 'number') {
+          val = val === '' ? 0 : Number(val);
+        }
+        this._updateConfig(key, val);
+      });
+    });
+
+    const switches = root.querySelectorAll('.config-switch');
+    switches.forEach(sw => {
+      const key = sw.getAttribute('configValue');
+      sw.addEventListener('change', () => {
+        this._updateConfig(key, sw.checked);
+      });
+    });
+  }
+
+  _updateConfig(key, val) {
+    const newConfig = {
+      ...this._config,
+      [key]: val
+    };
+    this._dispatch(newConfig);
+  }
+
+  _updateEntityConfig(key, val) {
+    const newEntities = {
+      ...(this._config.entities || {})
+    };
+    if (val === "" || val === undefined) {
+      delete newEntities[key];
+    } else {
+      newEntities[key] = val;
+    }
+
+    const newConfig = {
+      ...this._config,
+      entities: newEntities
+    };
+    this._dispatch(newConfig);
+  }
+
+  _dispatch(newConfig) {
+    this._config = newConfig;
     const event = new CustomEvent("config-changed", {
-      detail: { config: newConfig },
+      detail: { config: this._config },
       bubbles: true,
       composed: true,
     });
@@ -1659,13 +1822,5 @@ class PowerFlowCardEditor extends HTMLElement {
   }
 }
 
-customElements.define('power-flow-card-inverter-editor', PowerFlowCardEditor);
 customElements.define('power-flow-card-inverter', PowerFlowCardInverter);
-
-window.customCards = window.customCards || [];
-window.customCards.push({
-  type: "power-flow-card-inverter",
-  name: "Power Flow Card Inverter",
-  description: "Sơ đồ luồng năng lượng cho Inverter Hybrid (1 Pha / 3 Pha)",
-  configurable: true
-});
+customElements.define('power-flow-card-inverter-editor', PowerFlowCardInverterEditor);
