@@ -1,0 +1,32 @@
+<svg viewBox="0 0 500 600" xmlns="http://www.w3.org/2000/svg">
+  <g fill="#61C68C" stroke="#61C68C" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M 250 40 L 140 550 M 250 40 L 360 550" fill="none" stroke-width="22" />
+    <path d="M 242 80 L 258 80 M 250 40 L 258 80 M 250 40 L 242 80" fill="none" stroke-width="3" />
+    <path d="M 235 120 L 265 120 M 242 80 L 265 120 M 258 80 L 235 120" fill="none" stroke-width="4.5" />
+    <path d="M 228 160 L 272 160 M 235 120 L 272 160 M 265 120 L 228 160" fill="none" stroke-width="6" />
+    <path d="M 220 205 L 280 205 M 228 160 L 280 205 M 272 160 L 220 205" fill="none" stroke-width="7.5" />
+    <path d="M 212 250 L 288 250 M 220 205 L 288 250 M 280 205 L 212 250" fill="none" stroke-width="9" />
+    <path d="M 200 305 L 300 305 M 212 250 L 300 305 M 288 250 L 200 305" fill="none" stroke-width="10.5" />
+    <path d="M 186 365 L 314 365 M 200 305 L 314 365 M 300 305 L 186 365" fill="none" stroke-width="12" />
+    <path d="M 170 430 L 330 430 M 186 365 L 330 430 M 314 365 L 170 430" fill="none" stroke-width="13.5" />
+    <path d="M 152 490 L 348 490 M 170 430 L 348 490 M 330 430 L 152 490 M 152 490 L 360 550 M 348 490 L 140 550" fill="none" stroke-width="15" />
+    <path d="M 228 160 L 145 190 Q 138 193 145 200 L 220 205 Z" stroke-width="3" />
+    <path d="M 272 160 L 355 190 Q 362 193 355 200 L 280 205 Z" stroke-width="3" />
+    <path d="M 152 202 A 12 12 0 0 0 176 202" fill="none" stroke-width="4.5" />
+    <path d="M 152 210 A 12 12 0 0 0 176 210" fill="none" stroke-width="4.5" />
+    <path d="M 152 218 A 12 12 0 0 0 176 218" fill="none" stroke-width="4.5" />
+    <path d="M 324 202 A 12 12 0 0 0 348 202" fill="none" stroke-width="4.5" />
+    <path d="M 324 210 A 12 12 0 0 0 348 210" fill="none" stroke-width="4.5" />
+    <path d="M 324 218 A 12 12 0 0 0 348 218" fill="none" stroke-width="4.5" />
+    <path d="M 212 250 L 68 280 Q 60 283 68 295 L 200 305 Z M 140 265 L 140 295" stroke-width="3" />
+    <path d="M 288 250 L 432 280 Q 440 283 432 295 L 300 305 Z M 360 265 L 360 295" stroke-width="3" />
+    <path d="M 95 292 A 12 12 0 0 0 119 292" fill="none" stroke-width="4.5" />
+    <path d="M 95 300 A 12 12 0 0 0 119 300" fill="none" stroke-width="4.5" />
+    <path d="M 95 308 A 12 12 0 0 0 119 308" fill="none" stroke-width="4.5" />
+    <path d="M 100 310 Q 130 350 160 310" fill="none" stroke-width="4.5" />
+    <path d="M 381 292 A 12 12 0 0 0 405 292" fill="none" stroke-width="4.5" />
+    <path d="M 381 300 A 12 12 0 0 0 405 300" fill="none" stroke-width="4.5" />
+    <path d="M 381 308 A 12 12 0 0 0 405 308" fill="none" stroke-width="4.5" />
+    <path d="M 340 310 Q 370 350 400 310" fill="none" stroke-width="4.5" />
+  </g>
+</svg>
