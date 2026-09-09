@@ -22,6 +22,15 @@
     const hasLoadPower = loadP > MIN_POWER;
     const hasEpsPower = epsP > MIN_POWER;
 
+    // --- ĐIỀU KIỆN BỔ SUNG: CHẾ ĐỘ AC PV OFFGRID NỐI LƯỚI ---
+    // (Có lưới + Không tải tiêu thụ + Không lấy lưới + Có PV/Pin nạp xả + Có AC PV + Có EPS)
+    const isAcPvSpecialOffgrid = isGridConnected && 
+                                 !hasLoadPower && 
+                                 !isImporting && 
+                                 (hasPvPower || isNetCharging || isNetDischarging) && 
+                                 hasAcPvPower && 
+                                 hasEpsPower;
+
     // --- CẶP MŨI TÊN PIN ---
     this.setFlowVisible('flow-bat-charge', isBat1Charging);
     this.setFlowVisible('flow-bat-discharge', isBat1Discharging);
@@ -37,19 +46,19 @@
     // --- CẶP MŨI TÊN TẢI & EPS & PV ---
     this.setFlowVisible('flow-pv', hasPvPower);
     
-    // PV hòa lưới (AC PV) hiển thị khi có lưới HOẶC khi mất lưới mà có tải EPS / Sạc Pin
-    const showAcPvFlow = hasAcPvPower && (isGridConnected || hasEpsPower || isNetCharging);
+    // Mũi tên PV hòa lưới (AC PV)
+    const showAcPvFlow = hasAcPvPower && (isGridConnected || hasEpsPower || isNetCharging || isAcPvSpecialOffgrid);
     this.setFlowVisible('flow-ac-pv', showAcPvFlow);
     
     this.setFlowVisible('flow-bus-to-load', hasLoadPower);
     this.setFlowVisible('flow-eps', hasEpsPower);
 
     // --- CHUYỂN ĐỔI GIỮA INVERTER VÀ THANH CÁI AC (BUS) ---
-    // 1. Bus cấp điện ngược lại Inverter (Sạc pin từ lưới/AC PV hoặc AC PV cấp EPS offgrid)
+    // 1. Bus cấp điện ngược lại Inverter (Bật khi có AC PV Offgrid Nối lưới)
     const isAcPvOffgridSupply = !isGridConnected && hasAcPvPower && (hasEpsPower || isNetCharging);
-    const isBusChargingInv = ((isImporting || hasAcPvPower) && isNetCharging) || isAcPvOffgridSupply;
+    const isBusChargingInv = ((isImporting || hasAcPvPower) && isNetCharging) || isAcPvOffgridSupply || isAcPvSpecialOffgrid;
 
-    // 2. Inverter đẩy điện ra Bus: Đồng bộ loại trừ triệt để với BusChargingInv
+    // 2. Inverter đẩy điện ra Bus (Tự động loại trừ để tránh xung đột ngược chiều)
     const isInvSupplyingBus = !isBusChargingInv && (isGridConnected || hasLoadPower) && (hasPvPower || isNetDischarging) && (hasLoadPower || isExporting);
 
     this.setFlowVisible('flow-inv-to-bus', isInvSupplyingBus);
