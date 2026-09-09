@@ -1,5 +1,26 @@
-<svg viewBox="0 0 33.6 55" xmlns="http://www.w3.org/2000/svg">
-  <rect x="11.55" y="1" width="10.5" height="4" rx="1.5" fill="#16a34a"/>
-  <rect x="2.1" y="5" width="29.4" height="48" rx="4" fill="#ffffff" stroke="#16a34a" stroke-width="2"/>
-  <rect x="4.2" y="7" width="25.2" height="43" rx="1.5" fill="#16a34a"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35.2 55" width="100%" height="100%">
+  <defs>
+    <style>
+      /* Giao diện sáng (Light Mode) */
+      .battery-terminal { fill: #16a34a; }
+      .battery-body { fill: #ffffff; stroke: #16a34a; stroke-width: 2; }
+      .battery-fill { fill: #16a34a; }
+
+      /* Giao diện tối (Dark Mode) */
+      @media (prefers-color-scheme: dark) {
+        .battery-terminal { fill: #34d399; }
+        .battery-body { fill: #0f172a; stroke: #34d399; }
+        .battery-fill { fill: #10b982; }
+      }
+    </style>
+  </defs>
+
+  <!-- Đầu cực pin -->
+  <rect class="battery-terminal" x="12.1" y="1" width="11" height="4" rx="1.5" />
+
+  <!-- Thân / Vỏ ngoài pin -->
+  <rect class="battery-body" x="2.2" y="5" width="30.8" height="48" rx="4" />
+
+  <!-- Mức dung lượng pin -->
+  <rect class="battery-fill" x="4.4" y="7" width="26.4" height="43" rx="1.5" />
 </svg>
