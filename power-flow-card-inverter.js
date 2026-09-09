@@ -915,16 +915,16 @@ class PowerFlowCardInverter extends HTMLElement {
     this.setEnergyStat('stat-grid-today', this.getState(isGridSell ? ent.grid_sell_daily : ent.grid_buy_daily));
     this.setEnergyStat('stat-grid-total', this.getState(isGridSell ? ent.grid_sell_total : ent.grid_buy_total));
 
-    // Ngưỡng công suất tối thiểu (Watts) để kích hoạt chuyển động mũi tên
+        // Ngưỡng công suất tối thiểu (Watts) để kích hoạt chuyển động mũi tên
     const MIN_POWER = 5;
 
-    // 1. Trạng thái Sạc / Xả Pin từng bộ riêng lẻ
+    // 1. Trạng thái Sạc / Xả Pin
     const isBat1Charging = batP > MIN_POWER;
     const isBat1Discharging = batP < -MIN_POWER;
     const isBat2Charging = showBat2 && bat2P > MIN_POWER;
     const isBat2Discharging = showBat2 && bat2P < -MIN_POWER;
 
-    // Cập nhật: Tính tổng công suất nạp/xả ròng (netBatPower) cho Trục Pin chính
+    // Tính tổng công suất ròng của Pin để đồng bộ luồng trục chính (Trunk)
     const netBatPower = batP + (showBat2 ? bat2P : 0);
     const isNetCharging = netBatPower > MIN_POWER;
     const isNetDischarging = netBatPower < -MIN_POWER;
@@ -938,6 +938,15 @@ class PowerFlowCardInverter extends HTMLElement {
     const hasAcPvPower = hasAcPvP && acPvP > MIN_POWER;
     const hasLoadPower = loadP > MIN_POWER;
     const hasEpsPower = epsP > MIN_POWER;
+
+    // --- ĐIỀU KIỆN BỔ SUNG: CHẾ ĐỘ AC PV OFFGRID NỐI LƯỚI ---
+    // (Có lưới + Không tải tiêu thụ + Không lấy lưới + Có PV/Pin nạp xả + Có AC PV + Có EPS)
+    const isAcPvSpecialOffgrid = isGridConnected && 
+                                 !hasLoadPower && 
+                                 !isImporting && 
+                                 (hasPvPower || isNetCharging || isNetDischarging) && 
+                                 hasAcPvPower && 
+                                 hasEpsPower;
 
     // --- CẶP MŨI TÊN PIN ---
     this.setFlowVisible('flow-bat-charge', isBat1Charging);
@@ -954,20 +963,20 @@ class PowerFlowCardInverter extends HTMLElement {
     // --- CẶP MŨI TÊN TẢI & EPS & PV ---
     this.setFlowVisible('flow-pv', hasPvPower);
     
-    // PV hòa lưới (AC PV) hiển thị khi có lưới HOẶC khi mất lưới mà có tải EPS / Sạc Pin
-    const showAcPvFlow = hasAcPvPower && (isGridConnected || hasEpsPower || isNetCharging);
+    // Mũi tên PV hòa lưới (AC PV)
+    const showAcPvFlow = hasAcPvPower && (isGridConnected || hasEpsPower || isNetCharging || isAcPvSpecialOffgrid);
     this.setFlowVisible('flow-ac-pv', showAcPvFlow);
     
     this.setFlowVisible('flow-bus-to-load', hasLoadPower);
     this.setFlowVisible('flow-eps', hasEpsPower);
 
     // --- CHUYỂN ĐỔI GIỮA INVERTER VÀ THANH CÁI AC (BUS) ---
-    // 1. Bus cấp điện ngược lại Inverter (khi nạp pin từ lưới/AC PV hoặc chạy EPS offgrid):
+    // 1. Bus cấp điện ngược lại Inverter (Bật khi có AC PV Offgrid Nối lưới)
     const isAcPvOffgridSupply = !isGridConnected && hasAcPvPower && (hasEpsPower || isNetCharging);
-    const isBusChargingInv = ((isImporting || hasAcPvPower) && isNetCharging) || isAcPvOffgridSupply;
+    const isBusChargingInv = ((isImporting || hasAcPvPower) && isNetCharging) || isAcPvOffgridSupply || isAcPvSpecialOffgrid;
 
-    // 2. Inverter đẩy điện ra Bus: Thêm điều kiện loại trừ tương hỗ (!isBusChargingInv)
-    const isInvSupplyingBus = !isBusChargingInv && isGridConnected && (hasPvPower || isNetDischarging) && (hasLoadPower || isExporting);
+    // 2. Inverter đẩy điện ra Bus (Tự động loại trừ để tránh xung đột ngược chiều)
+    const isInvSupplyingBus = !isBusChargingInv && (isGridConnected || hasLoadPower) && (hasPvPower || isNetDischarging) && (hasLoadPower || isExporting);
 
     this.setFlowVisible('flow-inv-to-bus', isInvSupplyingBus);
     this.setFlowVisible('flow-bus-to-inv', isBusChargingInv);
