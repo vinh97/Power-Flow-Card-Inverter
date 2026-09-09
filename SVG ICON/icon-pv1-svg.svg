@@ -1,19 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 90" width="100%" height="100%">
   <defs>
     <style>
-      /* Mặc định (Giao diện sáng) */
+      /* Giao diện màu cố định */
       .sun-icon { stroke: #52b788; fill: none; stroke-width: 4.5; stroke-linecap: round; }
       .sun-core { fill: #52b788; }
       .pv-frame { fill: #52b788; stroke: #ffffff; stroke-width: 1.875; stroke-linejoin: round; }
       .pv-grid { stroke: #ffffff; stroke-width: 2.5; stroke-linecap: round; opacity: 0.9; }
-
-      /* Tối ưu riêng cho Giao diện tối (Dark Mode) */
-      @media (prefers-color-scheme: dark) {
-        .sun-icon { stroke: #74c69d; }
-        .sun-core { fill: #74c69d; }
-        .pv-frame { fill: #2d6a4f; stroke: #74c69d; }
-        .pv-grid { stroke: #d8f3dc; opacity: 0.95; }
-      }
     </style>
     
     <!-- Cắt gọn lưới vừa khít bên trong tấm PV -->

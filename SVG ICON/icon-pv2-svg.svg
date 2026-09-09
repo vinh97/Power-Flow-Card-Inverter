@@ -1,36 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
   <defs>
     <style>
-      :root {
-        /* Bảng màu Giao diện sáng (Light Mode) */
-        --bg-color: #ffffff;
-        --sun-color: #10b982;
-        --pv-frame-color: #10b982;
-        --pv-grid-color: #ffffff;
-        --pv-grid-opacity: 1;
-        --shadow-color: #000000;
-        --shadow-opacity: 0.18;
-      }
-
-      @media (prefers-color-scheme: dark) {
-        :root {
-          /* Bảng màu Giao diện tối (Dark Mode) */
-          --bg-color: #0f172a;
-          --sun-color: #34d399;
-          --pv-frame-color: #059669;
-          --pv-grid-color: #ecfdf5;
-          --pv-grid-opacity: 0.95;
-          --shadow-opacity: 0.45;
-        }
-      }
-
-      /* Khai báo thuộc tính bằng CSS Variables */
-      .bg { fill: var(--bg-color); }
-      .sun-rays line { stroke: var(--sun-color); stroke-width: 4; stroke-linecap: round; }
-      .sun-body { fill: var(--sun-color); }
-      .pv-frame { fill: var(--pv-frame-color); }
-      .pv-grid line { stroke: var(--pv-grid-color); stroke-width: 2.5; stroke-linecap: round; opacity: var(--pv-grid-opacity); }
-      .shadow-effect { flood-color: var(--shadow-color); flood-opacity: var(--shadow-opacity); }
+      /* Giao diện màu cố định */
+      .bg { fill: #ffffff; }
+      .sun-rays line { stroke: #10b982; stroke-width: 4; stroke-linecap: round; }
+      .sun-body { fill: #10b982; }
+      .pv-frame { fill: #10b982; }
+      .pv-grid line { stroke: #ffffff; stroke-width: 2.5; stroke-linecap: round; opacity: 1; }
+      .shadow-effect { flood-color: #000000; flood-opacity: 0.18; }
     </style>
 
     <!-- Cắt gọn lưới vừa khít khung tấm PV -->
@@ -38,7 +15,7 @@
       <polygon points="70,78 162,78 134,162 42,162" />
     </clipPath>
 
-    <!-- Mask đục hở phần mặt trời tại vùng bị tấm PV che (khoảng hở = 3/4 nét kẻ PV = 1.875px) -->
+    <!-- Mask đục hở phần mặt trời tại vùng bị tấm PV che -->
     <mask id="sun-cutout">
       <rect width="100%" height="100%" fill="#ffffff" />
       <polygon points="70,78 162,78 134,162 42,162" fill="#000000" stroke="#000000" stroke-width="3.75" stroke-linejoin="round" />
@@ -50,7 +27,7 @@
     </filter>
   </defs>
 
-  <!-- Nền chuyển đổi thông minh -->
+  <!-- Nền cố định -->
   <rect class="bg" width="100%" height="100%" rx="16"/>
 
   <!-- ==================== MẶT TRỜI ==================== -->
@@ -68,7 +45,7 @@
 
   <!-- ==================== TẤM PIN MẶT TRỜI ==================== -->
   <g id="pv-panel" filter="url(#shadow)">
-    <!-- Khung tấm pin (không viền) -->
+    <!-- Khung tấm pin -->
     <polygon points="70,78 162,78 134,162 42,162" class="pv-frame" />
 
     <!-- Lưới ô pin được cắt gọn bằng clip-path -->

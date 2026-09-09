@@ -1,17 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="100%" height="100%">
   <defs>
     <style>
-      /* Giao diện sáng (Light Mode) */
+      /* Giao diện màu cố định */
       .icon-stroke { stroke: #52b788; }
       .icon-fill { fill: #52b788; }
       .icon-text { fill: #52b788; }
-
-      /* Giao diện tối (Dark Mode) */
-      @media (prefers-color-scheme: dark) {
-        .icon-stroke { stroke: #74c69d; }
-        .icon-fill { fill: #74c69d; }
-        .icon-text { fill: #74c69d; }
-      }
     </style>
   </defs>
 

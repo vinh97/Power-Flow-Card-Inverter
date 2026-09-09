@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 210" width="100%" height="100%">
   <defs>
     <style>
-      /* Giao diện sáng (Light Mode) */
+      /* Giao diện màu cố định */
       .bg { fill: #ffffff; }
       .dashed-border { fill: none; stroke: #b0bec5; stroke-width: 2; stroke-dasharray: 6,4; }
       .pv-bottom { fill: #10b982; }
@@ -10,18 +10,6 @@
       .divider-line { stroke: #b0bec5; stroke-width: 3; stroke-linecap: round; }
       .symbol { stroke: #1a1a1a; stroke-width: 4.5; stroke-linecap: round; fill: none; }
       .shadow-effect { flood-color: #000000; flood-opacity: 0.18; }
-
-      /* Giao diện tối (Dark Mode) */
-      @media (prefers-color-scheme: dark) {
-        .bg { fill: #0f172a; }
-        .dashed-border { stroke: #475569; }
-        .pv-bottom { fill: #047857; }
-        .pv-top { fill: #059669; }
-        .inverter-frame { stroke: #34d399; }
-        .divider-line { stroke: #64748b; }
-        .symbol { stroke: #f8fafc; }
-        .shadow-effect { flood-color: #000000; flood-opacity: 0.45; }
-      }
     </style>
 
     <!-- Đổ bóng tách khối -->
@@ -30,7 +18,7 @@
     </filter>
   </defs>
 
-  <!-- Nền chuyển đổi thông minh -->
+  <!-- Nền cố định -->
   <rect class="bg" width="100%" height="100%" rx="16"/>
 
   <!-- Viền nét đứt lề -->
