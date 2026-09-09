@@ -24,7 +24,7 @@ const TRANSLATIONS = {
 
     today: "HÔM NAY",
     total: "TỔNG",
-    pv_power_lbl: "CÔNG SUẤT PV",
+    pv_power_lbl: "TỔNG PV",
     backup_power: "CÔNG SUẤT DỰ PHÒNG",
     standby_mode: "CHẾ ĐỘ CHỜ",
     consumption: "TIÊU THỤ",
