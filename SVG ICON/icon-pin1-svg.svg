@@ -1,19 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35.2 55" width="100%" height="100%">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36.96 55" width="100%" height="100%">
   <defs>
     <style>
-      /* Giao diện màu cố định */
-      .battery-terminal { fill: #16a34a; }
-      .battery-body { fill: #ffffff; stroke: #16a34a; stroke-width: 2; }
-      .battery-fill { fill: #16a34a; }
+      /* Giao diện màu xanh lục bảo (Emerald Green) */
+      .battery-terminal { fill: #059669; }
+      .battery-body { fill: #ffffff; stroke: #059669; stroke-width: 2; }
+      .battery-fill { fill: #059669; }
     </style>
   </defs>
 
   <!-- Đầu cực pin -->
-  <rect class="battery-terminal" x="12.1" y="1" width="11" height="4" rx="1.5" />
+  <rect class="battery-terminal" x="12.705" y="1" width="11.55" height="4" rx="1.5" />
 
   <!-- Thân / Vỏ ngoài pin -->
-  <rect class="battery-body" x="2.2" y="5" width="30.8" height="48" rx="4" />
+  <rect class="battery-body" x="2.31" y="5" width="32.34" height="48" rx="4" />
 
   <!-- Mức dung lượng pin -->
-  <rect class="battery-fill" x="4.4" y="7" width="26.4" height="43" rx="1.5" />
+  <rect class="battery-fill" x="4.62" y="7" width="27.72" height="43" rx="1.5" />
 </svg>

@@ -1,23 +1,24 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 105 100" width="100%" height="100%">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 92" width="100%" height="100%" class="svg-icon-house">
   <defs>
     <style>
-      /* Giao diện màu cố định */
-      .house-accent { fill: #52b788; }
-      .roof-stroke { stroke: #52b788; fill: none; stroke-width: 10; stroke-linecap: round; stroke-linejoin: round; }
-      .house-body { fill: #52b788; }
-      .lightning { fill: #ffffff; }
+      .house-accent { fill: #10b982; }
+      .roof-stroke { stroke: #10b982; fill: none; stroke-width: 10; stroke-linecap: round; stroke-linejoin: round; }
+      .house-body { fill: #10b982; }
     </style>
+
+    <!-- Mặt nạ đục rỗng tia sét trong suốt -->
+    <mask id="lightning-cutout">
+      <rect width="100%" height="100%" fill="white" />
+      <polygon points="52.1,41.5 41.6,56.5 49.5,56.5 46.3,74.5 58.4,55.5 50.5,55.5" fill="black" />
+    </mask>
   </defs>
 
   <!-- Ống khói -->
-  <rect class="house-accent" x="28.35" y="14" width="10.5" height="20" rx="1" />
+  <rect class="house-accent" x="25.85" y="10" width="10.5" height="20" rx="1" />
 
   <!-- Mái nhà -->
-  <path class="roof-stroke" d="M 10.5 50 L 52.5 21 L 94.5 50" />
+  <path class="roof-stroke" d="M 8 46 L 50 17 L 92 46" />
 
-  <!-- Thân nhà -->
-  <path class="house-body" d="M 52.5 29.5 L 86.1 52.5 L 86.1 85 C 86.1 86.5 84.5 88 83 88 L 22.1 88 C 20.5 88 18.9 86.5 18.9 85 L 18.9 52.5 Z" />
-
-  <!-- Biểu tượng tia sét -->
-  <polygon class="lightning" points="54.6,45.5 44.1,60.5 52,60.5 48.8,78.5 60.9,59.5 53,59.5" />
+  <!-- Thân nhà (Đục rỗng hình tia sét nhìn xuyên nền) -->
+  <path class="house-body" mask="url(#lightning-cutout)" d="M 50 25.5 L 83.6 48.5 L 83.6 81 C 83.6 82.5 82 84 80.5 84 L 19.6 84 C 18 84 16.4 82.5 16.4 81 L 16.4 48.5 Z" />
 </svg>
