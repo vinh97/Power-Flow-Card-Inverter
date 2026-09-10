@@ -24,7 +24,7 @@ const TRANSLATIONS = {
 
     today: "HÔM NAY",
     total: "TỔNG",
-    pv_power_lbl: "TỔNG PV",
+    pv_power_lbl: "CÔNG SUẤT PV",
     backup_power: "CÔNG SUẤT DỰ PHÒNG",
     standby_mode: "CHẾ ĐỘ CHỜ",
     consumption: "TIÊU THỤ",
@@ -386,7 +386,7 @@ class PowerFlowCardInverter extends HTMLElement {
       const lineV = this.getEl(`line-pv${i}-v`);
       const lineP = this.getEl(`line-pv${i}-p`);
       if (lineV) lineV.setAttribute('x', '26');
-      if (lineP) lineP.setAttribute('x', '88');
+      if (lineP) lineP.setAttribute('x', '80');
 
       const grp = this.getEl(`grp-pv${i}`);
       if (grp) {
@@ -418,9 +418,9 @@ class PowerFlowCardInverter extends HTMLElement {
 
     if (numStrings > 0 || hasTotal) {
       const lineSpacing = 16;
-      const pvTotalGap = 22;
+      const pvTotalGap = 20;
       const iconY = -56;
-      const pvIconBaseY = iconY + 49;
+      const pvIconBaseY = iconY + 49 + 20;
 
       const pvIconGroup = this.getEl('grp-pv-icon');
       if (pvIconGroup) {
@@ -610,9 +610,6 @@ class PowerFlowCardInverter extends HTMLElement {
 
     this.alignTextStack(gridInfoElements, 117, 12, 3.5);
 
-    // =========================================================================
-    // XỬ LÝ DỮ LIỆU TẢI TIÊU THỤ (LOAD & EPS)
-    // =========================================================================
     let loadP = 0, loadL1 = 0, loadL2 = 0, loadL3 = 0;
     let epsP = 0, epsL1 = 0, epsL2 = 0, epsL3 = 0;
 
@@ -635,7 +632,6 @@ class PowerFlowCardInverter extends HTMLElement {
       epsP = Math.abs(Math.round(this.getState(ent.eps_power, 0)));
     }
 
-    // --- XỬ LÝ LOGIC SINGLE LOAD MODE ---
     if (singleLoadMode) {
       const activeP = Math.max(loadP, epsP);
       const activeL1 = Math.max(loadL1, epsL1);
@@ -643,7 +639,6 @@ class PowerFlowCardInverter extends HTMLElement {
       const activeL3 = Math.max(loadL3, epsL3);
 
       if (isGridConnected) {
-        // CÓ LƯỚI: Tải tiêu thụ (Load) chạy, EPS ẩn hoàn toàn
         loadP = activeP;
         loadL1 = activeL1;
         loadL2 = activeL2;
@@ -654,7 +649,6 @@ class PowerFlowCardInverter extends HTMLElement {
         epsL2 = 0;
         epsL3 = 0;
       } else {
-        // MẤT LƯỚI: EPS chạy, Tải tiêu thụ (Load) ẩn hoàn toàn
         epsP = activeP;
         epsL1 = activeL1;
         epsL2 = activeL2;
@@ -670,7 +664,6 @@ class PowerFlowCardInverter extends HTMLElement {
     this.setDisplay('grp-eps', true);
     this.setDisplay('grp-load', true);
 
-    // Ghi công suất Load
     if (isThreePhase) {
       this.setPower('txt-load-l1', loadL1);
       this.setPower('txt-load-l2', loadL2);
@@ -679,7 +672,6 @@ class PowerFlowCardInverter extends HTMLElement {
       this.setPower('txt-load-p', loadP);
     }
 
-    // Ẩn/hiện thông số công suất W khối Load
     const showLoadPowerLines = !singleLoadMode || isGridConnected;
 
     const loadElements = [];
@@ -710,15 +702,14 @@ class PowerFlowCardInverter extends HTMLElement {
     const lblLoadSub = this.getEl('lbl-load-sub');
     if (lblLoadSub) {
       if (isThreePhase) {
-        lblLoadSub.setAttribute('x', '60');
+        lblLoadSub.setAttribute('x', '59');
         lblLoadSub.setAttribute('y', '64');
       } else {
-        lblLoadSub.setAttribute('x', '60');
-        lblLoadSub.setAttribute('y', '40.5');
+        lblLoadSub.setAttribute('x', '59');
+        lblLoadSub.setAttribute('y', '48');
       }
     }
 
-    // Ghi công suất EPS
     if (isThreePhase) {
       this.setPower('txt-eps-l1', epsL1);
       this.setPower('txt-eps-l2', epsL2);
@@ -733,7 +724,6 @@ class PowerFlowCardInverter extends HTMLElement {
     const epsV = hasEpsV ? this.getState(ent.eps_voltage, 0.0) : 0;
     const epsF = hasEpsF ? this.getState(ent.eps_frequency, 0.0) : 0;
 
-    // Ẩn/hiện thông số Vac, Hz, W khối EPS
     const showEpsV = (!singleLoadMode || !isGridConnected) && !isThreePhase && hasEpsV && epsV > 0;
     const showEpsF = (!singleLoadMode || !isGridConnected) && !isThreePhase && hasEpsF && epsF > 0;
 
@@ -772,9 +762,11 @@ class PowerFlowCardInverter extends HTMLElement {
 
     this.alignTextStack(epsElements, 28, 12, 3.5);
 
-    // Hiển thị nhãn CHẾ ĐỘ CHỜ khi có lưới và epsP = 0
-    const showStandby = isGridConnected && (epsP === 0);
+    this.setText('lbl-eps-sub', t.backup_power);
+    
+    const showStandby = epsP === 0;
     this.setDisplay('lbl-eps-standby', showStandby);
+    this.setText('lbl-eps-standby', t.standby_mode);
 
     let batP = Math.round(this.getState(ent.battery_power, 0));
     const batV = this.getState(ent.battery_voltage, 0);
@@ -820,7 +812,7 @@ class PowerFlowCardInverter extends HTMLElement {
       batFill.setAttribute('y', 7 + (maxH - h));
     }
 
-    let batColor = '#16a34a';
+    let batColor = '#059669';
     if (soc <= 20) batColor = '#dc2626';
     else if (soc <= 40) batColor = '#ea580c';
 
@@ -886,7 +878,7 @@ class PowerFlowCardInverter extends HTMLElement {
         bat2Fill.setAttribute('y', 7 + (maxH - h2));
       }
 
-      let bat2Color = '#16a34a';
+      let bat2Color = '#059669';
       if (soc2 <= 20) bat2Color = '#dc2626';
       else if (soc2 <= 40) bat2Color = '#ea580c';
 
@@ -915,32 +907,25 @@ class PowerFlowCardInverter extends HTMLElement {
     this.setEnergyStat('stat-grid-today', this.getState(isGridSell ? ent.grid_sell_daily : ent.grid_buy_daily));
     this.setEnergyStat('stat-grid-total', this.getState(isGridSell ? ent.grid_sell_total : ent.grid_buy_total));
 
-        // Ngưỡng công suất tối thiểu (Watts) để kích hoạt chuyển động mũi tên
     const MIN_POWER = 5;
 
-    // 1. Trạng thái Sạc / Xả Pin
     const isBat1Charging = batP > MIN_POWER;
     const isBat1Discharging = batP < -MIN_POWER;
     const isBat2Charging = showBat2 && bat2P > MIN_POWER;
     const isBat2Discharging = showBat2 && bat2P < -MIN_POWER;
 
-    // Tính tổng công suất ròng của Pin để đồng bộ luồng trục chính (Trunk)
     const netBatPower = batP + (showBat2 ? bat2P : 0);
     const isNetCharging = netBatPower > MIN_POWER;
     const isNetDischarging = netBatPower < -MIN_POWER;
 
-    // 2. Trạng thái Lấy / Đẩy Lưới
     const isImporting = isGridConnected && gridP < -MIN_POWER;
     const isExporting = isGridConnected && gridP > MIN_POWER;
 
-    // 3. Trạng thái PV và Tải Tiêu Thụ
     const hasPvPower = pvP > MIN_POWER;
     const hasAcPvPower = hasAcPvP && acPvP > MIN_POWER;
     const hasLoadPower = loadP > MIN_POWER;
     const hasEpsPower = epsP > MIN_POWER;
 
-    // --- ĐIỀU KIỆN BỔ SUNG: CHẾ ĐỘ AC PV OFFGRID NỐI LƯỚI ---
-    // (Có lưới + Không tải tiêu thụ + Không lấy lưới + Có PV/Pin nạp xả + Có AC PV + Có EPS)
     const isAcPvSpecialOffgrid = isGridConnected && 
                                  !hasLoadPower && 
                                  !isImporting && 
@@ -948,7 +933,6 @@ class PowerFlowCardInverter extends HTMLElement {
                                  hasAcPvPower && 
                                  hasEpsPower;
 
-    // --- CẶP MŨI TÊN PIN ---
     this.setFlowVisible('flow-bat-charge', isBat1Charging);
     this.setFlowVisible('flow-bat-discharge', isBat1Discharging);
     this.setFlowVisible('flow-bat2-charge', showBat2 && isBat2Charging);
@@ -956,32 +940,27 @@ class PowerFlowCardInverter extends HTMLElement {
     this.setFlowVisible('flow-bat-trunk-charge', isNetCharging);
     this.setFlowVisible('flow-bat-trunk-discharge', isNetDischarging);
 
-    // --- CẶP MŨI TÊN LƯỚI ---
     this.setFlowVisible('flow-grid-import', isImporting);
     this.setFlowVisible('flow-grid-export', isExporting);
 
-    // --- CẶP MŨI TÊN TẢI & EPS & PV ---
     this.setFlowVisible('flow-pv', hasPvPower);
     
-    // Mũi tên PV hòa lưới (AC PV)
     const showAcPvFlow = hasAcPvPower && (isGridConnected || hasEpsPower || isNetCharging || isAcPvSpecialOffgrid);
     this.setFlowVisible('flow-ac-pv', showAcPvFlow);
     
-    this.setFlowVisible('flow-bus-to-load', hasLoadPower);
+    this.setFlowVisible('flow-bus-to-load', isGridConnected && hasLoadPower);
+    
     this.setFlowVisible('flow-eps', hasEpsPower);
 
-    // --- CHUYỂN ĐỔI GIỮA INVERTER VÀ THANH CÁI AC (BUS) ---
-    // 1. Bus cấp điện ngược lại Inverter (Bật khi có AC PV Offgrid Nối lưới)
     const isAcPvOffgridSupply = !isGridConnected && hasAcPvPower && (hasEpsPower || isNetCharging);
     const isBusChargingInv = ((isImporting || hasAcPvPower) && isNetCharging) || isAcPvOffgridSupply || isAcPvSpecialOffgrid;
 
-    // 2. Inverter đẩy điện ra Bus (Tự động loại trừ để tránh xung đột ngược chiều)
-    const isInvSupplyingBus = !isBusChargingInv && (isGridConnected || hasLoadPower) && (hasPvPower || isNetDischarging) && (hasLoadPower || isExporting);
+    const isInvSupplyingBus = isGridConnected && !isBusChargingInv && (hasPvPower || isNetDischarging) && (hasLoadPower || isExporting);
 
     this.setFlowVisible('flow-inv-to-bus', isInvSupplyingBus);
     this.setFlowVisible('flow-bus-to-inv', isBusChargingInv);
 
-    const loadIconColor = isGridConnected ? '#52b788' : (hasLoadPower ? '#e11d48' : '#94a3b8');
+    const loadIconColor = isGridConnected ? '#10b982' : (hasLoadPower ? '#e11d48' : '#94a3b8');
     const loadIcons = this.shadowRoot.querySelectorAll('#icon-load .load-icon-color');
     loadIcons.forEach(icon => icon.setAttribute('fill', loadIconColor));
     const loadStrokes = this.shadowRoot.querySelectorAll('#icon-load .load-icon-stroke');
@@ -1077,8 +1056,13 @@ class PowerFlowCardInverter extends HTMLElement {
         .dark-mode .svg-txt-sub, 
         .dark-mode .unit-lbl { color: #94a3b8; fill: #94a3b8; }
 
+        /* Bổ sung dòng này để giữ màu xanh khi ở Chế độ sáng */
+        #lbl-eps-standby { fill: #16a34a; }
+
+        .dark-mode #lbl-eps-standby { fill: #4ade80 !important; }
+
         .dark-mode .svg-bg-card { fill: #0f172a !important; }
-        .dark-mode .svg-inv-bg { fill: #ffffff !important; stroke: #334155 !important; }
+        .dark-mode .svg-inv-bg { fill: #ffffff !important; stroke: #0284c7 !important; }
         .dark-mode .svg-stroke-dark { stroke: #94a3b8 !important; }
 
         .dark-mode .status-pill.ongrid { background: #064e3b; color: #4ade80; border-color: #047857; }
@@ -1265,7 +1249,7 @@ class PowerFlowCardInverter extends HTMLElement {
 
               <g id="flow-bat-trunk-charge">
                 <use href="#chv-block-l" x="114" y="98" class="chv-block" style="animation-delay: 0.00s;" />
-                <use href="#chv-block-l" x="100" y="98" class="chv-block" style="animation-delay: 0.12s;" />
+                <use href="#chv-block-l" x="100" y="98" class="chv-block" style="animation-delay: 0.24s;" />
                 <use href="#chv-block-l" x="86" y="98" class="chv-block" style="animation-delay: 0.24s;" />
               </g>
 
@@ -1281,7 +1265,7 @@ class PowerFlowCardInverter extends HTMLElement {
                 <use href="#chv-block-l" x="276" y="98" class="chv-block" style="animation-delay: 0.00s;" />
                 <use href="#chv-block-l" x="262" y="98" class="chv-block" style="animation-delay: 0.12s;" />
                 <use href="#chv-block-l" x="248" y="98" class="chv-block" style="animation-delay: 0.24s;" />
-                <use href="#chv-block-l" x="234" y="98" class="chv-block" style="animation-delay: 0.36s;" />
+                <use href="#chv-block-l" x="234" y="98" class="chv-block" style="animation-delay: 0.12s;" />
                 <use href="#chv-block-l" x="220" y="98" class="chv-block" style="animation-delay: 0.48s;" />
               </g>
 
@@ -1326,89 +1310,133 @@ class PowerFlowCardInverter extends HTMLElement {
 
                 <g id="grp-pv-total">
                   <text id="lbl-pv-total-sub" x="0" y="0" class="svg-txt-sub" text-anchor="start">${t.pv_power_lbl}</text>
-                  <text id="line-pv-total-p" x="88" y="0" text-anchor="start">
+                  <text id="line-pv-total-p" x="80" y="0" text-anchor="start">
                     <tspan id="txt-pv-total-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan>
                   </text>
                 </g>
 
                 <g id="grp-pv-icon" transform="translate(138, -56) scale(0.57)">
-                  <g stroke="#52b788" stroke-width="4.5" stroke-linecap="round" fill="none">
-                    <circle cx="34" cy="34" r="14" />
-                    <line x1="34" y1="12" x2="34" y2="5" />
-                    <line x1="18" y1="18" x2="13" y2="13" />
-                    <line x1="12" y1="34" x2="5" y2="34" />
-                    <line x1="18" y1="50" x2="13" y2="55" />
-                    <line x1="50" y1="18" x2="55" y2="13" />
-                    <line x1="56" y1="34" x2="63" y2="34" />
+                  <defs>
+                    <style>
+                      .sun-icon { stroke: #10b982; fill: none; stroke-width: 4.5; stroke-linecap: round; }
+                      .sun-core { fill: #10b982; }
+                      .pv-frame { fill: #10b982; }
+                    </style>
+
+                    <mask id="sun-cutout-mask">
+                      <rect width="100%" height="100%" fill="white" />
+                      <path d="M 33.5,42 L 84.5,42 Q 85.8,42 86.1,43.3 L 95.9,84.7 Q 96.2,86 94.5,86 L 19.5,86 Q 17.8,86 18.1,84.7 L 31.9,43.3 Q 32.2,42 33.5,42 Z"
+                            fill="black"
+                            stroke="black"
+                            stroke-width="3"
+                            stroke-linejoin="round" />
+                    </mask>
+
+                    <mask id="pv-grid-mask">
+                      <rect width="100%" height="100%" fill="white" />
+                      <g stroke="black" stroke-width="2.2" stroke-linecap="butt">
+                        <line x1="10" y1="53" x2="100" y2="53" />
+                        <line x1="10" y1="64" x2="100" y2="64" />
+                        <line x1="10" y1="75" x2="100" y2="75" />
+                        <line x1="46.5" y1="35" x2="36.5" y2="92" />
+                        <line x1="59.5" y1="35" x2="56.5" y2="92" />
+                        <line x1="72.0" y1="35" x2="77.0" y2="92" />
+                      </g>
+                    </mask>
+                  </defs>
+
+                  <g class="sun-icon" mask="url(#sun-cutout-mask)">
+                    <circle class="sun-core" cx="34" cy="34" r="14" />
+                    <line x1="56" y1="34" x2="64.4" y2="34" />
+                    <line x1="53.1" y1="45" x2="60.3" y2="49.2" />
+                    <line x1="45" y1="53.1" x2="49.2" y2="60.3" />
+                    <line x1="34" y1="56" x2="34" y2="64.4" />
+                    <line x1="23" y1="53.1" x2="18.8" y2="60.3" />
+                    <line x1="14.9" y1="45" x2="7.7" y2="49.2" />
+                    <line x1="12" y1="34" x2="3.6" y2="34" />
+                    <line x1="14.9" y1="23" x2="7.7" y2="18.8" />
+                    <line x1="23" y1="14.9" x2="18.8" y2="7.7" />
+                    <line x1="34" y1="12" x2="34" y2="3.6" />
+                    <line x1="45" y1="14.9" x2="49.2" y2="7.7" />
+                    <line x1="53.1" y1="23" x2="60.3" y2="18.8" />
                   </g>
-                  <polygon points="32,42 86,42 96,86 18,86" fill="#52b788" stroke="#52b788" stroke-width="4" stroke-linejoin="round"/>
-                  <g stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.9">
-                    <line x1="28.5" y1="53" x2="88.5" y2="53" />
-                    <line x1="25" y1="64" x2="91" y2="64" />
-                    <line x1="21.5" y1="75" x2="93.5" y2="75" />
-                    <line x1="45.5" y1="42" x2="37.5" y2="86" />
-                    <line x1="59" y1="42" x2="57" y2="86" />
-                    <line x1="72.5" y1="42" x2="76.5" y2="86" />
-                  </g>
+
+                  <path class="pv-frame" mask="url(#pv-grid-mask)" d="M 33.5,42 L 84.5,42 Q 85.8,42 86.1,43.3 L 95.9,84.7 Q 96.2,86 94.5,86 L 19.5,86 Q 17.8,86 18.1,84.7 L 31.9,43.3 Q 32.2,42 33.5,42 Z" />
                 </g>
               </g>
 
-              <!-- Khối PV AC -->
+              <!-- Khối PV AC/Hoà lưới -->
               <g id="grp-pv-ac">
-                <text id="line-ac-pv-1p" x="320" y="0" text-anchor="start"><tspan id="txt-ac-pv-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
-                <text id="line-ac-pv-l1" x="320" y="0" text-anchor="start" style="display:none;"><tspan id="txt-ac-pv-l1" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
-                <text id="line-ac-pv-l2" x="320" y="0" text-anchor="start" style="display:none;"><tspan id="txt-ac-pv-l2" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
-                <text id="line-ac-pv-l3" x="320" y="0" text-anchor="start" style="display:none;"><tspan id="txt-ac-pv-l3" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
-                <text id="line-ac-pv-v" x="320" y="0" text-anchor="start"><tspan id="txt-ac-pv-v" class="highlight-val">0.0</tspan><tspan class="unit-lbl" dx="3"> V</tspan></text>
-                <text id="line-ac-pv-f" x="320" y="0" text-anchor="start"><tspan id="txt-ac-pv-f" class="highlight-freq">0.00</tspan><tspan class="unit-lbl" dx="3"> Hz</tspan></text>
+                <text id="line-ac-pv-1p" x="324" y="0" text-anchor="start"><tspan id="txt-ac-pv-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+                <text id="line-ac-pv-l1" x="324" y="0" text-anchor="start" style="display:none;"><tspan id="txt-ac-pv-l1" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+                <text id="line-ac-pv-l2" x="324" y="0" text-anchor="start" style="display:none;"><tspan id="txt-ac-pv-l2" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+                <text id="line-ac-pv-l3" x="324" y="0" text-anchor="start" style="display:none;"><tspan id="txt-ac-pv-l3" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+                <text id="line-ac-pv-v" x="324" y="0" text-anchor="start"><tspan id="txt-ac-pv-v" class="highlight-val">0.0</tspan><tspan class="unit-lbl" dx="3"> Vac</tspan></text>
+                <text id="line-ac-pv-f" x="324" y="0" text-anchor="start"><tspan id="txt-ac-pv-f" class="highlight-freq">0.00</tspan><tspan class="unit-lbl" dx="3"> Hz</tspan></text>
 
-                <g transform="translate(274, -58) scale(0.925)">
-                  <rect class="svg-bg-card" x="0" y="0" width="44" height="49" rx="6" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.8" stroke-dasharray="3.5,3"/>
-                  <g transform="translate(-5, -1)">
-                    <g fill="#10b981">
-                      <polygon points="18,5 42,5 36,11 12,11" />
-                      <polygon points="18,12 42,12 36,18 12,18" />
-                    </g>
-                    <g>
-                      <rect class="svg-bg-card" x="9" y="24" width="36" height="22" rx="4" fill="#ffffff" stroke="#10b981" stroke-width="2"/>
-                      <line x1="11" y1="43" x2="43" y2="27" stroke="#cbd5e1" stroke-width="1.2"/>
-                      <line class="svg-stroke-dark" x1="13" y1="29" x2="21" y2="29" stroke="#0f172a" stroke-width="1.8" stroke-linecap="round"/>
-                      <line class="svg-stroke-dark" x1="13" y1="33" x2="21" y2="33" stroke="#0f172a" stroke-width="1.8" stroke-linecap="round"/>
-                      <path class="svg-stroke-dark" d="M 31 35 Q 33.5 33, 36 35 T 41 35" fill="none" stroke="#0f172a" stroke-width="1.5" stroke-linecap="round"/>
-                      <path class="svg-stroke-dark" d="M 31 39 Q 33.5 37, 36 39 T 41 39" fill="none" stroke="#0f172a" stroke-width="1.5" stroke-linecap="round"/>
-                    </g>
+                <g transform="translate(274, -58) scale(0.22)">
+                  <defs>
+                    <style>
+                      .acpv-card-bg { fill: #ffffff; stroke: #b0bec5; stroke-width: 2; stroke-dasharray: 6,4; }
+                      .acpv-panel { fill: #10b982; }
+                      .acpv-inverter-frame { fill: none; stroke: #0284c7; stroke-width: 5.2; stroke-linejoin: round; }
+                      .acpv-divider-line { stroke: #b0bec5; stroke-width: 3; stroke-linecap: round; }
+                      .acpv-symbol { stroke: #1a1a1a; stroke-width: 4.5; stroke-linecap: round; fill: none; }
+                      .acpv-symbol-ac { stroke: #2563eb; stroke-width: 4.5; stroke-linecap: round; fill: none; }
+                      .acpv-shadow-effect { flood-color: #000000; flood-opacity: 0.18; }
+                    </style>
+
+                    <filter id="acpv-shadow" x="-20%" y="-20%" width="150%" height="150%">
+                      <feDropShadow dx="0" dy="3" stdDeviation="2.5" class="acpv-shadow-effect" />
+                    </filter>
+                  </defs>
+
+                  <rect class="svg-bg-card acpv-card-bg" x="1" y="1" width="198" height="208" rx="16"/>
+
+                  <polygon id="bottom-pv-panel" class="acpv-panel" points="65,44 165,44 135,80 35,80" />
+                  <polygon id="top-pv-panel" class="acpv-panel" points="65,20 165,20 135,56 35,56" filter="url(#acpv-shadow)" />
+
+                  <g id="inverter-box">
+                    <rect class="acpv-inverter-frame" x="32.5" y="100" width="135" height="89" rx="19" />
+                    <line class="acpv-divider-line" x1="45" y1="178" x2="155" y2="111" />
+
+                    <line class="svg-stroke-dark acpv-symbol" x1="48" y1="121" x2="84" y2="121" />
+                    <line class="svg-stroke-dark acpv-symbol" x1="48" y1="134" x2="84" y2="134" />
+
+                    <path class="svg-stroke-dark acpv-symbol-ac" d="M 112 154 Q 118 146 125 154 T 138 154" />
+                    <path class="svg-stroke-dark acpv-symbol-ac" d="M 112 167 Q 118 159 125 167 T 138 167" />
                   </g>
                 </g>
               </g>
 
               <!-- Khối Pin Lưu Trữ 1 -->
-              <g id="grp-bat1" transform="translate(5, 72)">
-                <rect x="11" y="1" width="10" height="4" rx="1.5" fill="#16a34a"/>
-                <rect class="svg-bg-card" x="2" y="5" width="28" height="48" rx="4" fill="#ffffff" stroke="#16a34a" stroke-width="2"/>
-                <rect id="bat-fill" x="4" y="7" width="24" height="43" rx="1.5" fill="#16a34a"/>
+              <g id="grp-bat1" transform="translate(1, 72)">
+                <rect x="12.705" y="1" width="11.55" height="4" rx="1.5" fill="#059669" />
+                <rect class="svg-bg-card" x="2.31" y="5" width="32.34" height="48" rx="4" fill="#ffffff" stroke="#059669" stroke-width="2" />
+                <rect id="bat-fill" x="4.62" y="7" width="27.72" height="43" rx="1.5" fill="#059669" />
 
                 <text id="line-bat-p" x="0" y="0" text-anchor="start"><tspan id="txt-bat-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
                 <text id="lbl-bat-mode" x="0" y="0" class="svg-txt-sub" text-anchor="start">${t.bat_standby}</text>
-                <text id="line-bat-v" x="0" y="0" text-anchor="start"><tspan id="txt-bat-v" class="highlight-val">0.0</tspan><tspan class="unit-lbl" dx="3"> V</tspan></text>
-                <text id="line-bat-soc" x="0" y="0" text-anchor="start"><tspan id="txt-soc-val" font-size="13px" font-weight="bold" fill="#16a34a">0</tspan><tspan class="unit-lbl" dx="1" fill="#16a34a">%</tspan></text>
+                <text id="line-bat-v" x="0" y="0" text-anchor="start"><tspan id="txt-bat-v" class="highlight-val">0.0</tspan><tspan class="unit-lbl" dx="3"> Vdc</tspan></text>
+                <text id="line-bat-soc" x="0" y="0" text-anchor="start"><tspan id="txt-soc-val" font-size="13px" font-weight="bold" fill="#059669">0</tspan><tspan class="unit-lbl" dx="1" fill="#059669">%</tspan></text>
               </g>
 
               <!-- Khối Pin Lưu Trữ 2 -->
-              <g id="grp-bat2" transform="translate(5, 196)" style="display: none;">
-                <rect x="11" y="1" width="10" height="4" rx="1.5" fill="#16a34a"/>
-                <rect class="svg-bg-card" x="2" y="5" width="28" height="48" rx="4" fill="#ffffff" stroke="#16a34a" stroke-width="2"/>
-                <rect id="bat2-fill" x="4" y="7" width="24" height="43" rx="1.5" fill="#16a34a"/>
+              <g id="grp-bat2" transform="translate(1, 196)" style="display: none;">
+                <rect x="12.705" y="1" width="11.55" height="4" rx="1.5" fill="#059669" />
+                <rect class="svg-bg-card" x="2.31" y="5" width="32.34" height="48" rx="4" fill="#ffffff" stroke="#059669" stroke-width="2" />
+                <rect id="bat2-fill" x="4.62" y="7" width="27.72" height="43" rx="1.5" fill="#059669" />
 
                 <text id="line-bat2-p" x="0" y="0" text-anchor="start"><tspan id="txt-bat2-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
                 <text id="lbl-bat2-mode" x="0" y="0" class="svg-txt-sub" text-anchor="start">${t.bat_standby}</text>
-                <text id="line-bat2-v" x="0" y="0" text-anchor="start"><tspan id="txt-bat2-v" class="highlight-val">0.0</tspan><tspan class="unit-lbl" dx="3"> V</tspan></text>
-                <text id="line-bat2-soc" x="0" y="0" text-anchor="start"><tspan id="txt-soc2-val" font-size="13px" font-weight="bold" fill="#16a34a">0</tspan><tspan class="unit-lbl" dx="1" fill="#16a34a">%</tspan></text>
+                <text id="line-bat2-v" x="0" y="0" text-anchor="start"><tspan id="txt-bat2-v" class="highlight-val">0.0</tspan><tspan class="unit-lbl" dx="3"> Vdc</tspan></text>
+                <text id="line-bat2-soc" x="0" y="0" text-anchor="start"><tspan id="txt-soc2-val" font-size="13px" font-weight="bold" fill="#059669">0</tspan><tspan class="unit-lbl" dx="1" fill="#059669">%</tspan></text>
               </g>
 
               <!-- Khối Inverter -->
               <g transform="translate(144, 74)">
                 <g id="inv-default-graphics">
-                  <rect class="svg-inv-bg" x="0" y="0" width="58" height="58" rx="6" fill="#ffffff" stroke="#334155" stroke-width="2"/>
+                  <rect class="svg-inv-bg" x="0" y="0" width="58" height="58" rx="6" fill="#ffffff" stroke="#0284c7" stroke-width="2"/>
                   <circle cx="10" cy="10" r="3.5" fill="#16a34a" id="inv-led"/>
                   <rect x="11" y="18" width="36" height="22" rx="2" fill="#0f172a"/>
                   <rect x="13" y="20" width="32" height="18" rx="1" fill="#020617"/>
@@ -1425,7 +1453,7 @@ class PowerFlowCardInverter extends HTMLElement {
                 <text id="line-grid-l3" x="21" y="0" text-anchor="middle" style="display:none;"><tspan id="txt-grid-l3" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
 
                 <svg x="-9" y="38" width="65" height="65" viewBox="0 0 500 600">
-                  <g fill="#61C68C" stroke="#61C68C" stroke-linecap="round" stroke-linejoin="round">
+                  <g fill="#10b982" stroke="#10b982" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M 250 40 L 140 550 M 250 40 L 360 550" fill="none" stroke-width="22" />
                     <path d="M 242 80 L 258 80 M 250 40 L 258 80 M 250 40 L 242 80" fill="none" stroke-width="3" />
                     <path d="M 235 120 L 265 120 M 242 80 L 265 120 M 258 80 L 235 120" fill="none" stroke-width="4.5" />
@@ -1453,69 +1481,66 @@ class PowerFlowCardInverter extends HTMLElement {
                     <path d="M 381 292 A 12 12 0 0 0 405 292" fill="none" stroke-width="4.5" />
                     <path d="M 381 300 A 12 12 0 0 0 405 300" fill="none" stroke-width="4.5" />
                     <path d="M 381 308 A 12 12 0 0 0 405 308" fill="none" stroke-width="4.5" />
-                    <path d="M 340 310 Q 370 350 400 310" fill="none" stroke-width="4.5" />
                   </g>
                 </svg>
 
-                <text id="line-grid-v" x="21" y="0" text-anchor="middle"><tspan id="txt-grid-v" class="highlight-val">0.0</tspan><tspan class="unit-lbl" dx="1">Vac</tspan></text>
-                <text id="line-grid-f" x="21" y="0" text-anchor="middle"><tspan id="txt-grid-f" class="highlight-freq">0.00</tspan><tspan class="unit-lbl" dx="1">Hz</tspan></text>
+                <text id="line-grid-v" x="21" y="0" text-anchor="middle"><tspan id="txt-grid-v" class="highlight-val">0.0</tspan><tspan class="unit-lbl" dx="3"> Vac</tspan></text>
+                <text id="line-grid-f" x="21" y="0" text-anchor="middle"><tspan id="txt-grid-f" class="highlight-freq">0.00</tspan><tspan class="unit-lbl" dx="3"> Hz</tspan></text>
               </g>
 
               <!-- Khối EPS -->
-              <g id="grp-eps" transform="translate(154, 232)">
+              <g id="grp-eps" transform="translate(148, 232)">
                 <svg id="icon-eps" x="0" y="0" width="56" height="56" viewBox="0 0 60 60">
-                  <g stroke="#52b788" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="8" y="8" width="23" height="12" rx="3"/>
-                    <text x="19.5" y="16.5" font-size="7.5" font-weight="bold" fill="#52b788" stroke="none" text-anchor="middle" font-family="sans-serif">UPS</text>
-
-                    <circle cx="43" cy="23" r="9"/>
-                    <line x1="40" y1="19" x2="40" y2="27" stroke-width="2.5"/>
-                    <line x1="46" y1="19" x2="46" y2="27" stroke-width="2.5"/>
-
-                    <path d="M 8 20 C 12 28, 10 38, 12 43 L 24 43"/>
-
-                    <path d="M 23 37 C 23 37, 32 34, 35 43 C 36 48, 30 52, 24 50 Z" fill="#52b788"/>
-                    <line x1="31" y1="34" x2="35" y2="30" stroke-width="2.5"/>
-                    <line x1="36" y1="39" x2="40" y2="35" stroke-width="2.5"/>
+                  <g stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <rect class="eps-icon-stroke" x="8" y="8" width="23" height="12" rx="3" stroke="#10b982"/>
+                    <text class="eps-icon-text" x="19.5" y="16.5" font-size="7.5" font-weight="bold" fill="#10b982" stroke="none" text-anchor="middle" font-family="sans-serif">UPS</text>
+                    <circle class="eps-icon-stroke" cx="43" cy="23" r="9" stroke="#10b982"/>
+                    <line class="eps-icon-stroke" x1="40" y1="19" x2="40" y2="27" stroke-width="2.5" stroke="#10b982"/>
+                    <line class="eps-icon-stroke" x1="46" y1="19" x2="46" y2="27" stroke-width="2.5" stroke="#10b982"/>
+                    <path class="eps-icon-stroke" d="M 8 20 C 12 28, 10 38, 12 43 L 24 43" stroke="#10b982"/>
+                    <path class="eps-icon-fill" d="M 23 37 C 23 37, 32 34, 35 43 C 36 48, 30 52, 24 50 Z" fill="#10b982"/>
+                    <line class="eps-icon-stroke" x1="31" y1="34" x2="35" y2="30" stroke-width="2.5" stroke="#10b982"/>
+                    <line class="eps-icon-stroke" x1="36" y1="39" x2="40" y2="35" stroke-width="2.5" stroke="#10b982"/>
                   </g>
                 </svg>
 
-                <text id="line-eps-1p" x="52" y="0"><tspan id="txt-eps-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
-                <text id="line-eps-l1" x="52" y="0" style="display:none;"><tspan id="txt-eps-l1" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
-                <text id="line-eps-l2" x="52" y="0" style="display:none;"><tspan id="txt-eps-l2" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
-                <text id="line-eps-l3" x="52" y="0" style="display:none;"><tspan id="txt-eps-l3" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
-
-                <text id="line-eps-v" x="52" y="0"><tspan id="txt-eps-v" class="highlight-val">0.0</tspan><tspan class="unit-lbl" dx="1">Vac</tspan></text>
-                <text id="line-eps-f" x="52" y="0"><tspan id="txt-eps-f" class="highlight-freq">0.00</tspan><tspan class="unit-lbl" dx="3"> Hz</tspan></text>
-
-                <text x="0" y="64" id="lbl-eps-sub" class="svg-txt-sub">${t.backup_power}</text>
-                <text x="0" y="75" id="lbl-eps-standby" style="font-size: 9px; fill: #16a34a; font-weight: 800; display: none;">${t.standby_mode}</text>
+                <text id="line-eps-1p" x="58" y="15" text-anchor="start"><tspan id="txt-eps-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+                <text id="line-eps-l1" x="58" y="15" text-anchor="start" style="display:none;"><tspan id="txt-eps-l1" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+                <text id="line-eps-l2" x="58" y="15" text-anchor="start" style="display:none;"><tspan id="txt-eps-l2" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+                <text id="line-eps-l3" x="58" y="15" text-anchor="start" style="display:none;"><tspan id="txt-eps-l3" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+                <text id="line-eps-v" x="58" y="32" text-anchor="start"><tspan id="txt-eps-v" class="highlight-val">0.0</tspan><tspan class="unit-lbl" dx="3"> Vac</tspan></text>
+                <text id="line-eps-f" x="58" y="49" text-anchor="start"><tspan id="txt-eps-f" class="highlight-freq">0.00</tspan><tspan class="unit-lbl" dx="3"> Hz</tspan></text>
+                <text id="lbl-eps-sub" x="-2" y="66" class="svg-txt-sub" style="text-anchor: start !important;">${t.backup_power}</text>
+                <text id="lbl-eps-standby" x="-2" y="81" class="svg-txt-sub" fill="#16a34a" style="text-anchor: start !important;">${t.standby_mode}</text>
               </g>
 
-              <!-- Khối tiêu thụ -->
-              <g id="grp-load" transform="translate(269, 232)">
-                <svg id="icon-load" x="0" y="0" width="54" height="54" viewBox="0 0 100 100">
-                  <rect class="load-icon-color" x="27" y="14" width="10" height="20" rx="1" fill="#52b788"/>
-                  <path class="load-icon-stroke" d="M 10 50 L 50 21 L 90 50" fill="none" stroke="#52b788" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
-                  <path class="load-icon-color" d="M 50 29.5 L 82 52.5 L 82 85 C 82 86.5 80.5 88 79 88 L 21 88 C 19.5 88 18 86.5 18 85 L 18 52.5 Z" fill="#52b788"/>
-                  <polygon points="52,45.5 42,60.5 49.5,60.5 46.5,78.5 58,59.5 50.5,59.5" fill="#ffffff"/>
+              <!-- Khối Tiêu Thụ (Load) -->
+              <g id="grp-load" transform="translate(270, 232)">
+                <svg id="icon-load" x="0" y="0" width="56" height="56" viewBox="0 0 100 92">
+                  <defs>
+                    <mask id="lightning-cutout">
+                      <rect width="100%" height="100%" fill="white" />
+                      <polygon points="52.1,41.5 41.6,56.5 49.5,56.5 46.3,74.5 58.4,55.5 50.5,55.5" fill="black" />
+                    </mask>
+                  </defs>
+
+                  <rect class="load-icon-color house-accent" x="25.85" y="10" width="10.5" height="20" rx="1" fill="#10b982" />
+                  <path class="load-icon-stroke roof-stroke" d="M 8 46 L 50 17 L 92 46" fill="none" stroke="#10b982" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" />
+                  <path class="load-icon-color house-body" mask="url(#lightning-cutout)" d="M 50 25.5 L 83.6 48.5 L 83.6 81 C 83.6 82.5 82 84 80.5 84 L 19.6 84 C 18 84 16.4 82.5 16.4 81 L 16.4 48.5 Z" fill="#10b982" />
                 </svg>
 
-                <text id="line-load-1p" x="60" y="0"><tspan id="txt-load-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
-                <text id="line-load-l1" x="60" y="0" style="display:none;"><tspan id="txt-load-l1" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
-                <text id="line-load-l2" x="60" y="0" style="display:none;"><tspan id="txt-load-l2" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
-                <text id="line-load-l3" x="60" y="0" style="display:none;"><tspan id="txt-load-l3" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
-
-                <text x="60" y="40.5" id="lbl-load-sub" class="svg-txt-sub">${t.consumption}</text>
+                 <text id="line-load-1p" x="59" y="25" text-anchor="start"><tspan id="txt-load-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+                 <text id="line-load-l1" x="59" y="25" text-anchor="start" style="display:none;"><tspan id="txt-load-l1" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+                 <text id="line-load-l2" x="59" y="25" text-anchor="start" style="display:none;"><tspan id="txt-load-l2" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+                 <text id="line-load-l3" x="59" y="25" text-anchor="start" style="display:none;"><tspan id="txt-load-l3" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+                 <text id="lbl-load-sub" x="59" y="51" class="svg-txt-sub" text-anchor="start">${t.consumption}</text>
               </g>
             </svg>
           </div>
         </div>
       </ha-card>
     `;
-
     this.attachEventListeners();
-    this.updateData();
   }
 }
 
