@@ -1,0 +1,5 @@
+* text=auto
+*.js text eol=lf
+dist/power-flow-card-inverter.js linguist-vendored=false
+dist/power-flow-card-inverter.js linguist-generated=false
+dist/power-flow-card-inverter.js linguist-detectable=true
