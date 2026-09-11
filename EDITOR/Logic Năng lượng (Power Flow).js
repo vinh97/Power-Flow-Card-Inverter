@@ -1,6 +1,7 @@
 // --- XÁC ĐỊNH TRẠNG THÁI CÁC THIẾT BỊ ---
 
 const MIN_POWER = 5; // Ngưỡng công suất tối thiểu (W) để kích hoạt luồng chảy
+const totalPvPower = pvP + (hasAcPvP ? acPvP : 0);
 
 // Trạng thái sạc/xả Pin lưu trữ 1 & 2
 const isBat1Charging = batP > MIN_POWER;
@@ -23,13 +24,24 @@ const hasAcPvPower = hasAcPvP && acPvP > MIN_POWER;
 const hasLoadPower = loadP > MIN_POWER;
 const hasEpsPower = epsP > MIN_POWER;
 
-// Trường hợp đặc biệt: AC PV cấp điện khi mất lưới hoặc chạy chế độ riêng
-const isAcPvSpecialOffgrid = isGridConnected && 
-                             !hasLoadPower && 
-                             !isImporting && 
-                             (hasPvPower || isNetCharging || isNetDischarging) && 
-                             hasAcPvPower && 
-                             hasEpsPower;
+const batChargePower = isNetCharging ? netBatPower : 0;
+const gridImportPower = isImporting ? Math.abs(gridP) : 0;
+
+// ============================================================================
+// KHÁI NIỆM & ĐIỀU KIỆN: CHẾ ĐỘ BYPASS LƯỚI (GRID BYPASS MODE)
+// 1. Có điện lưới (isGridConnected)
+// 2. Công suất lấy từ lưới = Công suất tiêu thụ tải (gridImportPower ≈ loadP)
+// 3. Pin không xả gánh tải (Pin = 0W hoặc đang sạc từ PV)
+// 4. PV đủ công suất sạc Pin (PV ≥ BatCharge)
+// 5. Không có công suất AC PV hòa lưới (!hasAcPvPower)
+// ==> Kết quả: Lưới đi thẳng xuống Tải, Inverter đứng yên/chỉ sạc Pin từ PV.
+// ============================================================================
+const isGridBypass = isGridConnected && 
+                     hasLoadPower && 
+                     isImporting && 
+                     Math.abs(gridImportPower - loadP) <= 15 && 
+                     !hasAcPvPower && 
+                     (!isNetCharging || totalPvPower >= (batChargePower - MIN_POWER));
 
 
 // --- BẬT / TẮT ĐƯỜNG ĐI CỦA CÁC LUỒNG NĂNG LƯỢNG (SET FLOW VISIBILITY) ---
@@ -49,42 +61,40 @@ this.setFlowVisible('flow-grid-export', isExporting); // Bán điện ra lưới
 // 3. Luồng Quang điện DC (Tấm pin mặt trời)
 this.setFlowVisible('flow-pv', hasPvPower);
 
-// 4. Luồng Quang điện AC (Hệ thống inverter phụ hòa lưới)
+// 4. Luồng Quang điện AC
+const isAcPvSpecialOffgrid = isGridConnected && !hasLoadPower && !isImporting && (hasPvPower || isNetCharging || isNetDischarging) && hasAcPvPower && hasEpsPower;
 const showAcPvFlow = hasAcPvPower && (isGridConnected || hasEpsPower || isNetCharging || isAcPvSpecialOffgrid);
 this.setFlowVisible('flow-ac-pv', showAcPvFlow);
 
-// 5. Luồng từ Thanh cái AC (Bus) cấp cho Tải tiêu thụ
+// 5. Luồng từ Thanh cái AC (Bus) cấp cho Tải tiêu thụ (Điện lưới chạy thẳng xuống Tải)
 this.setFlowVisible('flow-bus-to-load', isGridConnected && hasLoadPower);
 
 // 6. Luồng cấp điện cho Tải dự phòng (EPS)
 this.setFlowVisible('flow-eps', hasEpsPower);
 
-// 7.  -- TÍNH TOÁN HƯỚNG DÒNG ĐIỆN GIỮA INVERTER VÀ THANH CÁI AC (BUS) ---
-
-const batChargePower = isNetCharging ? netBatPower : 0;
-const gridImportPower = isImporting ? Math.abs(gridP) : 0;
+// 7. --- XỬ LÝ ẨN/HIỆN MŨI TÊN GIỮA INVERTER VÀ THANH CÁI AC (BUS) ---
 
 // Chế độ 1: Ưu tiên tải (Load Priority Mode)
-// Điều kiện: Có lưới + Công suất nạp Pin < Công suất PV + Công suất mua lưới < Công suất tải
 const isLoadPriorityInvToBus = isGridConnected && 
                                (batChargePower < totalPvPower) && 
                                (gridImportPower < loadP);
 
 // Chế độ 2: Ưu tiên lưu trữ (Storage Priority Mode)
-// Điều kiện: Có lưới + Có PV + Pin đang nạp + Không mua lưới + Có tải tiêu thụ
 const isStoragePriorityInvToBus = isGridConnected && 
                                   hasPvPower && 
                                   isNetCharging && 
                                   (!isImporting || gridImportPower === 0) && 
                                   hasLoadPower;
 
-// Kích hoạt luồng điện từ Inverter -> Thanh cái AC khi thỏa mãn Chế độ 1 HOẶC Chế độ 2
-const isInvSupplyingBus = isLoadPriorityInvToBus || isStoragePriorityInvToBus;
+// Luồng Inverter -> Bus: Tắt khi ở chế độ Bypass
+const isInvSupplyingBus = !isGridBypass && (isLoadPriorityInvToBus || isStoragePriorityInvToBus);
 
-// 8. Luồng điện sạc Pin từ Thanh cái AC vào Inverter (Bus -> Inverter)
+// 8. Luồng Bus -> Inverter (Lưới sạc Pin): Tắt khi ở chế độ Bypass (do PV đã gánh sạc Pin)
+const isGridChargingBat = isImporting && isNetCharging && (totalPvPower < batChargePower - MIN_POWER);
 const isAcPvOffgridSupply = !isGridConnected && hasAcPvPower && (hasEpsPower || isNetCharging);
-const isBusChargingInv = ((isImporting || hasAcPvPower) && isNetCharging) || isAcPvOffgridSupply || isAcPvSpecialOffgrid;
 
+const isBusChargingInv = !isGridBypass && (isGridChargingBat || (hasAcPvPower && isNetCharging) || isAcPvOffgridSupply || isAcPvSpecialOffgrid);
 
+// Áp dụng ẩn/hiện lên giao diện
 this.setFlowVisible('flow-inv-to-bus', isInvSupplyingBus); // Inverter cấp điện ra Bus
-this.setFlowVisible('flow-bus-to-inv', isBusChargingInv);  // Bus cấp điện ngược lại Inverter (Sạc)
+this.setFlowVisible('flow-bus-to-inv', isBusChargingInv);  // Bus cấp điện ngược vào Inverter
