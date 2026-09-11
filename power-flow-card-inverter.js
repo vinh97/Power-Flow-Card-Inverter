@@ -951,11 +951,8 @@ class PowerFlowCardInverter extends HTMLElement {
     this.setFlowVisible('flow-bus-to-load', isGridConnected && hasLoadPower);
     
     this.setFlowVisible('flow-eps', hasEpsPower);
-
-    const isAcPvOffgridSupply = !isGridConnected && hasAcPvPower && (hasEpsPower || isNetCharging);
-    const isBusChargingInv = ((isImporting || hasAcPvPower) && isNetCharging) || isAcPvOffgridSupply || isAcPvSpecialOffgrid;
-
-    const batChargePower = isNetCharging ? netBatPower : 0;
+	
+	const batChargePower = isNetCharging ? netBatPower : 0;
     const gridImportPower = isImporting ? Math.abs(gridP) : 0;
 
     // 1. Chế độ Ưu tiên tải (Load Priority Mode):
@@ -975,6 +972,9 @@ class PowerFlowCardInverter extends HTMLElement {
 
     // Mũi tên Inverter -> Bus hòa lưới bật khi đáp ứng Chế độ Ưu tiên tải HOẶC Chế độ Ưu tiên lưu trữ
     const isInvSupplyingBus = isLoadPriorityInvToBus || isStoragePriorityInvToBus;
+
+    const isAcPvOffgridSupply = !isGridConnected && hasAcPvPower && (hasEpsPower || isNetCharging);
+    const isBusChargingInv = ((isImporting || hasAcPvPower) && isNetCharging) || isAcPvOffgridSupply || isAcPvSpecialOffgrid;
 
     this.setFlowVisible('flow-inv-to-bus', isInvSupplyingBus);
     this.setFlowVisible('flow-bus-to-inv', isBusChargingInv);
