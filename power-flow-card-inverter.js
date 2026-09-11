@@ -955,7 +955,26 @@ class PowerFlowCardInverter extends HTMLElement {
     const isAcPvOffgridSupply = !isGridConnected && hasAcPvPower && (hasEpsPower || isNetCharging);
     const isBusChargingInv = ((isImporting || hasAcPvPower) && isNetCharging) || isAcPvOffgridSupply || isAcPvSpecialOffgrid;
 
-    const isInvSupplyingBus = isGridConnected && !isBusChargingInv && (hasPvPower || isNetDischarging) && (hasLoadPower || isExporting);
+    const batChargePower = isNetCharging ? netBatPower : 0;
+    const gridImportPower = isImporting ? Math.abs(gridP) : 0;
+
+    // 1. Chế độ Ưu tiên tải (Load Priority Mode):
+    // Có lưới + Công suất nạp PIN < Công suất PV + Công suất lấy lưới < Công suất tiêu thụ
+    const isLoadPriorityInvToBus = isGridConnected && 
+                                   (batChargePower < totalPvPower) && 
+                                   (gridImportPower < loadP);
+
+    // 2. Chế độ Ưu tiên lưu trữ (Storage Priority Mode):
+    // Có lưới + PV có công suất + Pin đang nạp + Công suất lấy lưới = 0 + Có công suất tiêu thụ
+    // (Bất kể PV hòa lưới/AC PV có công suất hay không)
+    const isStoragePriorityInvToBus = isGridConnected && 
+                                      hasPvPower && 
+                                      isNetCharging && 
+                                      (!isImporting || gridImportPower === 0) && 
+                                      hasLoadPower;
+
+    // Mũi tên Inverter -> Bus hòa lưới bật khi đáp ứng Chế độ Ưu tiên tải HOẶC Chế độ Ưu tiên lưu trữ
+    const isInvSupplyingBus = isLoadPriorityInvToBus || isStoragePriorityInvToBus;
 
     this.setFlowVisible('flow-inv-to-bus', isInvSupplyingBus);
     this.setFlowVisible('flow-bus-to-inv', isBusChargingInv);
