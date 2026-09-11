@@ -952,7 +952,7 @@ class PowerFlowCardInverter extends HTMLElement {
     
     this.setFlowVisible('flow-eps', hasEpsPower);
 	
-	const batChargePower = isNetCharging ? netBatPower : 0;
+    const batChargePower = isNetCharging ? netBatPower : 0;
     const gridImportPower = isImporting ? Math.abs(gridP) : 0;
 
     // 1. Chế độ Ưu tiên tải (Load Priority Mode):
@@ -970,11 +970,22 @@ class PowerFlowCardInverter extends HTMLElement {
                                       (!isImporting || gridImportPower === 0) && 
                                       hasLoadPower;
 
-    // Mũi tên Inverter -> Bus hòa lưới bật khi đáp ứng Chế độ Ưu tiên tải HOẶC Chế độ Ưu tiên lưu trữ
-    const isInvSupplyingBus = isLoadPriorityInvToBus || isStoragePriorityInvToBus;
+    // 3. Chế độ Bypass Lưới -> Tiêu thụ:
+    // Có lưới + (Công suất lấy lưới >= Công suất tiêu thụ hoặc xấp xỉ bằng) + Pin không nạp/xả (0W) + PV không phát + AC PV không có công suất
+    const isGridBypass = isGridConnected && 
+                         isImporting && 
+                         (gridImportPower >= loadP || Math.abs(gridImportPower - loadP) <= 5) && 
+                         !isNetCharging && 
+                         !isNetDischarging && 
+                         !hasPvPower && 
+                         !hasAcPvPower;
+
+    // Mũi tên Inverter -> Bus hòa lưới bật khi đáp ứng Chế độ Ưu tiên tải HOẶC Chế độ Ưu tiên lưu trữ,
+    // và TẮT khi đang ở Chế độ Bypass Lưới
+    const isInvSupplyingBus = !isGridBypass && (isLoadPriorityInvToBus || isStoragePriorityInvToBus);
 
     const isAcPvOffgridSupply = !isGridConnected && hasAcPvPower && (hasEpsPower || isNetCharging);
-    const isBusChargingInv = ((isImporting || hasAcPvPower) && isNetCharging) || isAcPvOffgridSupply || isAcPvSpecialOffgrid;
+    const isBusChargingInv = !isGridBypass && (((isImporting || hasAcPvPower) && isNetCharging) || isAcPvOffgridSupply || isAcPvSpecialOffgrid);
 
     this.setFlowVisible('flow-inv-to-bus', isInvSupplyingBus);
     this.setFlowVisible('flow-bus-to-inv', isBusChargingInv);
@@ -1200,9 +1211,9 @@ class PowerFlowCardInverter extends HTMLElement {
                 <use href="#chv-block-d" x="291" y="4"   class="chv-block" style="animation-delay: 0.00s;" />
                 <use href="#chv-block-d" x="291" y="20"  class="chv-block" style="animation-delay: 0.12s;" />
                 <use href="#chv-block-d" x="291" y="36"  class="chv-block" style="animation-delay: 0.24s;" />
-                <use href="#chv-block-d" x="291" y="52"  class="chv-block" style="animation-delay: 0.36s;" />
-                <use href="#chv-block-d" x="291" y="68"  class="chv-block" style="animation-delay: 0.48s;" />
-                <use href="#chv-block-d" x="291" y="84"  class="chv-block" style="animation-delay: 0.60s;" />
+                <use href="#chv-block-d" x="291" y="52"  class="chv-block" style="animation-delay: 0.48s;" />
+                <use href="#chv-block-d" x="291" y="68"  class="chv-block" style="animation-delay: 0.60s;" />
+                <use href="#chv-block-d" x="291" y="84"  class="chv-block" style="animation-delay: 0.72s;" />
               </g>
 
               <g id="flow-eps">
