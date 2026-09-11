@@ -65,11 +65,10 @@ const isStoragePriorityInvToBus = isGridConnected &&
 // 3. Chế độ Bypass Lưới -> Tiêu thụ
 const isGridBypass = isGridConnected && 
                      isImporting && 
-                     (gridImportPower >= loadP || Math.abs(gridImportPower - loadP) <= 5) && 
-                     !isNetCharging && 
-                     !isNetDischarging && 
-                     !hasPvPower && 
-                     !hasAcPvPower;
+                     !hasAcPvPower && 
+                     (gridImportPower >= loadP - 5) && 
+                     (!isNetDischarging || (hasPvPower && isNetCharging));
+
 
 // Luồng giữa Biến tần (Inverter) và Bus AC
 const isInvSupplyingBus = !isGridBypass && (isLoadPriorityInvToBus || isStoragePriorityInvToBus);
