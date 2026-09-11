@@ -59,12 +59,7 @@ this.setFlowVisible('flow-bus-to-load', isGridConnected && hasLoadPower);
 // 6. Luồng cấp điện cho Tải dự phòng (EPS)
 this.setFlowVisible('flow-eps', hasEpsPower);
 
-// 7. Luồng điện sạc Pin từ Thanh cái AC vào Inverter (Bus -> Inverter)
-const isAcPvOffgridSupply = !isGridConnected && hasAcPvPower && (hasEpsPower || isNetCharging);
-const isBusChargingInv = ((isImporting || hasAcPvPower) && isNetCharging) || isAcPvOffgridSupply || isAcPvSpecialOffgrid;
-
-
-// --- TÍNH TOÁN HƯỚNG DÒNG ĐIỆN GIỮA INVERTER VÀ THANH CÁI AC (BUS) ---
+// 7.  -- TÍNH TOÁN HƯỚNG DÒNG ĐIỆN GIỮA INVERTER VÀ THANH CÁI AC (BUS) ---
 
 const batChargePower = isNetCharging ? netBatPower : 0;
 const gridImportPower = isImporting ? Math.abs(gridP) : 0;
@@ -85,6 +80,11 @@ const isStoragePriorityInvToBus = isGridConnected &&
 
 // Kích hoạt luồng điện từ Inverter -> Thanh cái AC khi thỏa mãn Chế độ 1 HOẶC Chế độ 2
 const isInvSupplyingBus = isLoadPriorityInvToBus || isStoragePriorityInvToBus;
+
+// 8. Luồng điện sạc Pin từ Thanh cái AC vào Inverter (Bus -> Inverter)
+const isAcPvOffgridSupply = !isGridConnected && hasAcPvPower && (hasEpsPower || isNetCharging);
+const isBusChargingInv = ((isImporting || hasAcPvPower) && isNetCharging) || isAcPvOffgridSupply || isAcPvSpecialOffgrid;
+
 
 this.setFlowVisible('flow-inv-to-bus', isInvSupplyingBus); // Inverter cấp điện ra Bus
 this.setFlowVisible('flow-bus-to-inv', isBusChargingInv);  // Bus cấp điện ngược lại Inverter (Sạc)
