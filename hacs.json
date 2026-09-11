@@ -1,5 +1,8 @@
 {
   "name": "Power Flow Card Inverter",
   "render_readme": true,
-  "filename": "power-flow-card-inverter.js"
+  "filename": "power-flow-card-inverter.js",
+  "render_readme": true,
+  "content_in_root": false,
+  "homeassistant": "2020.12.0"
 }
