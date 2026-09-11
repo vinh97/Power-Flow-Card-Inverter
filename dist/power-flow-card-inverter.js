@@ -971,14 +971,13 @@ class PowerFlowCardInverter extends HTMLElement {
                                       hasLoadPower;
 
     // 3. Chế độ Bypass Lưới -> Tiêu thụ:
-    // Có lưới + (Công suất lấy lưới >= Công suất tiêu thụ hoặc xấp xỉ bằng) + Pin không nạp/xả (0W) + PV không phát + AC PV không có công suất
+    // Có lưới + (Công suất lấy lưới >= Công suất tiêu thụ hoặc xấp xỉ bằng) + Pin không nạp/xả (0W) + PV đang phát + AC PV không có công suất
     const isGridBypass = isGridConnected && 
-                         isImporting && 
-                         (gridImportPower >= loadP || Math.abs(gridImportPower - loadP) <= 5) && 
-                         !isNetCharging && 
-                         !isNetDischarging && 
-                         !hasPvPower && 
-                         !hasAcPvPower;
+                     isImporting && 
+                     !hasAcPvPower && 
+                     (gridImportPower >= loadP - 5) && 
+                     (!isNetDischarging || (hasPvPower && isNetCharging));
+
 
     // Mũi tên Inverter -> Bus hòa lưới bật khi đáp ứng Chế độ Ưu tiên tải HOẶC Chế độ Ưu tiên lưu trữ,
     // và TẮT khi đang ở Chế độ Bypass Lưới
