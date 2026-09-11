@@ -64,8 +64,7 @@ this.setFlowVisible('flow-eps', hasEpsPower);
 const batChargePower = isNetCharging ? netBatPower : 0;
 const gridImportPower = isImporting ? Math.abs(gridP) : 0;
 
-// Chế độ Bypass Lưới -> Tiêu thụ:
-// Lưới mua chênh lệch 0-5W so với tải, Pin không xả. Cho phép Pin sạc nếu có PV DC.
+// Chế độ Bypass Lưới -> Tiêu thụ: Lưới bù nhẹ 0-5W so với tải
 const gridToLoadDiff = gridImportPower - loadP;
 const isGridBypass = isGridConnected && 
                      isImporting && 
@@ -73,26 +72,18 @@ const isGridBypass = isGridConnected &&
                      (!isNetCharging || hasPvPower) &&
                      (gridToLoadDiff >= 0 && gridToLoadDiff <= 5);
 
-// Chế độ 1: Ưu tiên tải (Load Priority Mode)
-const isLoadPriorityInvToBus = isGridConnected && 
-                               (batChargePower < totalPvPower) && 
-                               (gridImportPower < loadP);
+// Inverter phát điện: Có PV DC hoặc Pin đang xả
+const isInvGenerating = hasPvPower || isNetDischarging;
 
-// Chế độ 2: Ưu tiên lưu trữ (Storage Priority Mode)
-const isStoragePriorityInvToBus = isGridConnected && 
-                                  hasPvPower && 
-                                  isNetCharging && 
-                                  (!isImporting || gridImportPower === 0) && 
-                                  hasLoadPower;
+// Trạng thái thô: Bắt buộc isGridConnected = true theo đúng thiết kế tính năng
+const rawInvToBus = isGridConnected && !isGridBypass && isInvGenerating && (hasLoadPower || isExporting);
 
-// Luồng Inverter -> Bus (Tắt khi đang Bypass Lưới)
-const isInvSupplyingBus = !isGridBypass && (isLoadPriorityInvToBus || isStoragePriorityInvToBus);
+// 8. Trạng thái thô cho luồng Bus -> Inverter (Sạc pin từ AC Bus/Lưới)
+const rawBusToInv = isGridConnected && (isImporting || hasAcPvPower) && isNetCharging && !isGridBypass;
 
-// 8. Luồng điện sạc Pin từ Thanh cái AC vào Inverter (Bus -> Inverter)
-const isAcPvOffgridSupply = !isGridConnected && hasAcPvPower && (hasEpsPower || isNetCharging);
-const isBusChargingInv = ((isImporting || hasAcPvPower) && isNetCharging && !isGridBypass) || 
-                         isAcPvOffgridSupply || 
-                         isAcPvSpecialOffgrid;
+// --- KHỬ XUNG ĐỘT HIỂN THỊ 2 CHIỀU ---
+const isInvSupplyingBus = rawInvToBus && !rawBusToInv;
+const isBusChargingInv = rawBusToInv && !rawInvToBus;
 
 this.setFlowVisible('flow-inv-to-bus', isInvSupplyingBus); // Inverter cấp điện ra Bus
-this.setFlowVisible('flow-bus-to-inv', isBusChargingInv);  // Bus cấp điện ngược lại Inverter (Sạc)
+this.setFlowVisible('flow-bus-to-inv', isBusChargingInv);  // Bus cấp điện ngược lại Inverter
