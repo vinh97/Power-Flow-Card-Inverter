@@ -907,87 +907,105 @@ class PowerFlowCardInverter extends HTMLElement {
     this.setEnergyStat('stat-grid-today', this.getState(isGridSell ? ent.grid_sell_daily : ent.grid_buy_daily));
     this.setEnergyStat('stat-grid-total', this.getState(isGridSell ? ent.grid_sell_total : ent.grid_buy_total));
 
-    const MIN_POWER = 5;
+    // --- XÁC ĐỊNH TRẠNG THÁI CÁC THIẾT BỊ ---
 
+    const MIN_POWER = 5; // Ngưỡng công suất tối thiểu (W) để kích hoạt luồng chảy
+
+// Trạng thái sạc/xả Pin lưu trữ 1 & 2
     const isBat1Charging = batP > MIN_POWER;
     const isBat1Discharging = batP < -MIN_POWER;
     const isBat2Charging = showBat2 && bat2P > MIN_POWER;
     const isBat2Discharging = showBat2 && bat2P < -MIN_POWER;
 
+// Tổng công suất sạc/xả của hệ thống Pin
     const netBatPower = batP + (showBat2 ? bat2P : 0);
     const isNetCharging = netBatPower > MIN_POWER;
     const isNetDischarging = netBatPower < -MIN_POWER;
 
-    const isImporting = isGridConnected && gridP < -MIN_POWER;
-    const isExporting = isGridConnected && gridP > MIN_POWER;
+// Trạng thái Nhập / Phát điện lưới
+    const isImporting = isGridConnected && gridP < -MIN_POWER; // Nhập lưới (Mua điện)
+    const isExporting = isGridConnected && gridP > MIN_POWER;  // Phát lưới (Bán điện)
 
+// Trạng thái có công suất nguồn & tải
     const hasPvPower = pvP > MIN_POWER;
     const hasAcPvPower = hasAcPvP && acPvP > MIN_POWER;
     const hasLoadPower = loadP > MIN_POWER;
     const hasEpsPower = epsP > MIN_POWER;
 
+// Trường hợp đặc biệt: AC PV cấp điện khi mất lưới hoặc chạy chế độ riêng
     const isAcPvSpecialOffgrid = isGridConnected && 
-                                 !hasLoadPower && 
-                                 !isImporting && 
-                                 (hasPvPower || isNetCharging || isNetDischarging) && 
-                                 hasAcPvPower && 
-                                 hasEpsPower;
+                             !hasLoadPower && 
+                             !isImporting && 
+                             (hasPvPower || isNetCharging || isNetDischarging) && 
+                             hasAcPvPower && 
+                             hasEpsPower;
 
-    this.setFlowVisible('flow-bat-charge', isBat1Charging);
-    this.setFlowVisible('flow-bat-discharge', isBat1Discharging);
-    this.setFlowVisible('flow-bat2-charge', showBat2 && isBat2Charging);
-    this.setFlowVisible('flow-bat2-discharge', showBat2 && isBat2Discharging);
-    this.setFlowVisible('flow-bat-trunk-charge', isNetCharging);
-    this.setFlowVisible('flow-bat-trunk-discharge', isNetDischarging);
 
-    this.setFlowVisible('flow-grid-import', isImporting);
-    this.setFlowVisible('flow-grid-export', isExporting);
+// --- BẬT / TẮT ĐƯỜNG ĐI CỦA CÁC LUỒNG NĂNG LƯỢNG (SET FLOW VISIBILITY) ---
 
+// 1. Luồng Pin lưu trữ
+    this.setFlowVisible('flow-bat-charge', isBat1Charging);             // Sạc Pin 1
+    this.setFlowVisible('flow-bat-discharge', isBat1Discharging);       // Xả Pin 1
+    this.setFlowVisible('flow-bat2-charge', showBat2 && isBat2Charging); // Sạc Pin 2
+    this.setFlowVisible('flow-bat2-discharge', showBat2 && isBat2Discharging); // Xả Pin 2
+    this.setFlowVisible('flow-bat-trunk-charge', isNetCharging);       // Luồng tổng nạp Pin
+    this.setFlowVisible('flow-bat-trunk-discharge', isNetDischarging); // Luồng tổng xả Pin
+
+// 2. Luồng Điện lưới
+    this.setFlowVisible('flow-grid-import', isImporting); // Mua điện từ lưới
+    this.setFlowVisible('flow-grid-export', isExporting); // Bán điện ra lưới
+
+// 3. Luồng Quang điện DC (Tấm pin mặt trời)
     this.setFlowVisible('flow-pv', hasPvPower);
-    
+
+// 4. Luồng Quang điện AC (Hệ thống inverter phụ hòa lưới)
     const showAcPvFlow = hasAcPvPower && (isGridConnected || hasEpsPower || isNetCharging || isAcPvSpecialOffgrid);
     this.setFlowVisible('flow-ac-pv', showAcPvFlow);
-    
+
+// 5. Luồng từ Thanh cái AC (Bus) cấp cho Tải tiêu thụ
     this.setFlowVisible('flow-bus-to-load', isGridConnected && hasLoadPower);
-    
+
+// 6. Luồng cấp điện cho Tải dự phòng (EPS)
     this.setFlowVisible('flow-eps', hasEpsPower);
-	
+
+// 7. --- TÍNH TOÁN HƯỚNG DÒNG ĐIỆN GIỮA INVERTER VÀ THANH CÁI AC (BUS) ---
+
     const batChargePower = isNetCharging ? netBatPower : 0;
     const gridImportPower = isImporting ? Math.abs(gridP) : 0;
 
-    // 1. Chế độ Ưu tiên tải (Load Priority Mode):
-    // Có lưới + Công suất nạp PIN < Công suất PV + Công suất lấy lưới < Công suất tiêu thụ
-    const isLoadPriorityInvToBus = isGridConnected && 
-                                   (batChargePower < totalPvPower) && 
-                                   (gridImportPower < loadP);
-
-    // 2. Chế độ Ưu tiên lưu trữ (Storage Priority Mode):
-    // Có lưới + PV có công suất + Pin đang nạp + Công suất lấy lưới = 0 + Có công suất tiêu thụ
-    // (Bất kể PV hòa lưới/AC PV có công suất hay không)
-    const isStoragePriorityInvToBus = isGridConnected && 
-                                      hasPvPower && 
-                                      isNetCharging && 
-                                      (!isImporting || gridImportPower === 0) && 
-                                      hasLoadPower;
-
-    // 3. Chế độ Bypass Lưới -> Tiêu thụ:
-    // Có lưới + (Công suất lấy lưới >= Công suất tiêu thụ hoặc xấp xỉ bằng) + Pin không nạp/xả (0W) + PV đang phát + AC PV không có công suất
+// Chế độ Bypass Lưới -> Tiêu thụ:
+// Lưới mua chênh lệch 0-5W so với tải, Pin không xả. Cho phép Pin sạc nếu có PV DC.
+    const gridToLoadDiff = gridImportPower - loadP;
     const isGridBypass = isGridConnected && 
                      isImporting && 
-                     !hasAcPvPower && 
-                     (gridImportPower >= loadP - 5) && 
-                     (!isNetDischarging || (hasPvPower && isNetCharging));
+                     !isNetDischarging && 
+                     (!isNetCharging || hasPvPower) &&
+                     (gridToLoadDiff >= 0 && gridToLoadDiff <= 5);
 
+// Chế độ 1: Ưu tiên tải (Load Priority Mode)
+    const isLoadPriorityInvToBus = isGridConnected && 
+                               (batChargePower < totalPvPower) && 
+                               (gridImportPower < loadP);
 
-    // Mũi tên Inverter -> Bus hòa lưới bật khi đáp ứng Chế độ Ưu tiên tải HOẶC Chế độ Ưu tiên lưu trữ,
-    // và TẮT khi đang ở Chế độ Bypass Lưới
+// Chế độ 2: Ưu tiên lưu trữ (Storage Priority Mode)
+    const isStoragePriorityInvToBus = isGridConnected && 
+                                  hasPvPower && 
+                                  isNetCharging && 
+                                  (!isImporting || gridImportPower === 0) && 
+                                  hasLoadPower;
+
+// Luồng Inverter -> Bus (Tắt khi đang Bypass Lưới)
     const isInvSupplyingBus = !isGridBypass && (isLoadPriorityInvToBus || isStoragePriorityInvToBus);
 
+// 8. Luồng điện sạc Pin từ Thanh cái AC vào Inverter (Bus -> Inverter)
     const isAcPvOffgridSupply = !isGridConnected && hasAcPvPower && (hasEpsPower || isNetCharging);
-    const isBusChargingInv = !isGridBypass && (((isImporting || hasAcPvPower) && isNetCharging) || isAcPvOffgridSupply || isAcPvSpecialOffgrid);
+    const isBusChargingInv = ((isImporting || hasAcPvPower) && isNetCharging && !isGridBypass) || 
+                         isAcPvOffgridSupply || 
+                         isAcPvSpecialOffgrid;
 
-    this.setFlowVisible('flow-inv-to-bus', isInvSupplyingBus);
-    this.setFlowVisible('flow-bus-to-inv', isBusChargingInv);
+    this.setFlowVisible('flow-inv-to-bus', isInvSupplyingBus); // Inverter cấp điện ra Bus
+    this.setFlowVisible('flow-bus-to-inv', isBusChargingInv);  // Bus cấp điện ngược lại Inverter (Sạc)
+
 
     const loadIconColor = isGridConnected ? '#10b982' : (hasLoadPower ? '#e11d48' : '#94a3b8');
     const loadIcons = this.shadowRoot.querySelectorAll('#icon-load .load-icon-color');
@@ -1210,9 +1228,9 @@ class PowerFlowCardInverter extends HTMLElement {
                 <use href="#chv-block-d" x="291" y="4"   class="chv-block" style="animation-delay: 0.00s;" />
                 <use href="#chv-block-d" x="291" y="20"  class="chv-block" style="animation-delay: 0.12s;" />
                 <use href="#chv-block-d" x="291" y="36"  class="chv-block" style="animation-delay: 0.24s;" />
-                <use href="#chv-block-d" x="291" y="52"  class="chv-block" style="animation-delay: 0.48s;" />
-                <use href="#chv-block-d" x="291" y="68"  class="chv-block" style="animation-delay: 0.60s;" />
-                <use href="#chv-block-d" x="291" y="84"  class="chv-block" style="animation-delay: 0.72s;" />
+                <use href="#chv-block-d" x="291" y="52"  class="chv-block" style="animation-delay: 0.36s;" />
+                <use href="#chv-block-d" x="291" y="68"  class="chv-block" style="animation-delay: 0.48s;" />
+                <use href="#chv-block-d" x="291" y="84"  class="chv-block" style="animation-delay: 0.60s;" />
               </g>
 
               <g id="flow-eps">
