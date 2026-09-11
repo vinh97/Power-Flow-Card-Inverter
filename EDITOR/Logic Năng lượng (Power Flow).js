@@ -69,6 +69,13 @@ const isGridBypass = isGridConnected &&
                      (gridImportPower >= loadP - 5) && 
                      (!isNetDischarging || (hasPvPower && isNetCharging));
 
+// 4. Chế độ Sạc Lưới AC
+const isAcGridCharging = isGridConnected && 
+                         isImporting && 
+                         (gridImportPower > loadP + 30) && 
+                         isNetCharging && 
+                         (batteryChargePower > pvPower);
+
 
 // Luồng giữa Biến tần (Inverter) và Bus AC
 const isInvSupplyingBus = !isGridBypass && (isLoadPriorityInvToBus || isStoragePriorityInvToBus);
