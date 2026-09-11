@@ -65,7 +65,7 @@ const isStoragePriorityInvToBus = isGridConnected &&
 // 3. Chế độ Bypass Lưới -> Tiêu thụ
 const isGridBypass = isGridConnected && 
                      isImporting && 
-                     (gridImportPower >= loadP || Math.abs(gridImportPower - loadP) <= 30) && 
+                     (gridImportPower >= loadP || Math.abs(gridImportPower - loadP) <= 5) && 
                      !isNetCharging && 
                      !isNetDischarging && 
                      !hasPvPower && 
