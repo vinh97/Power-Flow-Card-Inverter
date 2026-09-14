@@ -77,7 +77,7 @@ smart_load_aux: false               # AUX là Smart Load (Tải) thay vì nguồ
 
 # --- Biến tần (Inverter) ---
 inverter_image: false               # Bật true nếu muốn dùng ảnh riêng (hoặc điền đường dẫn ảnh)
-inverter_icon: "mdi:solar-inverter" # Icon MDI mặc định khi không dùng ảnh
+inverter_icon: /local/community/inverter.png # Icon MDI mặc định khi không dùng ảnh
 inverter_x: 136                     # Tọa độ X toàn khối Inverter
 inverter_y: 68                      # Tọa độ Y toàn khối Inverter
 inverter_width: 75                  # Chiều rộng hình ảnh (W)
