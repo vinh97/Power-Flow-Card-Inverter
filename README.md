@@ -55,92 +55,200 @@ Vào Dashboard bất kỳ ➔ Chọn **Chỉnh sửa giao diện** (Edit Dashboa
 
 ```yaml
 type: custom:power-flow-card-inverter
-language: vi             # Ngôn ngữ: 'vi' hoặc 'en'
-dark_mode: false         # Bật/tắt giao diện tối
-three_phase: false       # Đổi thành true nếu dùng điện 3 pha
-single_load_mode: false  # Bật true để tự chuyển tải sang EPS khi mất lưới
-always_show_ac_pv: false # Bật true để luôn hiển thị nguồn AC PV
-invert_grid_power: false # Bật true nếu công suất lưới bị ngược chiều (+/-)
-invert_battery_power: false # Bật true nếu công suất pin bị ngược chiều (+/-)
-always_show_battery2: false # Bật true để luôn hiển thị Pin lưu trữ 2
-invert_battery2_power: false # Bật true nếu công suất pin 2 bị ngược chiều (+/-)
 
-# Tùy chỉnh ảnh / Icon Biến tần (Inverter)
-inverter_image: false    # Bật true nếu muốn dùng ảnh riêng
-#inverter_icon: /hacsfiles/Power-Flow-Card-Inverter/inverter.png
-inverter_icon: /local/community/inverter.png
-inverter_x: 144                                 # Tọa độ X toàn khối Inverter , Mặc định X: 136
-inverter_y: 74                                  # Tọa độ Y toàn khối Inverter , Mặc định X: 68
-inverter_width: 58                              # Chiều rộng hình ảnh           Mặc định X: 75
-inverter_height: 58                             # Chiều cao hình ảnh            Mặc định X: 75              
+# ==========================================
+# CẤU HÌNH HỆ THỐNG CHUNG
+# ==========================================
+language: vi                        # Ngôn ngữ hiển thị (vi: Tiếng Việt, en: Tiếng Anh)
+dark_mode: false                    # Chế độ tối (true: Bật, false: Tắt)
+three_phase: false                  # Hệ thống điện 3 pha (true: Bật 3 pha, false: 1 pha)
+single_load_mode: false             # Gom chung tải tiêu thụ nhà và tải dự phòng
+invert_grid_power: false            # Đảo chiều giá trị công suất lưới (âm <-> dương)
+invert_battery_power: false         # Đảo chiều giá trị công suất Pin 1
+always_show_battery2: false         # Luôn hiển thị Pin lưu trữ thứ 2
+invert_battery2_power: false        # Đảo chiều giá trị công suất Pin 2
+always_show_aux: false              # Luôn hiển thị tải phụ / cổng AUX
+invert_aux_power: false             # Đảo chiều giá trị công suất cổng AUX
+smart_load_aux: false               # AUX là Smart Load (Tải) thay vì nguồn phát (AC PV)
 
+# ==========================================
+# CẤU HÌNH TÙY CHỈNH ẢNH / ICON & TỌA ĐỘ KÍCH THƯỚC
+# ==========================================
+
+# --- Biến tần (Inverter) ---
+inverter_image: false               # Bật true nếu muốn dùng ảnh riêng (hoặc điền đường dẫn ảnh)
+inverter_icon: "mdi:solar-inverter" # Icon MDI mặc định khi không dùng ảnh
+inverter_x: 136                     # Tọa độ X toàn khối Inverter
+inverter_y: 68                      # Tọa độ Y toàn khối Inverter
+inverter_width: 75                  # Chiều rộng hình ảnh (W)
+inverter_height: 75                 # Chiều cao hình ảnh (H)
+inverter_custom_x: 0                # Tọa độ X tùy chỉnh cho icon
+inverter_custom_y: 0                # Tọa độ Y tùy chỉnh cho icon
+
+# --- Điện mặt trời (PV) ---
+pv_image: false                     # Sử dụng ảnh PV tùy chỉnh
+pv_icon: ""                         # Đường dẫn Icon/Ảnh PV riêng
+pv_x: 138                           # Tọa độ X khối PV
+pv_y: -56                           # Tọa độ Y khối PV
+pv_width: 50                        # Chiều rộng khối PV
+pv_height: 50                       # Chiều cao khối PV
+pv_custom_x: 0
+pv_custom_y: 0
+
+# --- Tải phụ / Smart Load (AUX) ---
+aux_image: false                    # Sử dụng ảnh AUX riêng
+aux_icon: ""                        # Đường dẫn Icon/Ảnh AUX riêng
+aux_x: 274                          # Tọa độ X khối AUX
+aux_y: -58                          # Tọa độ Y khối AUX
+aux_width: 44                       # Chiều rộng khối AUX
+aux_height: 46                      # Chiều cao khối AUX
+aux_custom_x: 0
+aux_custom_y: 0
+
+# --- Tải tiêu thụ nhà (Load) ---
+load_image: false                   # Sử dụng ảnh Tải nhà riêng
+load_icon: ""                       # Đường dẫn Icon/Ảnh Tải riêng
+load_x: 0                           # Tọa độ X khối Tải
+load_y: 0                           # Tọa độ Y khối Tải
+load_width: 100                     # Chiều rộng Tải
+load_height: 92                     # Chiều cao Tải
+load_custom_x: 0
+load_custom_y: 0
+
+# --- Tải dự phòng (EPS / Backup Load) ---
+eps_image: false                    # Sử dụng ảnh EPS riêng
+eps_icon: ""                        # Đường dẫn Icon/Ảnh EPS riêng
+eps_x: 0                            # Tọa độ X khối EPS
+eps_y: 0                            # Tọa độ Y khối EPS
+eps_width: 50                       # Chiều rộng EPS
+eps_height: 50                      # Chiều cao EPS
+eps_custom_x: 0
+eps_custom_y: 0
+
+# ==========================================
+# KHAI BÁO CÁC THỰC THỂ (ENTITIES)
+# ==========================================
 entities:
-  # --- PV DC (Năng Lượng Mặt Trời) ---
+  # --- Thông tin Biến tần (Inverter) ---
+  inverter_power: sensor.inverter_power
+  inverter_current: sensor.inverter_current
+  inverter_voltage: sensor.inverter_voltage
+  inverter_temp: sensor.inverter_temperature
+
+  # --- Tổng Pin lưu trữ (Battery 1 + 2) ---
+  battery1_battery2_power: sensor.battery_power_all
+  battery1_battery2_current: sensor.battery_current_all
+
+  # --- Điện mặt trời (Solar PV 1-4 & Tổng) ---
   pv_power: sensor.pv_total_power
-  pv_daily: sensor.pv_energy_today
-  pv_total: sensor.pv_energy_total
   pv1_power: sensor.pv1_power
   pv1_voltage: sensor.pv1_voltage
+  pv1_current: sensor.pv1_current
   pv2_power: sensor.pv2_power
   pv2_voltage: sensor.pv2_voltage
-  # pv3_power: sensor.pv3_power
-  # pv3_voltage: sensor.pv3_voltage
-  # pv4_power: sensor.pv4_power
-  # pv4_voltage: sensor.pv4_voltage
+  pv2_current: sensor.pv2_current
+  pv3_power: sensor.pv3_power
+  pv3_voltage: sensor.pv3_voltage
+  pv3_current: sensor.pv3_current
+  pv4_power: sensor.pv4_power
+  pv4_voltage: sensor.pv4_voltage
+  pv4_current: sensor.pv4_current
 
-  # --- PV AC (Microinverter / Inverter hòa lưới phụ) ---
-  # ac_pv_power: sensor.ac_pv_power
-  # ac_pv_power_l1: sensor.ac_pv_power_l1
-  # ac_pv_power_l2: sensor.ac_pv_power_l2
-  # ac_pv_power_l3: sensor.ac_pv_power_l3
-  # ac_pv_voltage: sensor.ac_pv_voltage
-  # ac_pv_frequency: sensor.ac_pv_frequency
-
-  # --- Điện Lưới (Grid) ---
-  grid_power: sensor.grid_power            # Cấu hình 1 pha
-  grid_voltage: sensor.grid_voltage        # Cấu hình 1 pha
+  # --- Điện lưới 1 Pha (Grid 1-Phase) ---
+  grid_power: sensor.lux_grid_flow_live
+  grid_voltage: sensor.grid_voltage
   grid_frequency: sensor.grid_frequency
-  grid_sell_daily: sensor.grid_export_today
-  grid_sell_total: sensor.grid_export_total
-  grid_buy_daily: sensor.grid_import_today
-  grid_buy_total: sensor.grid_import_total
-  # Bỏ comment các dòng dưới nếu three_phase: true
-  # grid_power_l1: sensor.grid_power_l1
-  # grid_power_l2: sensor.grid_power_l2
-  # grid_power_l3: sensor.grid_power_l3
-  # grid_voltage_l1: sensor.grid_voltage_l1
+  grid_current: sensor.grid_current
 
-  # --- Tải Tiêu Thụ (Load) ---
-  load_power: sensor.load_power            # Cấu hình 1 pha
-  load_daily: sensor.load_energy_today
-  load_total: sensor.load_energy_total
-  # Bỏ comment các dòng dưới nếu three_phase: true
-  # load_power_l1: sensor.load_power_l1
-  # load_power_l2: sensor.load_power_l2
-  # load_power_l3: sensor.load_power_l3
+  # --- Điện lưới 3 Pha (Grid 3-Phase) ---
+  grid_power_l1: sensor.grid_power_l1
+  grid_power_l2: sensor.grid_power_l2
+  grid_power_l3: sensor.grid_power_l3
+  grid_voltage_l1: sensor.grid_voltage_l1
+  grid_voltage_l2: sensor.grid_voltage_l2
+  grid_voltage_l3: sensor.grid_voltage_l3
+  grid_frequency_l1: sensor.grid_frequency_l1
+  grid_frequency_l2: sensor.grid_frequency_l2
+  grid_frequency_l3: sensor.grid_frequency_l3
+  grid_current_l1: sensor.grid_current_l1
+  grid_current_l2: sensor.grid_current_l2
+  grid_current_l3: sensor.grid_current_l3
 
-  # --- Nguồn Dự Phòng (EPS / Backup) ---
-  eps_power: sensor.eps_power              # Cấu hình 1 pha
+  # --- Tải tiêu thụ nhà (Load 1 Pha & 3 Pha) ---
+  load_power: sensor.load_power
+  load_voltage: sensor.load_voltage
+  load_frequency: sensor.load_frequency
+  load_current: sensor.load_current
+  load_power_l1: sensor.load_power_l1
+  load_power_l2: sensor.load_power_l2
+  load_power_l3: sensor.load_power_l3
+  load_voltage_l1: sensor.load_voltage_l1
+  load_voltage_l2: sensor.load_voltage_l2
+  load_voltage_l3: sensor.load_voltage_l3
+  load_current_l1: sensor.load_current_l1
+  load_current_l2: sensor.load_current_l2
+  load_current_l3: sensor.load_current_l3
+
+  # --- Tải dự phòng (EPS / Backup Load 1 Pha & 3 Pha) ---
+  eps_power: sensor.eps_power
   eps_voltage: sensor.eps_voltage
   eps_frequency: sensor.eps_frequency
-  # Bỏ comment các dòng dưới nếu three_phase: true
-  # eps_power_l1: sensor.eps_power_l1
-  # eps_power_l2: sensor.eps_power_l2
-  # eps_power_l3: sensor.eps_power_l3
+  eps_current: sensor.eps_current
+  eps_power_l1: sensor.eps_power_l1
+  eps_power_l2: sensor.eps_power_l2
+  eps_power_l3: sensor.eps_power_l3
+  eps_voltage_l1: sensor.eps_voltage_l1
+  eps_voltage_l2: sensor.eps_voltage_l2
+  eps_voltage_l3: sensor.eps_voltage_l3
+  eps_frequency_l1: sensor.eps_frequency_l1
+  eps_frequency_l2: sensor.eps_frequency_l2
+  eps_frequency_l3: sensor.eps_frequency_l3
+  eps_current_l1: sensor.eps_current_l1
+  eps_current_l2: sensor.eps_current_l2
+  eps_current_l3: sensor.eps_current_l3
 
-  # --- Pin Lưu Trữ 1 (Battery 1) ---
-  battery_power: sensor.battery_power
+  # --- Tải phụ / Smart Load (AUX 1 Pha & 3 Pha) ---
+  aux_power: sensor.aux_power
+  aux_voltage: sensor.aux_voltage
+  aux_frequency: sensor.aux_frequency
+  aux_current: sensor.aux_current
+  aux_power_l1: sensor.aux_power_l1
+  aux_power_l2: sensor.aux_power_l2
+  aux_power_l3: sensor.aux_power_l3
+  aux_voltage_l1: sensor.aux_voltage_l1
+  aux_voltage_l2: sensor.aux_voltage_l2
+  aux_voltage_l3: sensor.aux_voltage_l3
+  aux_frequency_l1: sensor.aux_frequency_l1
+  aux_frequency_l2: sensor.aux_frequency_l2
+  aux_frequency_l3: sensor.aux_frequency_l3
+  aux_current_l1: sensor.aux_current_l1
+  aux_current_l2: sensor.aux_current_l2
+  aux_current_l3: sensor.aux_current_l3
+
+  # --- Pin lưu trữ 1 (Battery 1) ---
+  battery_power: sensor.lux_battery_flow_live
   battery_voltage: sensor.battery_voltage
   battery_soc: sensor.battery_soc
+  battery_current: sensor.battery_current
+  battery_temp: sensor.battery_temperature
+
+  # --- Pin lưu trữ 2 (Battery 2) ---
+  battery2_power: sensor.battery2_power
+  battery2_voltage: sensor.battery2_voltage
+  battery2_soc: sensor.battery2_soc
+  battery2_current: sensor.battery2_current
+  battery2_temp: sensor.battery2_temperature
+
+  # --- Bảng Thống Kê Sản Lượng & Tiêu Thụ ---
+  pv_daily: sensor.pv_energy_today
+  pv_total: sensor.pv_energy_total
+  grid_buy_daily: sensor.grid_import_today
+  grid_buy_total: sensor.grid_import_total
+  grid_sell_daily: sensor.grid_export_today
+  grid_sell_total: sensor.grid_export_total
+  load_daily: sensor.load_energy_today
+  load_total: sensor.load_energy_total
   battery_charge_daily: sensor.battery_charge_today
   battery_charge_total: sensor.battery_charge_total
   battery_discharge_daily: sensor.battery_discharge_today
   battery_discharge_total: sensor.battery_discharge_total
-
-  # --- Pin Lưu Trữ 2 (Battery 2) ---
-  # battery2_power: sensor.battery2_power
-  # battery2_voltage: sensor.battery2_voltage
-  # battery2_soc: sensor.battery2_soc
-
-
-```
