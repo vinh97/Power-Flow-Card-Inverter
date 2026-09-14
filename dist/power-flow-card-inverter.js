@@ -1,1064 +1,1605 @@
 const TRANSLATIONS = {
-  vi: {
-    pv_yield: "SẢN LƯỢNG PV",
-    pv_today: "Sản lượng hôm nay",
-    pv_total: "Tổng sản lượng",
+    vi: {
+        pv_yield: "SẢN LƯỢNG PV",
+        pv_today: "Sản lượng hôm nay",
+        pv_total: "Tổng sản lượng",
 
-    bat_charge_title: "Pin nạp",
-    bat_discharge_title: "Pin xả",
-    charge_today: "Nạp hôm nay",
-    discharge_today: "Xả hôm nay",
-    total_charge: "Tổng nạp",
-    total_discharge: "Tổng xả",
+        bat_charge_title: "Pin nạp",
+        bat_discharge_title: "Pin xả",
+        charge_today: "Nạp hôm nay",
+        discharge_today: "Xả hôm nay",
+        total_charge: "Tổng nạp",
+        total_discharge: "Tổng xả",
 
-    grid_import_title: "Nhập lưới",
-    grid_export_title: "Phát lên lưới",
-    import_today: "Nhập hôm nay",
-    export_today: "Phát hôm nay",
-    total_import: "Tổng nhập",
-    total_export: "Tổng phát",
+        grid_import_title: "Nhập lưới",
+        grid_export_title: "Phát lên lưới",
+        import_today: "Nhập hôm nay",
+        export_today: "Phát hôm nay",
+        total_import: "Tổng nhập",
+        total_export: "Tổng phát",
 
-    load_consumption: "TIÊU THỤ",
-    load_today: "Tiêu thụ hôm nay",
-    load_total: "Tổng tiêu thụ",
+        load_consumption: "TIÊU THỤ",
+        load_today: "Tiêu thụ hôm nay",
+        load_total: "Tổng tiêu thụ",
 
-    today: "HÔM NAY",
-    total: "TỔNG",
-    pv_power_lbl: "CÔNG SUẤT PV",
-    backup_power: "CÔNG SUẤT DỰ PHÒNG",
-    standby_mode: "CHẾ ĐỘ CHỜ",
-    consumption: "TIÊU THỤ",
-    bat_charging: "ĐANG SẠC",
-    bat_discharging: "ĐANG XẢ",
-    bat_full: "PIN ĐẦY",
-    bat_standby: "PIN CHỜ",
-    bat_low: "PIN YẾU",
-    grid_offline: "MẤT LƯỚI",
-    grid_exporting: "ĐẨY LƯỚI",
-    grid_importing: "LẤY LƯỚI",
-    grid_ongrid: "HÒA LƯỚI"
-  },
-  en: {
-    pv_yield: "SOLAR PV",
-    pv_today: "Today's Yield",
-    pv_total: "Total Yield",
+        today: "HÔM NAY",
+        total: "TỔNG",
+        pv_power_lbl: "CÔNG SUẤT PV",
+        backup_power: "CÔNG SUẤT DỰ PHÒNG",
+        standby_mode: "CHẾ ĐỘ CHỜ",
+        consumption: "TIÊU THỤ",
+        bat_charging: "ĐANG SẠC",
+        bat_discharging: "ĐANG XẢ",
+        bat_full: "PIN ĐẦY",
+        bat_standby: "PIN CHỜ",
+        bat_low: "PIN YẾU",
+        grid_offline: "MẤT LƯỚI",
+        grid_exporting: "ĐẨY LƯỚI",
+        grid_importing: "LẤY LƯỚI",
+        grid_ongrid: "HÒA LƯỚI"
+    },
+    en: {
+        pv_yield: "SOLAR PV",
+        pv_today: "Today's Yield",
+        pv_total: "Total Yield",
 
-    bat_charge_title: "Battery Charge",
-    bat_discharge_title: "Battery Discharge",
-    charge_today: "Charged Today",
-    discharge_today: "Discharged Today",
-    total_charge: "Total Charged",
-    total_discharge: "Total Discharged",
+        bat_charge_title: "Battery Charge",
+        bat_discharge_title: "Battery Discharge",
+        charge_today: "Charged Today",
+        discharge_today: "Discharged Today",
+        total_charge: "Total Charged",
+        total_discharge: "Total Discharged",
 
-    grid_import_title: "Grid Import",
-    grid_export_title: "Grid Export",
-    import_today: "Imported Today",
-    export_today: "Exported Today",
-    total_import: "Total Imported",
-    total_export: "Total Exported",
+        grid_import_title: "Grid Import",
+        grid_export_title: "Grid Export",
+        import_today: "Imported Today",
+        export_today: "Exported Today",
+        total_import: "Total Imported",
+        total_export: "Total Exported",
 
-    load_consumption: "LOAD POWER",
-    load_today: "Today's Load",
-    load_total: "Total Load",
+        load_consumption: "LOAD POWER",
+        load_today: "Today's Load",
+        load_total: "Total Load",
 
-    today: "TODAY",
-    total: "TOTAL",
-    pv_power_lbl: "PV POWER",
-    backup_power: "BACKUP POWER",
-    standby_mode: "STANDBY MODE",
-    consumption: "CONSUMPTION",
-    bat_charging: "CHARGING",
-    bat_discharging: "DISCHARGING",
-    bat_full: "FULL",
-    bat_standby: "STANDBY",
-    bat_low: "LOW",
-    grid_offline: "OFF-GRID",
-    grid_exporting: "EXPORTING",
-    grid_importing: "IMPORTING",
-    grid_ongrid: "ON-GRID"
-  }
+        today: "TODAY",
+        total: "TOTAL",
+        pv_power_lbl: "PV POWER",
+        backup_power: "BACKUP POWER",
+        standby_mode: "STANDBY MODE",
+        consumption: "CONSUMPTION",
+        bat_charging: "CHARGING",
+        bat_discharging: "DISCHARGING",
+        bat_full: "FULL",
+        bat_standby: "STANDBY",
+        bat_low: "LOW",
+        grid_offline: "OFF-GRID",
+        grid_exporting: "EXPORTING",
+        grid_importing: "IMPORTING",
+        grid_ongrid: "ON-GRID"
+    }
 };
 
 class PowerFlowCardInverter extends HTMLElement {
-  constructor() {
-    super();
-    this.attachShadow({ mode: 'open' });
-    this._batToggle = 'discharge';
-    this._gridToggle = 'buy';
-  }
-
-  static getConfigElement() {
-    return document.createElement("power-flow-card-inverter-editor");
-  }
-
-  static getStubConfig() {
-    return {
-      language: "vi",
-      dark_mode: false,
-      three_phase: false,
-      single_load_mode: false,
-      always_show_ac_pv: false,
-      invert_grid_power: false,
-      invert_battery_power: false,
-      always_show_battery2: false,
-      invert_battery2_power: false,
-      inverter_image: false,
-      inverter_icon: "/local/community/inverter.png",
-      inverter_x: 136,
-      inverter_y: 68,
-      inverter_width: 75,
-      inverter_height: 75,
-      entities: {
-        pv_power: "sensor.pv_total_power",
-        pv_daily: "sensor.pv_energy_today",
-        pv_total: "sensor.pv_energy_total",
-        pv1_power: "sensor.pv1_power",
-        pv1_voltage: "sensor.pv1_voltage",
-        pv2_power: "sensor.pv2_power",
-        pv2_voltage: "sensor.pv2_voltage",
-        grid_power: "sensor.grid_power",
-        grid_voltage: "sensor.grid_voltage",
-        grid_frequency: "sensor.grid_frequency",
-        grid_sell_daily: "sensor.grid_export_today",
-        grid_sell_total: "sensor.grid_export_total",
-        grid_buy_daily: "sensor.grid_import_today",
-        grid_buy_total: "sensor.grid_import_total",
-        load_power: "sensor.load_power",
-        load_daily: "sensor.load_energy_today",
-        load_total: "sensor.load_energy_total",
-        eps_power: "sensor.eps_power",
-        eps_voltage: "sensor.eps_voltage",
-        eps_frequency: "sensor.eps_frequency",
-        battery_power: "sensor.battery_power",
-        battery_voltage: "sensor.battery_voltage",
-        battery_soc: "sensor.battery_soc",
-        battery_charge_daily: "sensor.battery_charge_today",
-        battery_charge_total: "sensor.battery_charge_total",
-        battery_discharge_daily: "sensor.battery_discharge_today",
-        battery_discharge_total: "sensor.battery_discharge_total"
-      }
-    };
-  }
-
-  getTranslation() {
-    const lang = (this.config?.language || this.config?.lang || 'vi').toLowerCase();
-    return TRANSLATIONS[lang] || TRANSLATIONS.vi;
-  }
-
-  setConfig(config) {
-    if (!config) {
-      throw new Error("Cấu hình không hợp lệ!");
-    }
-    this.config = config;
-    this.render();
-  }
-
-  connectedCallback() {}
-  disconnectedCallback() {}
-
-  set hass(hass) {
-    this._hass = hass;
-    this.updateData();
-  }
-
-  getEl(id) {
-    return this.shadowRoot ? this.shadowRoot.getElementById(id) : null;
-  }
-
-  setDisplay(id, visible) {
-    const el = typeof id === 'string' ? this.getEl(id) : id;
-    if (el) el.style.display = visible ? 'inline' : 'none';
-  }
-
-  setText(id, text) {
-    const el = this.getEl(id);
-    if (el) el.textContent = text;
-  }
-
-  setPower(id, val) {
-    const el = this.getEl(id);
-    if (!el) return;
-    const num = Number(val) || 0;
-    const absNum = Math.abs(num);
-    const unitEl = el.nextElementSibling;
-    
-    if (absNum >= 9999) {
-      const kw = num / 1000;
-      const absKw = Math.abs(kw);
-      let formatted = '';
-      if (absKw >= 1000) formatted = kw.toFixed(0);
-      else formatted = kw.toFixed(1);
-      
-      el.textContent = formatted;
-      if (unitEl) unitEl.textContent = ' kW';
-    } else {
-      el.textContent = Math.round(num);
-      if (unitEl) unitEl.textContent = ' W';
-    }
-  }
-
-  setEnergyStat(id, val) {
-    const el = this.getEl(id);
-    if (!el) return;
-    const num = Number(val) || 0;
-    const absNum = Math.abs(num);
-
-    let formatted = '';
-    let unit = 'kWh';
-
-    if (absNum >= 1000) {
-      const mwh = num / 1000;
-      const absMwh = Math.abs(mwh);
-      if (absMwh >= 1000) formatted = mwh.toFixed(0);
-      else if (absMwh >= 100) formatted = mwh.toFixed(1);
-      else formatted = mwh.toFixed(2);
-      unit = 'MWh';
-    } else {
-      if (absNum >= 100) formatted = num.toFixed(1);
-      else formatted = num.toFixed(2);
-      unit = 'kWh';
-    }
-
-    el.innerHTML = `${formatted} <span class="unit">${unit}</span>`;
-  }
-
-  getState(entityId, defaultVal = 0) {
-    if (!entityId || !this._hass || !this._hass.states[entityId]) return defaultVal;
-    const val = parseFloat(this._hass.states[entityId].state);
-    return isNaN(val) ? defaultVal : val;
-  }
-
-  setFlowVisible(id, visible) {
-    this.setDisplay(id, visible);
-  }
-
-  alignTextStack(elements, centerY, lineHeight = 12, baselineOffset = 3.5, gapIndex = -1, gapAmount = 0) {
-    const visible = elements.filter(el => el && el.style.display !== 'none');
-    const numLines = visible.length;
-    if (numLines === 0) return;
-
-    const hasGap = gapIndex >= 0 && gapIndex < numLines - 1;
-    const totalHeight = ((numLines - 1) * lineHeight) + (hasGap ? gapAmount : 0);
-    const startY = centerY - totalHeight / 2 + baselineOffset;
-
-    let currentY = startY;
-    visible.forEach((el, idx) => {
-      el.setAttribute('y', currentY);
-      currentY += lineHeight;
-      if (idx === gapIndex) {
-        currentY += gapAmount;
-      }
-    });
-  }
-
-  attachEventListeners() {
-    const btnBat = this.getEl('btn-toggle-bat');
-    if (btnBat) {
-      btnBat.onclick = (e) => {
-        e.stopPropagation();
-        this._batToggle = this._batToggle === 'charge' ? 'discharge' : 'charge';
-        this.updateData();
-      };
-    }
-
-    const btnGrid = this.getEl('btn-toggle-grid');
-    if (btnGrid) {
-      btnGrid.onclick = (e) => {
-        e.stopPropagation();
-        this._gridToggle = this._gridToggle === 'sell' ? 'buy' : 'sell';
-        this.updateData();
-      };
-    }
-  }
-
-  updateData() {
-    if (!this._hass || !this.config || !this.shadowRoot || !this.shadowRoot.querySelector('.app-card')) return;
-
-    const ent = this.config.entities || {};
-    const isTrue = (val) => val === true || String(val).toLowerCase() === 'true';
-    const t = this.getTranslation();
-
-    const isDarkMode = isTrue(this.config?.dark_mode) || isTrue(this.config?.dark_theme) || isTrue(this.config?.dark);
-    const appCard = this.shadowRoot.querySelector('.app-card');
-    if (appCard) {
-      if (isDarkMode) appCard.classList.add('dark-mode');
-      else appCard.classList.remove('dark-mode');
-    }
-
-    const invImgConfig = this.config?.inverter_image;
-    const isImgConfigTrue = isTrue(invImgConfig);
-    const isImgConfigFalse = invImgConfig === false || String(invImgConfig).toLowerCase() === 'false';
-    const isImgConfigStringPath = typeof invImgConfig === 'string' && !isImgConfigTrue && !isImgConfigFalse && invImgConfig.trim() !== '';
-
-    const customInvImage = isImgConfigStringPath 
-      ? invImgConfig 
-      : (this.config?.inverter_icon || this.config?.custom_inverter_icon || '');
-
-    const useCustomImg = !isImgConfigFalse && (isImgConfigTrue || isImgConfigStringPath) && Boolean(customInvImage && String(customInvImage).trim() !== '');
-
-    const invDefaultG = this.getEl('inv-default-graphics');
-    const invCustomImg = this.getEl('inv-custom-image');
-
-    const invX = Number(this.config?.inverter_x ?? 144);
-    const invY = Number(this.config?.inverter_y ?? 74);
-
-    const invWidth = Number(this.config?.inverter_width || this.config?.inverter_size || 58);
-    const invHeight = Number(this.config?.inverter_height || this.config?.inverter_size || 58);
-    const invCustomX = Number(this.config?.inverter_custom_x ?? this.config?.inverter_icon_x ?? 0);
-    const invCustomY = Number(this.config?.inverter_custom_y ?? this.config?.inverter_icon_y ?? 0);
-
-    const invGroup = invDefaultG ? invDefaultG.parentElement : null;
-    if (invGroup) {
-      invGroup.setAttribute('transform', `translate(${invX}, ${invY})`);
-    }
-
-    if (invDefaultG && invCustomImg) {
-      if (useCustomImg) {
-        invDefaultG.style.display = 'none';
-        invCustomImg.style.display = 'inline';
-        invCustomImg.setAttribute('href', customInvImage);
-        invCustomImg.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', customInvImage);
-        invCustomImg.setAttribute('width', invWidth);
-        invCustomImg.setAttribute('height', invHeight);
-        invCustomImg.setAttribute('x', invCustomX);
-        invCustomImg.setAttribute('y', invCustomY);
-      } else {
-        invDefaultG.style.display = 'inline';
-        invCustomImg.style.display = 'none';
-        const scaleX = invWidth / 58;
-        const scaleY = invHeight / 58;
-        invDefaultG.setAttribute('transform', `scale(${scaleX}, ${scaleY})`);
-      }
-    }
-
-    const configThreePhase = this.config?.three_phase ?? ent?.three_phase;
-    const isThreePhase = configThreePhase !== undefined
-      ? isTrue(configThreePhase)
-      : Boolean(ent?.load_power_l1 || ent?.grid_power_l1 || ent?.eps_power_l1 || ent?.ac_pv_power_l1);
-
-    const singleLoadMode = this.config?.single_load_mode !== undefined
-      ? isTrue(this.config.single_load_mode)
-      : (ent?.single_load_mode !== undefined ? isTrue(ent.single_load_mode) : false);
-
-    let latestDate = null;
-    if (ent) {
-      Object.values(ent).forEach(eId => {
-        if (typeof eId === 'string' && this._hass?.states[eId]?.last_updated) {
-          const d = new Date(this._hass.states[eId].last_updated);
-          if (!latestDate || d > latestDate) latestDate = d;
-        }
-      });
-    }
-
-    if (latestDate) {
-      const timeFormatted = [
-        latestDate.getHours(),
-        latestDate.getMinutes(),
-        latestDate.getSeconds()
-      ].map(n => String(n).padStart(2, '0')).join(':');
-      this.setText('inv-lcd-time', timeFormatted);
-    }
-
-    let pvP = 0;
-    const activePvGroups = [];
-
-    [1, 2, 3, 4].forEach(i => {
-      const pId = ent[`pv${i}_power`];
-      const vId = ent[`pv${i}_voltage`];
-
-      const hasP = Boolean(pId && this._hass?.states[pId] !== undefined);
-      const hasV = Boolean(vId && this._hass?.states[vId] !== undefined);
-
-      const pVal = hasP ? Math.abs(Math.round(this.getState(pId))) : 0;
-      const vVal = hasV ? this.getState(vId, 0) : 0;
-
-      if (hasP) pvP += pVal;
-
-      const showP = hasP && (pVal > 0 || vVal > 0 || !hasV);
-      const showV = hasV && (vVal > 0 || pVal > 0 || !hasP);
-
-      this.setDisplay(`line-pv${i}-v`, showV);
-      this.setDisplay(`line-pv${i}-p`, showP);
-
-      if (showV) this.setText(`txt-pv${i}-v`, vVal.toFixed(1));
-      if (showP) this.setPower(`txt-pv${i}-p`, pVal);
-
-      const lineV = this.getEl(`line-pv${i}-v`);
-      const lineP = this.getEl(`line-pv${i}-p`);
-      if (lineV) lineV.setAttribute('x', '26');
-      if (lineP) lineP.setAttribute('x', '80');
-
-      const grp = this.getEl(`grp-pv${i}`);
-      if (grp) {
-        if (showP || showV) {
-          grp.style.display = 'inline';
-          activePvGroups.push(grp);
-        } else {
-          grp.style.display = 'none';
-        }
-      }
-    });
-
-    if (pvP === 0 && ent.pv_power && this._hass?.states[ent.pv_power] !== undefined) {
-      pvP = Math.abs(Math.round(this.getState(ent.pv_power, 0)));
-    }
-
-    const totalPvPower = (ent.pv_power && this._hass?.states[ent.pv_power] !== undefined)
-      ? Math.abs(Math.round(this.getState(ent.pv_power, 0)))
-      : pvP;
-    this.setPower('txt-pv-total-p', totalPvPower);
-    this.setText('lbl-pv-total-sub', t.pv_power_lbl);
-
-    const grpTotal = this.getEl('grp-pv-total');
-    const showTotalPv = totalPvPower > 0 || activePvGroups.length > 0;
-    this.setDisplay('grp-pv-total', showTotalPv);
-
-    const numStrings = activePvGroups.length;
-    const hasTotal = showTotalPv && grpTotal;
-
-    if (numStrings > 0 || hasTotal) {
-      const lineSpacing = 16;
-      const pvTotalGap = 20;
-      const iconY = -56;
-      const pvIconBaseY = iconY + 49 + 20;
-
-      const pvIconGroup = this.getEl('grp-pv-icon');
-      if (pvIconGroup) {
-        pvIconGroup.setAttribute('transform', `translate(138, ${iconY}) scale(0.57)`);
-      }
-
-      if (hasTotal) {
-        grpTotal.setAttribute('transform', `translate(0, ${pvIconBaseY})`);
-      }
-
-      if (numStrings > 0) {
-        const lastRowY = hasTotal ? (pvIconBaseY - pvTotalGap) : pvIconBaseY;
-        activePvGroups.forEach((grp, idx) => {
-          const grpY = lastRowY - (numStrings - 1 - idx) * lineSpacing;
-          grp.setAttribute('transform', `translate(0, ${grpY})`);
+    constructor() {
+        super();
+        this.attachShadow({
+            mode: 'open'
         });
-      }
+        this._batToggle = 'discharge';
+        this._gridToggle = 'buy';
     }
 
-    const alwaysShowAcPv = isTrue(this.config?.always_show_ac_pv) || isTrue(this.config?.show_ac_pv) || isTrue(ent?.always_show_ac_pv);
-    let acPvP = 0;
-    let acPvL1 = 0, acPvL2 = 0, acPvL3 = 0;
-
-    const hasAcPv3PhaseEntities = Boolean(ent.ac_pv_power_l1 || ent.ac_pv_power_l2 || ent.ac_pv_power_l3);
-
-    if (isThreePhase) {
-      acPvL1 = Math.abs(Math.round(this.getState(ent.ac_pv_power_l1, 0)));
-      acPvL2 = Math.abs(Math.round(this.getState(ent.ac_pv_power_l2, 0)));
-      acPvL3 = Math.abs(Math.round(this.getState(ent.ac_pv_power_l3, 0)));
-
-      acPvP = hasAcPv3PhaseEntities
-        ? (acPvL1 + acPvL2 + acPvL3)
-        : Math.abs(Math.round(this.getState(ent.ac_pv_power, 0)));
-
-      this.setPower('txt-ac-pv-l1', acPvL1);
-      this.setPower('txt-ac-pv-l2', acPvL2);
-      this.setPower('txt-ac-pv-l3', acPvL3);
-      this.setPower('txt-ac-pv-p', acPvP);
-    } else {
-      acPvP = Math.abs(Math.round(this.getState(ent.ac_pv_power, 0)));
-      this.setPower('txt-ac-pv-p', acPvP);
+    static getConfigElement() {
+        return document.createElement("power-flow-card-inverter-editor");
     }
 
-    const acPvV = this.getState(ent.ac_pv_voltage, 0.0);
-    const acPvF = this.getState(ent.ac_pv_frequency, 0.0);
+    static getStubConfig() {
+        return {
+            language: "vi",
+            dark_mode: false,
+            three_phase: false,
+            single_load_mode: false,
+            invert_grid_power: false,
+            invert_battery_power: false,
+            always_show_battery2: false,
+            invert_battery2_power: false,
+            always_show_aux: false,
+            invert_aux_power: false,
+            smart_load_aux: false,
 
-    const hasAcPvP = Boolean((ent.ac_pv_power || ent.ac_pv_power_l1 || ent.ac_pv_power_l2 || ent.ac_pv_power_l3) && acPvP > 0);
-    const hasAcPvV = Boolean(ent.ac_pv_voltage && this._hass?.states[ent.ac_pv_voltage] !== undefined);
-    const hasAcPvF = hasAcPvV && Boolean(ent.ac_pv_frequency && this._hass?.states[ent.ac_pv_frequency] !== undefined);
+            // Cấu hình Biến tần (Inverter Image / Icon)
+            inverter_image: false,
+            inverter_icon: "mdi:solar-inverter",
+            inverter_x: 132,
+            inverter_y: 79,
+            inverter_width: 75,
+            inverter_height: 75,
+            inverter_custom_x: 0,
+            inverter_custom_y: 0,
 
-    this.setDisplay('grp-pv-ac', alwaysShowAcPv || hasAcPvP);
+            // Cấu hình Điện mặt trời (PV Image / Icon)
+            pv_image: false,
+            pv_icon: "",
+            pv_x: 138,
+            pv_y: -56,
+            pv_width: 50,
+            pv_height: 50,
+            pv_custom_x: 0,
+            pv_custom_y: 0,
 
-    const showAcPvV = hasAcPvV && acPvV > 0;
-    const showAcPvF = hasAcPvF && acPvF > 0;
+            // Cấu hình Tải phụ / Smart Load (AUX Image / Icon)
+            aux_image: false,
+            aux_icon: "",
+            aux_x: 274,
+            aux_y: -58,
+            aux_width: 44,
+            aux_height: 46,
+            aux_custom_x: 0,
+            aux_custom_y: 0,
 
-    if (showAcPvV) this.setText('txt-ac-pv-v', acPvV.toFixed(1));
-    if (showAcPvF) this.setText('txt-ac-pv-f', acPvF.toFixed(2));
+            // Cấu hình Tải tiêu thụ nhà (Load Image / Icon)
+            load_image: false,
+            load_icon: "",
+            load_x: 0,
+            load_y: 0,
+            load_width: 100,
+            load_height: 92,
+            load_custom_x: 0,
+            load_custom_y: 0,
 
-    const acPvElements = [];
+            // Cấu hình Tải dự phòng (EPS Image / Icon)
+            eps_image: false,
+            eps_icon: "",
+            eps_x: 0,
+            eps_y: 0,
+            eps_width: 50,
+            eps_height: 50,
+            eps_custom_x: 0,
+            eps_custom_y: 0,
 
-    const showAcPvL1 = Boolean(ent.ac_pv_power_l1 && acPvL1 > 0);
-    const showAcPvL2 = Boolean(ent.ac_pv_power_l2 && acPvL2 > 0);
-    const showAcPvL3 = Boolean(ent.ac_pv_power_l3 && acPvL3 > 0);
+            entities: {
+                // Thông tin Biến tần (Inverter)
+                inverter_power: "sensor.inverter_power",
+                inverter_current: "sensor.inverter_current",
+                inverter_voltage: "sensor.inverter_voltage",
+                inverter_temp: "sensor.inverter_temperature",
 
-    const showAcPv3Phase = isThreePhase && hasAcPv3PhaseEntities && (showAcPvL1 || showAcPvL2 || showAcPvL3);
+                // Tổng công suất & dòng điện lưu trữ battery1_battery2
+                battery1_battery2_power: "sensor.battery_power_all",
+                battery1_battery2_current: "sensor.battery_current_all",
 
-    if (showAcPv3Phase) {
-      this.setDisplay('line-ac-pv-1p', false);
-      this.setDisplay('line-ac-pv-l1', showAcPvL1);
-      this.setDisplay('line-ac-pv-l2', showAcPvL2);
-      this.setDisplay('line-ac-pv-l3', showAcPvL3);
+                // Điện mặt trời (Solar PV)
+                pv_power: "sensor.pv_total_power",
+                pv1_power: "sensor.pv1_power",
+                pv1_voltage: "sensor.pv1_voltage",
+                pv1_current: "sensor.pv1_current",
+                pv2_power: "sensor.pv2_power",
+                pv2_voltage: "sensor.pv2_voltage",
+                pv2_current: "sensor.pv2_current",
+                pv3_power: "sensor.pv3_power",
+                pv3_voltage: "sensor.pv3_voltage",
+                pv3_current: "sensor.pv3_current",
+                pv4_power: "sensor.pv4_power",
+                pv4_voltage: "sensor.pv4_voltage",
+                pv4_current: "sensor.pv4_current",
 
-      if (showAcPvL1) acPvElements.push(this.getEl('line-ac-pv-l1'));
-      if (showAcPvL2) acPvElements.push(this.getEl('line-ac-pv-l2'));
-      if (showAcPvL3) acPvElements.push(this.getEl('line-ac-pv-l3'));
-    } else {
-      this.setDisplay('line-ac-pv-1p', true);
-      this.setDisplay('line-ac-pv-l1', false);
-      this.setDisplay('line-ac-pv-l2', false);
-      this.setDisplay('line-ac-pv-l3', false);
-      acPvElements.push(this.getEl('line-ac-pv-1p'));
+                // Điện lưới (Grid) 1 Pha
+                grid_power: "sensor.lux_grid_flow_live",
+                grid_voltage: "sensor.grid_voltage",
+                grid_frequency: "sensor.grid_frequency",
+                grid_current: "sensor.grid_current",
+
+                // Điện lưới (Grid) 3 Pha
+                grid_power_l1: "sensor.grid_power_l1",
+                grid_power_l2: "sensor.grid_power_l2",
+                grid_power_l3: "sensor.grid_power_l3",
+                grid_voltage_l1: "sensor.grid_voltage_l1",
+                grid_voltage_l2: "sensor.grid_voltage_l2",
+                grid_voltage_l3: "sensor.grid_voltage_l3",
+                grid_frequency_l1: "sensor.grid_frequency_l1",
+                grid_frequency_l2: "sensor.grid_frequency_l2",
+                grid_frequency_l3: "sensor.grid_frequency_l3",
+                grid_current_l1: "sensor.grid_current_l1",
+                grid_current_l2: "sensor.grid_current_l2",
+                grid_current_l3: "sensor.grid_current_l3",
+
+                // Tải tiêu thụ nhà (Load) 1 Pha & 3 Pha
+                load_power: "sensor.load_power",
+                load_voltage: "sensor.load_voltage",
+                load_frequency: "sensor.load_frequency",
+                load_current: "sensor.load_current",
+                load_power_l1: "sensor.load_power_l1",
+                load_power_l2: "sensor.load_power_l2",
+                load_power_l3: "sensor.load_power_l3",
+                load_voltage_l1: "sensor.load_voltage_l1",
+                load_voltage_l2: "sensor.load_voltage_l2",
+                load_voltage_l3: "sensor.load_voltage_l3",
+                load_current_l1: "sensor.load_current_l1",
+                load_current_l2: "sensor.load_current_l2",
+                load_current_l3: "sensor.load_current_l3",
+
+                // Tải dự phòng (EPS / Backup Load) 1 Pha & 3 Pha
+                eps_power: "sensor.eps_power",
+                eps_voltage: "sensor.eps_voltage",
+                eps_frequency: "sensor.eps_frequency",
+                eps_current: "sensor.eps_current",
+                eps_power_l1: "sensor.eps_power_l1",
+                eps_power_l2: "sensor.eps_power_l2",
+                eps_power_l3: "sensor.eps_power_l3",
+                eps_voltage_l1: "sensor.eps_voltage_l1",
+                eps_voltage_l2: "sensor.eps_voltage_l2",
+                eps_voltage_l3: "sensor.eps_voltage_l3",
+                eps_frequency_l1: "sensor.eps_frequency_l1",
+                eps_frequency_l2: "sensor.eps_frequency_l2",
+                eps_frequency_l3: "sensor.eps_frequency_l3",
+                eps_current_l1: "sensor.eps_current_l1",
+                eps_current_l2: "sensor.eps_current_l2",
+                eps_current_l3: "sensor.eps_current_l3",
+
+                // Tải phụ / Smart Load (AUX)
+                aux_power: "sensor.aux_power",
+                aux_voltage: "sensor.aux_voltage",
+                aux_frequency: "sensor.aux_frequency",
+                aux_current: "sensor.aux_current",
+                aux_power_l1: "sensor.aux_power_l1",
+                aux_power_l2: "sensor.aux_power_l2",
+                aux_power_l3: "sensor.aux_power_l3",
+                aux_voltage_l1: "sensor.aux_voltage_l1",
+                aux_voltage_l2: "sensor.aux_voltage_l2",
+                aux_voltage_l3: "sensor.aux_voltage_l3",
+                aux_frequency_l1: "sensor.aux_frequency_l1",
+                aux_frequency_l2: "sensor.aux_frequency_l2",
+                aux_frequency_l3: "sensor.aux_frequency_l3",
+                aux_current_l1: "sensor.aux_current_l1",
+                aux_current_l2: "sensor.aux_current_l2",
+                aux_current_l3: "sensor.aux_current_l3",
+
+                // Pin lưu trữ 1
+                battery_power: "sensor.lux_battery_flow_live",
+                battery_voltage: "sensor.battery_voltage",
+                battery_soc: "sensor.battery_soc",
+                battery_current: "sensor.battery_current",
+                battery_temp: "sensor.battery_temperature",
+
+                // Pin lưu trữ 2
+                battery2_power: "sensor.battery2_power",
+                battery2_voltage: "sensor.battery2_voltage",
+                battery2_soc: "sensor.battery2_soc",
+                battery2_current: "sensor.battery2_current",
+                battery2_temp: "sensor.battery2_temperature",
+
+                // Bảng Thống Kê
+                pv_daily: "sensor.pv_energy_today",
+                pv_total: "sensor.pv_energy_total",
+                grid_buy_daily: "sensor.grid_import_today",
+                grid_buy_total: "sensor.grid_import_total",
+                grid_sell_daily: "sensor.grid_export_today",
+                grid_sell_total: "sensor.grid_export_total",
+                load_daily: "sensor.load_energy_today",
+                load_total: "sensor.load_energy_total",
+                battery_charge_daily: "sensor.battery_charge_today",
+                battery_charge_total: "sensor.battery_charge_total",
+                battery_discharge_daily: "sensor.battery_discharge_today",
+                battery_discharge_total: "sensor.battery_discharge_total"
+            }
+        };
     }
 
-    this.setDisplay('line-ac-pv-v', showAcPvV);
-    if (showAcPvV) acPvElements.push(this.getEl('line-ac-pv-v'));
-
-    this.setDisplay('line-ac-pv-f', showAcPvF);
-    if (showAcPvF) acPvElements.push(this.getEl('line-ac-pv-f'));
-
-    this.alignTextStack(acPvElements, -32.5, 12, 3.5);
-
-    let gridP = 0;
-    let rawGridV = 0.0;
-    let rawGridF = 0.0;
-
-    const gridPowerElements = [];
-    const gridInfoElements = [];
-
-    let gridL1 = 0, gridL2 = 0, gridL3 = 0;
-    const invertGrid = isTrue(this.config?.invert_grid_power) || isTrue(ent?.invert_grid_power);
-
-    if (isThreePhase) {
-      gridL1 = Math.round(this.getState(ent.grid_power_l1, 0));
-      gridL2 = Math.round(this.getState(ent.grid_power_l2, 0));
-      gridL3 = Math.round(this.getState(ent.grid_power_l3, 0));
-
-      if (invertGrid) {
-        gridL1 = -gridL1;
-        gridL2 = -gridL2;
-        gridL3 = -gridL3;
-      }
-
-      gridP = (ent.grid_power_l1 || ent.grid_power_l2 || ent.grid_power_l3)
-        ? (gridL1 + gridL2 + gridL3)
-        : Math.round(this.getState(ent.grid_power, 0));
-
-      if (invertGrid && !(ent.grid_power_l1 || ent.grid_power_l2 || ent.grid_power_l3)) {
-        gridP = -gridP;
-      }
-
-      rawGridV = this.getState(ent.grid_voltage_l1, this.getState(ent.grid_voltage, 0.0));
-      rawGridF = this.getState(ent.grid_frequency_l1, this.getState(ent.grid_frequency, 0.0));
-    } else {
-      gridP = Math.round(this.getState(ent.grid_power, 0));
-      if (invertGrid) gridP = -gridP;
-
-      rawGridV = this.getState(ent.grid_voltage, 0.0);
-      rawGridF = this.getState(ent.grid_frequency, 0.0);
+    getTranslation() {
+        const lang = (this.config?.language || this.config?.lang || 'vi').toLowerCase();
+        return TRANSLATIONS[lang] || TRANSLATIONS.vi;
     }
 
-    const hasGridVoltConfig = Boolean(ent.grid_voltage || ent.grid_voltage_l1);
-    const isGridConnected = hasGridVoltConfig ? (rawGridV > 50) : true;
-
-    if (!isGridConnected) {
-      gridP = 0;
-      if (isThreePhase) {
-        this.setPower('txt-grid-l1', 0);
-        this.setPower('txt-grid-l2', 0);
-        this.setPower('txt-grid-l3', 0);
-      } else {
-        this.setPower('txt-grid-p', 0);
-      }
-    } else {
-      if (isThreePhase) {
-        this.setPower('txt-grid-l1', Math.abs(gridL1));
-        this.setPower('txt-grid-l2', Math.abs(gridL2));
-        this.setPower('txt-grid-l3', Math.abs(gridL3));
-      } else {
-        this.setPower('txt-grid-p', Math.abs(gridP));
-      }
-    }
-
-    const gridV = isGridConnected ? rawGridV : 0.0;
-    const gridF = isGridConnected ? rawGridF : 0.0;
-
-    this.setText('txt-grid-v', gridV.toFixed(1));
-    this.setText('txt-grid-f', gridF.toFixed(2));
-
-    const showGridV = isGridConnected && gridV > 0;
-    const showGridF = isGridConnected && gridF > 0;
-
-    if (isThreePhase) {
-      this.setDisplay('line-grid-1p', false);
-      this.setDisplay('line-grid-l1', true);
-      this.setDisplay('line-grid-l2', true);
-      this.setDisplay('line-grid-l3', true);
-      gridPowerElements.push(this.getEl('line-grid-l1'), this.getEl('line-grid-l2'), this.getEl('line-grid-l3'));
-    } else {
-      this.setDisplay('line-grid-1p', true);
-      this.setDisplay('line-grid-l1', false);
-      this.setDisplay('line-grid-l2', false);
-      this.setDisplay('line-grid-l3', false);
-      gridPowerElements.push(this.getEl('line-grid-1p'));
-    }
-
-    if (isThreePhase) {
-      this.alignTextStack(gridPowerElements, 18, 12, 3.5);
-    } else {
-      this.alignTextStack(gridPowerElements, 26, 12, 3.5);
-    }
-
-    this.setDisplay('line-grid-v', showGridV);
-    if (showGridV) gridInfoElements.push(this.getEl('line-grid-v'));
-
-    this.setDisplay('line-grid-f', showGridF);
-    if (showGridF) gridInfoElements.push(this.getEl('line-grid-f'));
-
-    this.alignTextStack(gridInfoElements, 117, 12, 3.5);
-
-    let loadP = 0, loadL1 = 0, loadL2 = 0, loadL3 = 0;
-    let epsP = 0, epsL1 = 0, epsL2 = 0, epsL3 = 0;
-
-    if (isThreePhase) {
-      loadL1 = Math.abs(Math.round(this.getState(ent.load_power_l1, 0)));
-      loadL2 = Math.abs(Math.round(this.getState(ent.load_power_l2, 0)));
-      loadL3 = Math.abs(Math.round(this.getState(ent.load_power_l3, 0)));
-      loadP = (ent.load_power_l1 || ent.load_power_l2 || ent.load_power_l3)
-        ? (loadL1 + loadL2 + loadL3)
-        : Math.abs(Math.round(this.getState(ent.load_power, 0)));
-
-      epsL1 = Math.abs(Math.round(this.getState(ent.eps_power_l1, 0)));
-      epsL2 = Math.abs(Math.round(this.getState(ent.eps_power_l2, 0)));
-      epsL3 = Math.abs(Math.round(this.getState(ent.eps_power_l3, 0)));
-      epsP = (ent.eps_power_l1 || ent.eps_power_l2 || ent.eps_power_l3)
-        ? (epsL1 + epsL2 + epsL3)
-        : Math.abs(Math.round(this.getState(ent.eps_power, 0)));
-    } else {
-      loadP = Math.abs(Math.round(this.getState(ent.load_power, 0)));
-      epsP = Math.abs(Math.round(this.getState(ent.eps_power, 0)));
-    }
-
-    if (singleLoadMode) {
-      const activeP = Math.max(loadP, epsP);
-      const activeL1 = Math.max(loadL1, epsL1);
-      const activeL2 = Math.max(loadL2, epsL2);
-      const activeL3 = Math.max(loadL3, epsL3);
-
-      if (isGridConnected) {
-        loadP = activeP;
-        loadL1 = activeL1;
-        loadL2 = activeL2;
-        loadL3 = activeL3;
-
-        epsP = 0;
-        epsL1 = 0;
-        epsL2 = 0;
-        epsL3 = 0;
-      } else {
-        epsP = activeP;
-        epsL1 = activeL1;
-        epsL2 = activeL2;
-        epsL3 = activeL3;
-
-        loadP = 0;
-        loadL1 = 0;
-        loadL2 = 0;
-        loadL3 = 0;
-      }
-    }
-
-    this.setDisplay('grp-eps', true);
-    this.setDisplay('grp-load', true);
-
-    if (isThreePhase) {
-      this.setPower('txt-load-l1', loadL1);
-      this.setPower('txt-load-l2', loadL2);
-      this.setPower('txt-load-l3', loadL3);
-    } else {
-      this.setPower('txt-load-p', loadP);
-    }
-
-    const showLoadPowerLines = !singleLoadMode || isGridConnected;
-
-    const loadElements = [];
-    if (showLoadPowerLines) {
-      if (isThreePhase) {
-        this.setDisplay('line-load-1p', false);
-        this.setDisplay('line-load-l1', true);
-        this.setDisplay('line-load-l2', true);
-        this.setDisplay('line-load-l3', true);
-        loadElements.push(this.getEl('line-load-l1'), this.getEl('line-load-l2'), this.getEl('line-load-l3'));
-      } else {
-        this.setDisplay('line-load-1p', true);
-        this.setDisplay('line-load-l1', false);
-        this.setDisplay('line-load-l2', false);
-        this.setDisplay('line-load-l3', false);
-        loadElements.push(this.getEl('line-load-1p'));
-      }
-    } else {
-      this.setDisplay('line-load-1p', false);
-      this.setDisplay('line-load-l1', false);
-      this.setDisplay('line-load-l2', false);
-      this.setDisplay('line-load-l3', false);
-    }
-
-    const loadCenterY = isThreePhase ? 27 : 13.5;
-    this.alignTextStack(loadElements, loadCenterY, 12, 3.5);
-
-    const lblLoadSub = this.getEl('lbl-load-sub');
-    if (lblLoadSub) {
-      if (isThreePhase) {
-        lblLoadSub.setAttribute('x', '59');
-        lblLoadSub.setAttribute('y', '64');
-      } else {
-        lblLoadSub.setAttribute('x', '59');
-        lblLoadSub.setAttribute('y', '48');
-      }
-    }
-
-    if (isThreePhase) {
-      this.setPower('txt-eps-l1', epsL1);
-      this.setPower('txt-eps-l2', epsL2);
-      this.setPower('txt-eps-l3', epsL3);
-    } else {
-      this.setPower('txt-eps-p', epsP);
-    }
-
-    const hasEpsV = Boolean(ent.eps_voltage && this._hass?.states[ent.eps_voltage] !== undefined);
-    const hasEpsF = hasEpsV && Boolean(ent.eps_frequency && this._hass?.states[ent.eps_frequency] !== undefined);
-
-    const epsV = hasEpsV ? this.getState(ent.eps_voltage, 0.0) : 0;
-    const epsF = hasEpsF ? this.getState(ent.eps_frequency, 0.0) : 0;
-
-    const showEpsV = (!singleLoadMode || !isGridConnected) && !isThreePhase && hasEpsV && epsV > 0;
-    const showEpsF = (!singleLoadMode || !isGridConnected) && !isThreePhase && hasEpsF && epsF > 0;
-
-    if (showEpsV) this.setText('txt-eps-v', epsV.toFixed(1));
-    if (showEpsF) this.setText('txt-eps-f', epsF.toFixed(2));
-
-    const showEpsPowerLines = !singleLoadMode || !isGridConnected;
-
-    const epsElements = [];
-    if (showEpsPowerLines) {
-      if (isThreePhase) {
-        this.setDisplay('line-eps-1p', false);
-        this.setDisplay('line-eps-l1', true);
-        this.setDisplay('line-eps-l2', true);
-        this.setDisplay('line-eps-l3', true);
-        epsElements.push(this.getEl('line-eps-l1'), this.getEl('line-eps-l2'), this.getEl('line-eps-l3'));
-      } else {
-        this.setDisplay('line-eps-1p', true);
-        this.setDisplay('line-eps-l1', false);
-        this.setDisplay('line-eps-l2', false);
-        this.setDisplay('line-eps-l3', false);
-        epsElements.push(this.getEl('line-eps-1p'));
-      }
-    } else {
-      this.setDisplay('line-eps-1p', false);
-      this.setDisplay('line-eps-l1', false);
-      this.setDisplay('line-eps-l2', false);
-      this.setDisplay('line-eps-l3', false);
-    }
-
-    this.setDisplay('line-eps-v', showEpsV);
-    if (showEpsV) epsElements.push(this.getEl('line-eps-v'));
-
-    this.setDisplay('line-eps-f', showEpsF);
-    if (showEpsF) epsElements.push(this.getEl('line-eps-f'));
-
-    this.alignTextStack(epsElements, 28, 12, 3.5);
-
-    this.setText('lbl-eps-sub', t.backup_power);
-    
-    const showStandby = epsP === 0;
-    this.setDisplay('lbl-eps-standby', showStandby);
-    this.setText('lbl-eps-standby', t.standby_mode);
-
-    let batP = Math.round(this.getState(ent.battery_power, 0));
-    const batV = this.getState(ent.battery_voltage, 0);
-    const soc = Math.round(this.getState(ent.battery_soc, 0));
-
-    const invertBat = isTrue(this.config?.invert_battery_power) || isTrue(ent?.invert_battery_power);
-    if (invertBat) batP = -batP;
-
-    const isCharging = batP > 5;
-    const isDischarging = batP < -5;
-
-    this.setPower('txt-bat-p', Math.abs(batP));
-    this.setText('txt-bat-v', batV.toFixed(1));
-
-    const lblBatMode = this.getEl('lbl-bat-mode');
-    if (lblBatMode) {
-      if (isCharging) lblBatMode.textContent = t.bat_charging;
-      else if (isDischarging) lblBatMode.textContent = t.bat_discharging;
-      else {
-        if (soc >= 100) lblBatMode.textContent = t.bat_full;
-        else if (soc >= 20) lblBatMode.textContent = t.bat_standby;
-        else lblBatMode.textContent = t.bat_low;
-      }
-    }
-
-    const showBatV = batV > 0;
-    this.setDisplay('line-bat-v', showBatV);
-
-    const batElements = [
-      this.getEl('line-bat-p'),
-      this.getEl('lbl-bat-mode'),
-      ...(showBatV ? [this.getEl('line-bat-v')] : []),
-      this.getEl('line-bat-soc')
-    ];
-
-    this.alignTextStack(batElements, 84, 12, 3.5, 1, 2);
-
-    const batFill = this.getEl('bat-fill');
-    const maxH = 43.0;
-    const h = Math.max(1, (soc / 100) * maxH);
-    if (batFill) {
-      batFill.setAttribute('height', h);
-      batFill.setAttribute('y', 7 + (maxH - h));
-    }
-
-    let batColor = '#059669';
-    if (soc <= 20) batColor = '#dc2626';
-    else if (soc <= 40) batColor = '#ea580c';
-
-    this.setText('txt-soc-val', soc);
-    const txtSoc = this.getEl('txt-soc-val');
-    if (txtSoc) txtSoc.setAttribute('fill', batColor);
-    if (batFill) batFill.setAttribute('fill', batColor);
-
-    const hasBat2Entities = Boolean(
-      (ent.battery2_power || ent.battery2_soc || ent.battery2_voltage) &&
-      (this._hass?.states[ent.battery2_power] !== undefined || this._hass?.states[ent.battery2_soc] !== undefined)
-    );
-    const alwaysShowBat2 = isTrue(this.config?.always_show_battery2) || isTrue(ent?.always_show_battery2);
-    const showBat2 = alwaysShowBat2 || hasBat2Entities;
-
-    let bat2P = 0;
-    let isCharging2 = false;
-    let isDischarging2 = false;
-
-    this.setDisplay('grp-bat2', showBat2);
-
-    if (showBat2) {
-      bat2P = Math.round(this.getState(ent.battery2_power, 0));
-      const bat2V = this.getState(ent.battery2_voltage, 0);
-      const soc2 = Math.round(this.getState(ent.battery2_soc, 0));
-
-      const invertBat2 = isTrue(this.config?.invert_battery2_power) || isTrue(ent?.invert_battery2_power);
-      if (invertBat2) bat2P = -bat2P;
-
-      isCharging2 = bat2P > 5;
-      isDischarging2 = bat2P < -5;
-
-      this.setPower('txt-bat2-p', Math.abs(bat2P));
-      this.setText('txt-bat2-v', bat2V.toFixed(1));
-
-      const lblBat2Mode = this.getEl('lbl-bat2-mode');
-      if (lblBat2Mode) {
-        if (isCharging2) lblBat2Mode.textContent = t.bat_charging;
-        else if (isDischarging2) lblBat2Mode.textContent = t.bat_discharging;
-        else {
-          if (soc2 >= 100) lblBat2Mode.textContent = t.bat_full;
-          else if (soc2 >= 20) lblBat2Mode.textContent = t.bat_standby;
-          else lblBat2Mode.textContent = t.bat_low;
+    setConfig(config) {
+        if (!config) {
+            throw new Error("Cấu hình không hợp lệ!");
         }
-      }
-
-      const showBat2V = bat2V > 0;
-      this.setDisplay('line-bat2-v', showBat2V);
-
-      const bat2Elements = [
-        this.getEl('line-bat2-p'),
-        this.getEl('lbl-bat2-mode'),
-        ...(showBat2V ? [this.getEl('line-bat2-v')] : []),
-        this.getEl('line-bat2-soc')
-      ];
-
-      this.alignTextStack(bat2Elements, 84, 12, 3.5, 1, 2);
-
-      const bat2Fill = this.getEl('bat2-fill');
-      const h2 = Math.max(1, (soc2 / 100) * maxH);
-      if (bat2Fill) {
-        bat2Fill.setAttribute('height', h2);
-        bat2Fill.setAttribute('y', 7 + (maxH - h2));
-      }
-
-      let bat2Color = '#059669';
-      if (soc2 <= 20) bat2Color = '#dc2626';
-      else if (soc2 <= 40) bat2Color = '#ea580c';
-
-      this.setText('txt-soc2-val', soc2);
-      const txtSoc2 = this.getEl('txt-soc2-val');
-      if (txtSoc2) txtSoc2.setAttribute('fill', bat2Color);
-      if (bat2Fill) bat2Fill.setAttribute('fill', bat2Color);
+        this.config = config;
+        this.render();
     }
 
-    this.setEnergyStat('stat-pv-today', this.getState(ent.pv_daily));
-    this.setEnergyStat('stat-pv-total', this.getState(ent.pv_total));
-    this.setEnergyStat('stat-load-today', this.getState(ent.load_daily));
-    this.setEnergyStat('stat-load-total', this.getState(ent.load_total));
+    connectedCallback() {}
+    disconnectedCallback() {}
 
-    const isBatCharge = this._batToggle === 'charge';
-    this.setText('lbl-bat-title', isBatCharge ? t.bat_charge_title : t.bat_discharge_title);
-    this.setText('lbl-bat-today', isBatCharge ? t.charge_today : t.discharge_today);
-    this.setText('lbl-bat-total', isBatCharge ? t.total_charge : t.total_discharge);
-    this.setEnergyStat('stat-bat-today', this.getState(isBatCharge ? ent.battery_charge_daily : ent.battery_discharge_daily));
-    this.setEnergyStat('stat-bat-total', this.getState(isBatCharge ? ent.battery_charge_total : ent.battery_discharge_total));
-
-    const isGridSell = this._gridToggle === 'sell';
-    this.setText('lbl-grid-title', isGridSell ? t.grid_export_title : t.grid_import_title);
-    this.setText('lbl-grid-today', isGridSell ? t.export_today : t.import_today);
-    this.setText('lbl-grid-total', isGridSell ? t.total_export : t.total_import);
-    this.setEnergyStat('stat-grid-today', this.getState(isGridSell ? ent.grid_sell_daily : ent.grid_buy_daily));
-    this.setEnergyStat('stat-grid-total', this.getState(isGridSell ? ent.grid_sell_total : ent.grid_buy_total));
-
-    // --- XÁC ĐỊNH TRẠNG THÁI CÁC THIẾT BỊ ---
-    const MIN_POWER = 5; // Ngưỡng công suất tối thiểu (W) để kích hoạt luồng chảy
-
-    // Trạng thái sạc/xả Pin lưu trữ 1 & 2
-    const isBat1Charging = batP > MIN_POWER;
-    const isBat1Discharging = batP < -MIN_POWER;
-    const isBat2Charging = showBat2 && bat2P > MIN_POWER;
-    const isBat2Discharging = showBat2 && bat2P < -MIN_POWER;
-
-    // Tổng công suất sạc/xả của hệ thống Pin
-    const netBatPower = batP + (showBat2 ? bat2P : 0);
-    const isNetCharging = netBatPower > MIN_POWER;
-    const isNetDischarging = netBatPower < -MIN_POWER;
-
-    // Trạng thái Nhập / Phát điện lưới
-    const isImporting = isGridConnected && gridP < -MIN_POWER; // Nhập lưới (Mua điện)
-    const isExporting = isGridConnected && gridP > MIN_POWER;  // Phát lưới (Bán điện)
-
-    // Trạng thái có công suất nguồn & tải
-    const hasPvPower = pvP > MIN_POWER;
-    const hasAcPvPower = hasAcPvP && acPvP > MIN_POWER;
-    const hasLoadPower = loadP > MIN_POWER;
-    const hasEpsPower = epsP > MIN_POWER;
-
-    // Trường hợp đặc biệt: AC PV cấp điện khi mất lưới hoặc chạy chế độ riêng
-    const isAcPvSpecialOffgrid = isGridConnected && 
-                                 !hasLoadPower && 
-                                 !isImporting && 
-                                 (hasPvPower || isNetCharging || isNetDischarging) && 
-                                 hasAcPvPower && 
-                                 hasEpsPower;
-
-    // --- BẬT / TẮT ĐƯỜNG ĐI CỦA CÁC LUỒNG NĂNG LƯỢNG (SET FLOW VISIBILITY) ---
-
-    // 1. Luồng Pin lưu trữ
-    this.setFlowVisible('flow-bat-charge', isBat1Charging);             // Sạc Pin 1
-    this.setFlowVisible('flow-bat-discharge', isBat1Discharging);       // Xả Pin 1
-    this.setFlowVisible('flow-bat2-charge', showBat2 && isBat2Charging); // Sạc Pin 2
-    this.setFlowVisible('flow-bat2-discharge', showBat2 && isBat2Discharging); // Xả Pin 2
-    this.setFlowVisible('flow-bat-trunk-charge', isNetCharging);       // Luồng tổng nạp Pin
-    this.setFlowVisible('flow-bat-trunk-discharge', isNetDischarging); // Luồng tổng xả Pin
-
-    // 2. Luồng Điện lưới
-    this.setFlowVisible('flow-grid-import', isImporting); // Mua điện từ lưới
-    this.setFlowVisible('flow-grid-export', isExporting); // Bán điện ra lưới
-
-    // 3. Luồng Quang điện DC (Tấm pin mặt trời)
-    this.setFlowVisible('flow-pv', hasPvPower);
-
-    // 4. Luồng Quang điện AC (Hệ thống inverter phụ hòa lưới)
-    const showAcPvFlow = hasAcPvPower && (isGridConnected || hasEpsPower || isNetCharging || isAcPvSpecialOffgrid);
-    this.setFlowVisible('flow-ac-pv', showAcPvFlow);
-
-    // 5. Luồng từ Thanh cái AC (Bus) cấp cho Tải tiêu thụ
-    this.setFlowVisible('flow-bus-to-load', isGridConnected && hasLoadPower);
-
-    // 6. Luồng cấp điện cho Tải dự phòng (EPS)
-    this.setFlowVisible('flow-eps', hasEpsPower);
-    
-    // 7.=========================================================================
-    // TÍNH TOÁN HƯỚNG DÒNG ĐIỆN GIỮA INVERTER VÀ THANH CÁI AC (BUS)
-    // =========================================================================
-    const batChargePower = isNetCharging ? netBatPower : 0;
-    const gridImportPower = isImporting ? Math.abs(gridP) : 0;
-
-    // Chế độ Bypass Lưới -> Tiêu thụ: Lưới bù nhẹ 0-5W so với tải
-    const gridToLoadDiff = gridImportPower - loadP;
-    const isGridBypass = isGridConnected && 
-                         isImporting && 
-                         !isNetDischarging && 
-                         (!isNetCharging || hasPvPower) &&
-                         (gridToLoadDiff >= 0 && gridToLoadDiff <= 5);
-
-    // Inverter phát điện DC: Có PV DC hoặc Pin đang xả
-    const isInvGenerating = hasPvPower || isNetDischarging;
-
-    // Có nguồn điện AC trên Thanh cái (Lưới nhập hoặc PV hòa lưới)
-    const hasAcSourceOnBus = isImporting || hasAcPvPower;
-
-    // Inverter tiêu thụ điện AC từ Thanh cái (Sạc Pin hoặc cấp điện cho Tải dự phòng EPS)
-    const inverterNeedsAc = isNetCharging || hasEpsPower;
-
-    // Trạng thái thô cho luồng Inverter -> Bus
-    const rawInvToBus = (isGridConnected || hasLoadPower) && !isGridBypass && isInvGenerating && (hasLoadPower || isExporting);
-
-    // Trạng thái thô cho luồng Bus -> Inverter (Cấp điện cho Inverter từ AC Bus / Lưới / PV hòa lưới)
-    const rawBusToInv = hasAcSourceOnBus && inverterNeedsAc && !isGridBypass;
-
-    // =========================================================================
-    // KHỬ XUNG ĐỘT HIỂN THỊ 2 CHIỀU (PRIORITY RESOLUTION)
-    // =========================================================================
-    let isInvSupplyingBus = false;
-    let isBusChargingInv = false;
-
-    if (rawBusToInv && !rawInvToBus) {
-      isBusChargingInv = true;
-    } else if (rawInvToBus && !rawBusToInv) {
-      isInvSupplyingBus = true;
-    } else if (rawBusToInv && rawInvToBus) {
-      if (!isInvGenerating) {
-        isBusChargingInv = true;
-      } else if (isNetCharging && (isImporting || hasAcPvPower)) {
-        isBusChargingInv = true;
-      } else {
-        isInvSupplyingBus = true;
-      }
+    set hass(hass) {
+        this._hass = hass;
+        this.updateData();
     }
 
-    // Hiển thị/ẩn mũi tên luồng điện
-    this.setFlowVisible('flow-inv-to-bus', isInvSupplyingBus); // Mũi tên từ Inverter ra Bus AC
-    this.setFlowVisible('flow-bus-to-inv', isBusChargingInv);  // Mũi tên từ Bus AC vào Inverter
-
-    const loadIconColor = isGridConnected ? '#10b982' : (hasLoadPower ? '#e11d48' : '#94a3b8');
-    const loadIcons = this.shadowRoot.querySelectorAll('#icon-load .load-icon-color');
-    loadIcons.forEach(icon => icon.setAttribute('fill', loadIconColor));
-    const loadStrokes = this.shadowRoot.querySelectorAll('#icon-load .load-icon-stroke');
-    loadStrokes.forEach(icon => icon.setAttribute('stroke', loadIconColor));
-
-    const invLed = this.getEl('inv-led');
-    if (invLed) invLed.setAttribute('fill', isGridConnected ? '#16a34a' : '#dc2626');
-
-    const acNode = this.getEl('ac-bus-node');
-    if (acNode) acNode.setAttribute('fill', isGridConnected ? '#16a34a' : '#0284c7');
-
-    const lblGridMode = this.getEl('lbl-grid-mode');
-    const pill = this.getEl('sys-status-pill');
-    const pillTxt = this.getEl('sys-status-text');
-
-    if (pill) pill.className = 'status-pill';
-
-    if (!isGridConnected) {
-      if (lblGridMode) { lblGridMode.textContent = t.grid_offline; lblGridMode.style.fill = "#dc2626"; }
-      if (pill) pill.classList.add('offline');
-      if (pillTxt) pillTxt.textContent = t.grid_offline;
-    } else if (isExporting) {
-      if (lblGridMode) { lblGridMode.textContent = t.grid_exporting; lblGridMode.style.fill = "#0284c7"; }
-      if (pill) pill.classList.add('exporting');
-      if (pillTxt) pillTxt.textContent = t.grid_exporting;
-    } else if (isImporting) {
-      if (lblGridMode) { lblGridMode.textContent = t.grid_importing; lblGridMode.style.fill = "#d97706"; }
-      if (pill) pill.classList.add('importing');
-      if (pillTxt) pillTxt.textContent = t.grid_importing;
-    } else {
-      if (lblGridMode) { lblGridMode.textContent = t.grid_ongrid; lblGridMode.style.fill = "#16a34a"; }
-      if (pill) pill.classList.add('ongrid');
-      if (pillTxt) pillTxt.textContent = t.grid_ongrid;
+    getEl(id) {
+        return this.shadowRoot ? this.shadowRoot.getElementById(id) : null;
     }
-  }
 
-  render() {
-    const t = this.getTranslation();
-    this.shadowRoot.innerHTML = `
+    setDisplay(id, visible) {
+        const el = typeof id === 'string' ? this.getEl(id) : id;
+        if (el)
+            el.style.display = visible ? 'inline' : 'none';
+    }
+
+    setText(id, text) {
+        const el = this.getEl(id);
+        if (el)
+            el.textContent = text;
+    }
+
+    setPower(id, val) {
+        const el = this.getEl(id);
+        if (!el)
+            return;
+        const num = Number(val) || 0;
+        const absNum = Math.abs(num);
+        const unitEl = el.nextElementSibling;
+
+        if (absNum >= 9999) {
+            const kw = num / 1000;
+            const absKw = Math.abs(kw);
+            let formatted = '';
+            if (absKw >= 1000)
+                formatted = kw.toFixed(0);
+            else
+                formatted = kw.toFixed(1);
+
+            el.textContent = formatted;
+            if (unitEl)
+                unitEl.textContent = ' kW';
+        } else {
+            el.textContent = Math.round(num);
+            if (unitEl)
+                unitEl.textContent = ' W';
+        }
+    }
+
+    setEnergyStat(id, val) {
+        const el = this.getEl(id);
+        if (!el)
+            return;
+        const num = Number(val) || 0;
+        const absNum = Math.abs(num);
+
+        let formatted = '';
+        let unit = 'kWh';
+
+        if (absNum >= 1000) {
+            const mwh = num / 1000;
+            const absMwh = Math.abs(mwh);
+            if (absMwh >= 1000)
+                formatted = mwh.toFixed(0);
+            else if (absMwh >= 100)
+                formatted = mwh.toFixed(1);
+            else
+                formatted = mwh.toFixed(2);
+            unit = 'MWh';
+        } else {
+            if (absNum >= 100)
+                formatted = num.toFixed(1);
+            else
+                formatted = num.toFixed(2);
+            unit = 'kWh';
+        }
+
+        el.innerHTML = `${formatted} <span class="unit">${unit}</span>`;
+    }
+
+    getState(entityId, defaultVal = 0) {
+        if (!entityId || !this._hass || !this._hass.states[entityId])
+            return defaultVal;
+        const val = parseFloat(this._hass.states[entityId].state);
+        return isNaN(val) ? defaultVal : val;
+    }
+
+    setFlowVisible(id, visible) {
+        this.setDisplay(id, visible);
+    }
+
+    alignTextStack(elements, centerY, lineHeight = 12, baselineOffset = 3.5, gapIndex = -1, gapAmount = 0) {
+        const visible = elements.filter(el => el && el.style.display !== 'none');
+        const numLines = visible.length;
+        if (numLines === 0)
+            return;
+
+        const hasGap = gapIndex >= 0 && gapIndex < numLines - 1;
+        const totalHeight = ((numLines - 1) * lineHeight) + (hasGap ? gapAmount : 0);
+        const startY = centerY - totalHeight / 2 + baselineOffset;
+
+        let currentY = startY;
+        visible.forEach((el, idx) => {
+            el.setAttribute('y', currentY);
+            currentY += lineHeight;
+            if (idx === gapIndex) {
+                currentY += gapAmount;
+            }
+        });
+    }
+
+    attachEventListeners() {
+        const btnBat = this.getEl('btn-toggle-bat');
+        if (btnBat) {
+            btnBat.onclick = (e) => {
+                e.stopPropagation();
+                this._batToggle = this._batToggle === 'charge' ? 'discharge' : 'charge';
+                this.updateData();
+            };
+        }
+
+        const btnGrid = this.getEl('btn-toggle-grid');
+        if (btnGrid) {
+            btnGrid.onclick = (e) => {
+                e.stopPropagation();
+                this._gridToggle = this._gridToggle === 'sell' ? 'buy' : 'sell';
+                this.updateData();
+            };
+        }
+    }
+
+    updateData() {
+        if (!this._hass || !this.config || !this.shadowRoot || !this.shadowRoot.querySelector('.app-card'))
+            return;
+
+        const ent = this.config.entities || {};
+        const isTrue = (val) => val === true || String(val).toLowerCase() === 'true';
+        const t = this.getTranslation();
+
+        const isDarkMode = isTrue(this.config?.dark_mode) || isTrue(this.config?.dark_theme) || isTrue(this.config?.dark);
+        const appCard = this.shadowRoot.querySelector('.app-card');
+        if (appCard) {
+            if (isDarkMode)
+                appCard.classList.add('dark-mode');
+            else
+                appCard.classList.remove('dark-mode');
+        }
+
+        // --- ĐỌC TRẠNG THÁI INVERTER ---
+        const invP = Math.round(this.getState(ent.inverter_power, 0));
+        const invCurrent = this.getState(ent.inverter_current, 0);
+        const invTemp = this.getState(ent.inverter_temp, 0);
+        const invVolt = this.getState(ent.inverter_voltage, 0);
+
+        // --- ĐỌC TRẠNG THÁI TỔNG PIN LƯU TRỮ ---
+        const batAllP = Math.round(this.getState(ent.battery1_battery2_power, 0));
+        const batAllCurrent = this.getState(ent.battery1_battery2_current, 0);
+
+        const invImgConfig = this.config?.inverter_image;
+        const isImgConfigTrue = isTrue(invImgConfig);
+        const isImgConfigFalse = invImgConfig === false || String(invImgConfig).toLowerCase() === 'false';
+        const isImgConfigStringPath = typeof invImgConfig === 'string' && !isImgConfigTrue && !isImgConfigFalse && invImgConfig.trim() !== '';
+
+        const customInvImage = isImgConfigStringPath
+             ? invImgConfig
+             : (this.config?.inverter_icon || this.config?.custom_inverter_icon || '');
+
+        const useCustomImg = !isImgConfigFalse && (isImgConfigTrue || isImgConfigStringPath) && Boolean(customInvImage && String(customInvImage).trim() !== '');
+
+        const invDefaultG = this.getEl('inv-default-graphics');
+        const invCustomImg = this.getEl('inv-custom-image');
+
+        const invX = Number(this.config?.inverter_x ?? 132);
+        const invY = Number(this.config?.inverter_y ?? 78);
+
+        const invWidth = Number(this.config?.inverter_width || this.config?.inverter_size || 75);
+        const invHeight = Number(this.config?.inverter_height || this.config?.inverter_size || 75);
+        const invCustomX = Number(this.config?.inverter_custom_x ?? this.config?.inverter_icon_x ?? 0);
+        const invCustomY = Number(this.config?.inverter_custom_y ?? this.config?.inverter_icon_y ?? 0);
+
+        const invGroup = invDefaultG ? invDefaultG.parentElement : null;
+        if (invGroup) {
+            invGroup.setAttribute('transform', `translate(${invX}, ${invY})`);
+        }
+
+        if (invDefaultG && invCustomImg) {
+            if (useCustomImg) {
+                invDefaultG.style.display = 'none';
+                invCustomImg.style.display = 'inline';
+                invCustomImg.setAttribute('href', customInvImage);
+                invCustomImg.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', customInvImage);
+                invCustomImg.setAttribute('width', invWidth);
+                invCustomImg.setAttribute('height', invHeight);
+                invCustomImg.setAttribute('x', invCustomX);
+                invCustomImg.setAttribute('y', invCustomY);
+            } else {
+                invDefaultG.style.display = 'inline';
+                invCustomImg.style.display = 'none';
+                const scaleX = invWidth / 58;
+                const scaleY = invHeight / 58;
+                invDefaultG.setAttribute('transform', `scale(${scaleX}, ${scaleY})`);
+            }
+        }
+
+        const configThreePhase = this.config?.three_phase ?? ent?.three_phase;
+        const isThreePhase = configThreePhase !== undefined
+             ? isTrue(configThreePhase)
+             : Boolean(ent?.load_power_l1 || ent?.grid_power_l1 || ent?.eps_power_l1 || ent?.aux_power_l1);
+
+        const singleLoadMode = this.config?.single_load_mode !== undefined
+             ? isTrue(this.config.single_load_mode)
+             : (ent?.single_load_mode !== undefined ? isTrue(ent.single_load_mode) : false);
+
+        let latestDate = null;
+        if (ent) {
+            Object.values(ent).forEach(eId => {
+                if (typeof eId === 'string' && this._hass?.states[eId]?.last_updated) {
+                    const d = new Date(this._hass.states[eId].last_updated);
+                    if (!latestDate || d > latestDate)
+                        latestDate = d;
+                }
+            });
+        }
+
+        if (latestDate) {
+            const timeFormatted = [
+                latestDate.getHours(),
+                latestDate.getMinutes(),
+                latestDate.getSeconds()
+            ].map(n => String(n).padStart(2, '0')).join(':');
+            this.setText('inv-lcd-time', timeFormatted);
+        }
+
+        // --- ĐỌC TRẠNG THÁI PV ---
+        let pvP = 0;
+        const activePvGroups = [];
+
+        [1, 2, 3, 4].forEach(i => {
+            const pId = ent[`pv${i}_power`];
+            const vId = ent[`pv${i}_voltage`];
+            const cId = ent[`pv${i}_current`];
+
+            const hasP = Boolean(pId && this._hass?.states[pId] !== undefined);
+            const hasV = Boolean(vId && this._hass?.states[vId] !== undefined);
+            const hasC = Boolean(cId && this._hass?.states[cId] !== undefined);
+
+            const pVal = hasP ? Math.abs(Math.round(this.getState(pId))) : 0;
+            const vVal = hasV ? this.getState(vId, 0) : 0;
+            const cVal = hasC ? this.getState(cId, 0) : 0;
+
+            if (hasP)
+                pvP += pVal;
+
+            const showP = hasP && (pVal > 0 || vVal > 0 || !hasV);
+            const showV = hasV && (vVal > 0 || pVal > 0 || !hasP);
+
+            this.setDisplay(`line-pv${i}-v`, showV);
+            this.setDisplay(`line-pv${i}-p`, showP);
+
+            if (showV)
+                this.setText(`txt-pv${i}-v`, vVal.toFixed(1));
+            if (showP)
+                this.setPower(`txt-pv${i}-p`, pVal);
+
+            const lineV = this.getEl(`line-pv${i}-v`);
+            const lineP = this.getEl(`line-pv${i}-p`);
+            if (lineV)
+                lineV.setAttribute('x', '26');
+            if (lineP)
+                lineP.setAttribute('x', '88');
+
+            const grp = this.getEl(`grp-pv${i}`);
+            if (grp) {
+                if (showP || showV) {
+                    grp.style.display = 'inline';
+                    activePvGroups.push(grp);
+                } else {
+                    grp.style.display = 'none';
+                }
+            }
+        });
+
+        if (pvP === 0 && ent.pv_power && this._hass?.states[ent.pv_power] !== undefined) {
+            pvP = Math.abs(Math.round(this.getState(ent.pv_power, 0)));
+        }
+
+        const totalPvPower = (ent.pv_power && this._hass?.states[ent.pv_power] !== undefined)
+         ? Math.abs(Math.round(this.getState(ent.pv_power, 0)))
+         : pvP;
+        this.setPower('txt-pv-total-p', totalPvPower);
+        this.setText('lbl-pv-total-sub', t.pv_power_lbl);
+
+        const grpTotal = this.getEl('grp-pv-total');
+        const showTotalPv = totalPvPower > 0 || activePvGroups.length > 0;
+        this.setDisplay('grp-pv-total', showTotalPv);
+
+        // --- CẤU HÌNH HÌNH ẢNH / ICON TUỲ CHỈNH CHO PV ---
+        const pvImgConfig = this.config?.pv_image;
+        const isPvImgConfigTrue = isTrue(pvImgConfig);
+        const isPvImgConfigFalse = pvImgConfig === false || String(pvImgConfig).toLowerCase() === 'false';
+        const isPvImgConfigStringPath = typeof pvImgConfig === 'string' && !isPvImgConfigTrue && !isPvImgConfigFalse && pvImgConfig.trim() !== '';
+
+        const customPvImage = isPvImgConfigStringPath
+             ? pvImgConfig
+             : (this.config?.pv_icon || this.config?.custom_pv_icon || '');
+
+        const usePvCustomImg = !isPvImgConfigFalse && (isPvImgConfigTrue || isPvImgConfigStringPath) && Boolean(customPvImage && String(customPvImage).trim() !== '');
+
+        const pvDefaultG = this.getEl('pv-default-graphics');
+        const pvCustomImg = this.getEl('pv-custom-image');
+
+        const pvX = Number(this.config?.pv_x ?? 138);
+        const pvY = Number(this.config?.pv_y ?? -56);
+
+        const pvWidth = Number(this.config?.pv_width || this.config?.pv_size || 50);
+        const pvHeight = Number(this.config?.pv_height || this.config?.pv_size || 50);
+        const pvCustomX = Number(this.config?.pv_custom_x ?? this.config?.pv_icon_x ?? 0);
+        const pvCustomY = Number(this.config?.pv_custom_y ?? this.config?.pv_icon_y ?? 0);
+
+        const numStrings = activePvGroups.length;
+        const hasTotal = showTotalPv && grpTotal;
+
+        if (numStrings > 0 || hasTotal) {
+            const lineSpacing = 16;
+            const pvTotalGap = 20;
+            const iconY = pvY;
+            const pvIconBaseY = iconY + 49 + 20;
+
+            const pvIconGroup = this.getEl('grp-pv-icon');
+            if (pvIconGroup) {
+                if (usePvCustomImg) {
+                    pvIconGroup.setAttribute('transform', `translate(${pvX}, ${pvY})`);
+                } else {
+                    pvIconGroup.setAttribute('transform', `translate(${pvX}, ${pvY}) scale(0.57)`);
+                }
+            }
+
+            if (pvDefaultG && pvCustomImg) {
+                if (usePvCustomImg) {
+                    pvDefaultG.style.display = 'none';
+                    pvCustomImg.style.display = 'inline';
+                    pvCustomImg.setAttribute('href', customPvImage);
+                    pvCustomImg.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', customPvImage);
+                    pvCustomImg.setAttribute('width', pvWidth);
+                    pvCustomImg.setAttribute('height', pvHeight);
+                    pvCustomImg.setAttribute('x', pvCustomX);
+                    pvCustomImg.setAttribute('y', pvCustomY);
+                } else {
+                    pvDefaultG.style.display = 'inline';
+                    pvCustomImg.style.display = 'none';
+                }
+            }
+
+            if (hasTotal) {
+                grpTotal.setAttribute('transform', `translate(0, ${pvIconBaseY})`);
+            }
+
+            if (numStrings > 0) {
+                const lastRowY = hasTotal ? (pvIconBaseY - pvTotalGap) : pvIconBaseY;
+                activePvGroups.forEach((grp, idx) => {
+                    const grpY = lastRowY - (numStrings - 1 - idx) * lineSpacing;
+                    grp.setAttribute('transform', `translate(0, ${grpY})`);
+                });
+            }
+        }
+        // --- ĐỌC TRẠNG THÁI AUX / SMART LOAD ---
+        const alwaysShowAux = isTrue(this.config?.always_show_aux) || isTrue(this.config?.show_aux) || isTrue(ent?.always_show_aux);
+        const invertAux = isTrue(this.config?.invert_aux_power) || isTrue(ent?.invert_aux_power);
+        const isSmartLoadAux = isTrue(this.config?.smart_load_aux) || isTrue(this.config?.aux_smart_load) || isTrue(this.config?.smart_load) || isTrue(ent?.smart_load_aux) || isTrue(ent?.aux_smart_load);
+
+        let auxP = 0;
+        let auxL1 = 0,
+        auxL2 = 0,
+        auxL3 = 0;
+        let auxFL1 = 0.0,
+        auxFL2 = 0.0,
+        auxFL3 = 0.0;
+
+        const hasAux3PhaseEntities = Boolean(ent.aux_power_l1 || ent.aux_power_l2 || ent.aux_power_l3);
+
+        let rawAuxL1 = Math.round(this.getState(ent.aux_power_l1, 0));
+        let rawAuxL2 = Math.round(this.getState(ent.aux_power_l2, 0));
+        let rawAuxL3 = Math.round(this.getState(ent.aux_power_l3, 0));
+        let rawAuxP = Math.round(this.getState(ent.aux_power, 0));
+
+        if (invertAux) {
+            rawAuxL1 = -rawAuxL1;
+            rawAuxL2 = -rawAuxL2;
+            rawAuxL3 = -rawAuxL3;
+            rawAuxP = -rawAuxP;
+        }
+
+        if (isThreePhase) {
+            auxL1 = Math.abs(rawAuxL1);
+            auxL2 = Math.abs(rawAuxL2);
+            auxL3 = Math.abs(rawAuxL3);
+
+            const auxVL1 = this.getState(ent.aux_voltage_l1, 0.0);
+            const auxVL2 = this.getState(ent.aux_voltage_l2, 0.0);
+            const auxVL3 = this.getState(ent.aux_voltage_l3, 0.0);
+
+            const auxCL1 = this.getState(ent.aux_current_l1, 0.0);
+            const auxCL2 = this.getState(ent.aux_current_l2, 0.0);
+            const auxCL3 = this.getState(ent.aux_current_l3, 0.0);
+
+            auxFL1 = this.getState(ent.aux_frequency_l1, 0.0);
+            auxFL2 = this.getState(ent.aux_frequency_l2, 0.0);
+            auxFL3 = this.getState(ent.aux_frequency_l3, 0.0);
+
+            auxP = hasAux3PhaseEntities
+                 ? (auxL1 + auxL2 + auxL3)
+                 : Math.abs(rawAuxP);
+
+            this.setPower('txt-aux-l1', auxL1);
+            this.setPower('txt-aux-l2', auxL2);
+            this.setPower('txt-aux-l3', auxL3);
+            this.setPower('txt-aux-p', auxP);
+        } else {
+            auxP = Math.abs(rawAuxP);
+            this.setPower('txt-aux-p', auxP);
+        }
+
+        const auxVoltEnt = ent.aux_voltage || ent.aux_voltage_l1;
+        const auxFreqEnt = ent.aux_frequency || ent.aux_frequency_l1;
+
+        const auxV = this.getState(auxVoltEnt, 0.0);
+        const auxF = this.getState(auxFreqEnt, 0.0);
+        const auxC = this.getState(ent.aux_current, 0.0);
+
+        const auxPowerEnt = ent.aux_power || ent.aux_power_l1 || ent.aux_power_l2 || ent.aux_power_l3;
+
+        const hasAuxP = Boolean(auxPowerEnt && auxP > 0);
+        const hasAuxV = Boolean(auxVoltEnt && this._hass?.states[auxVoltEnt] !== undefined);
+        const hasAuxF = Boolean(auxFreqEnt && this._hass?.states[auxFreqEnt] !== undefined);
+
+        this.setDisplay('grp-aux', alwaysShowAux || hasAuxP);
+
+        const showAuxV = hasAuxV && auxV > 0;
+        const showAuxF = hasAuxF && auxF > 0;
+
+        if (showAuxV)
+            this.setText('txt-aux-v', auxV.toFixed(1));
+        if (showAuxF)
+            this.setText('txt-aux-f', auxF.toFixed(2));
+
+        const auxElements = [];
+
+        const showAuxL1 = Boolean(ent.aux_power_l1 && auxL1 > 0);
+        const showAuxL2 = Boolean(ent.aux_power_l2 && auxL2 > 0);
+        const showAuxL3 = Boolean(ent.aux_power_l3 && auxL3 > 0);
+
+        const showAux3Phase = isThreePhase && hasAux3PhaseEntities && (showAuxL1 || showAuxL2 || showAuxL3);
+
+        if (showAux3Phase) {
+            this.setDisplay('line-aux-1p', false);
+            this.setDisplay('line-aux-l1', showAuxL1);
+            this.setDisplay('line-aux-l2', showAuxL2);
+            this.setDisplay('line-aux-l3', showAuxL3);
+
+            if (showAuxL1)
+                auxElements.push(this.getEl('line-aux-l1'));
+            if (showAuxL2)
+                auxElements.push(this.getEl('line-aux-l2'));
+            if (showAuxL3)
+                auxElements.push(this.getEl('line-aux-l3'));
+        } else {
+            this.setDisplay('line-aux-1p', true);
+            this.setDisplay('line-aux-l1', false);
+            this.setDisplay('line-aux-l2', false);
+            this.setDisplay('line-aux-l3', false);
+            auxElements.push(this.getEl('line-aux-1p'));
+        }
+
+        this.setDisplay('line-aux-v', showAuxV);
+        if (showAuxV)
+            auxElements.push(this.getEl('line-aux-v'));
+
+        this.setDisplay('line-aux-f', showAuxF);
+        if (showAuxF)
+            auxElements.push(this.getEl('line-aux-f'));
+
+        this.alignTextStack(auxElements, -32.5, 12, 3.5);
+
+        // --- CẤU HÌNH HÌNH ẢNH / ICON TUỲ CHỈNH CHO AUX ---
+        const auxImgConfig = this.config?.aux_image;
+        const isAuxImgConfigTrue = isTrue(auxImgConfig);
+        const isAuxImgConfigFalse = auxImgConfig === false || String(auxImgConfig).toLowerCase() === 'false';
+        const isAuxImgConfigStringPath = typeof auxImgConfig === 'string' && !isAuxImgConfigTrue && !isAuxImgConfigFalse && auxImgConfig.trim() !== '';
+
+        const customAuxImage = isAuxImgConfigStringPath
+             ? auxImgConfig
+             : (this.config?.aux_icon || this.config?.custom_aux_icon || '');
+
+        const useAuxCustomImg = !isAuxImgConfigFalse && (isAuxImgConfigTrue || isAuxImgConfigStringPath) && Boolean(customAuxImage && String(customAuxImage).trim() !== '');
+
+        const auxDefaultG = this.getEl('aux-default-graphics');
+        const auxCustomImg = this.getEl('aux-custom-image');
+
+        const auxX = Number(this.config?.aux_x ?? 274);
+        const auxY = Number(this.config?.aux_y ?? -58);
+
+        const auxWidth = Number(this.config?.aux_width || this.config?.aux_size || 44);
+        const auxHeight = Number(this.config?.aux_height || this.config?.aux_size || 46);
+        const auxCustomX = Number(this.config?.aux_custom_x ?? this.config?.aux_icon_x ?? 0);
+        const auxCustomY = Number(this.config?.aux_custom_y ?? this.config?.aux_icon_y ?? 0);
+
+        const auxIconGroup = this.getEl('grp-aux-icon');
+        if (auxIconGroup) {
+            auxIconGroup.setAttribute('transform', `translate(${auxX}, ${auxY})`);
+        }
+
+        if (auxDefaultG && auxCustomImg) {
+            if (useAuxCustomImg) {
+                auxDefaultG.style.display = 'none';
+                auxCustomImg.style.display = 'inline';
+                auxCustomImg.setAttribute('href', customAuxImage);
+                auxCustomImg.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', customAuxImage);
+                auxCustomImg.setAttribute('width', auxWidth);
+                auxCustomImg.setAttribute('height', auxHeight);
+                auxCustomImg.setAttribute('x', auxCustomX);
+                auxCustomImg.setAttribute('y', auxCustomY);
+            } else {
+                auxDefaultG.style.display = 'inline';
+                auxCustomImg.style.display = 'none';
+                const scaleX = auxWidth / 44;
+                const scaleY = auxHeight / 46;
+                auxDefaultG.setAttribute('transform', `scale(${0.22 * scaleX})`);
+            }
+        }
+        // --- ĐỌC TRẠNG THÁI ĐIỆN LƯỚI GRID ---
+        let gridP = 0;
+        let rawGridV = 0.0;
+        let rawGridF = 0.0;
+
+        const gridPowerElements = [];
+        const gridInfoElements = [];
+
+        let gridL1 = 0,
+        gridL2 = 0,
+        gridL3 = 0;
+        let gridVL1 = 0.0,
+        gridVL2 = 0.0,
+        gridVL3 = 0.0;
+        let gridCL1 = 0.0,
+        gridCL2 = 0.0,
+        gridCL3 = 0.0;
+        let gridFL1 = 0.0,
+        gridFL2 = 0.0,
+        gridFL3 = 0.0;
+
+        const invertGrid = isTrue(this.config?.invert_grid_power) || isTrue(ent?.invert_grid_power);
+
+        if (isThreePhase) {
+            gridL1 = Math.round(this.getState(ent.grid_power_l1, 0));
+            gridL2 = Math.round(this.getState(ent.grid_power_l2, 0));
+            gridL3 = Math.round(this.getState(ent.grid_power_l3, 0));
+
+            gridVL1 = this.getState(ent.grid_voltage_l1, 0.0);
+            gridVL2 = this.getState(ent.grid_voltage_l2, 0.0);
+            gridVL3 = this.getState(ent.grid_voltage_l3, 0.0);
+
+            gridCL1 = this.getState(ent.grid_current_l1, 0.0);
+            gridCL2 = this.getState(ent.grid_current_l2, 0.0);
+            gridCL3 = this.getState(ent.grid_current_l3, 0.0);
+
+            gridFL1 = this.getState(ent.grid_frequency_l1, 0.0);
+            gridFL2 = this.getState(ent.grid_frequency_l2, 0.0);
+            gridFL3 = this.getState(ent.grid_frequency_l3, 0.0);
+
+            if (invertGrid) {
+                gridL1 = -gridL1;
+                gridL2 = -gridL2;
+                gridL3 = -gridL3;
+            }
+
+            gridP = (ent.grid_power_l1 || ent.grid_power_l2 || ent.grid_power_l3)
+             ? (gridL1 + gridL2 + gridL3)
+             : Math.round(this.getState(ent.grid_power, 0));
+
+            if (invertGrid && !(ent.grid_power_l1 || ent.grid_power_l2 || ent.grid_power_l3)) {
+                gridP = -gridP;
+            }
+
+            rawGridV = gridVL1 || this.getState(ent.grid_voltage, 0.0);
+            rawGridF = gridFL1 || this.getState(ent.grid_frequency, 0.0);
+        } else {
+            gridP = Math.round(this.getState(ent.grid_power, 0));
+            if (invertGrid)
+                gridP = -gridP;
+
+            rawGridV = this.getState(ent.grid_voltage, 0.0);
+            rawGridF = this.getState(ent.grid_frequency, 0.0);
+            const gridC = this.getState(ent.grid_current, 0.0);
+        }
+
+        const hasGridVoltConfig = Boolean(ent.grid_voltage || ent.grid_voltage_l1);
+        const isGridConnected = hasGridVoltConfig ? (rawGridV > 50) : true;
+
+        if (!isGridConnected) {
+            gridP = 0;
+            if (isThreePhase) {
+                this.setPower('txt-grid-l1', 0);
+                this.setPower('txt-grid-l2', 0);
+                this.setPower('txt-grid-l3', 0);
+            } else {
+                this.setPower('txt-grid-p', 0);
+            }
+        } else {
+            if (isThreePhase) {
+                this.setPower('txt-grid-l1', Math.abs(gridL1));
+                this.setPower('txt-grid-l2', Math.abs(gridL2));
+                this.setPower('txt-grid-l3', Math.abs(gridL3));
+            } else {
+                this.setPower('txt-grid-p', Math.abs(gridP));
+            }
+        }
+
+        const gridV = isGridConnected ? rawGridV : 0.0;
+        const gridF = isGridConnected ? rawGridF : 0.0;
+
+        this.setText('txt-grid-v', gridV.toFixed(1));
+        this.setText('txt-grid-f', gridF.toFixed(2));
+
+        const showGridV = isGridConnected && gridV > 0;
+        const showGridF = isGridConnected && gridF > 0;
+
+        if (isThreePhase) {
+            this.setDisplay('line-grid-1p', false);
+            this.setDisplay('line-grid-l1', true);
+            this.setDisplay('line-grid-l2', true);
+            this.setDisplay('line-grid-l3', true);
+            gridPowerElements.push(this.getEl('line-grid-l1'), this.getEl('line-grid-l2'), this.getEl('line-grid-l3'));
+        } else {
+            this.setDisplay('line-grid-1p', true);
+            this.setDisplay('line-grid-l1', false);
+            this.setDisplay('line-grid-l2', false);
+            this.setDisplay('line-grid-l3', false);
+            gridPowerElements.push(this.getEl('line-grid-1p'));
+        }
+
+        if (isThreePhase) {
+            this.alignTextStack(gridPowerElements, 18, 12, 3.5);
+        } else {
+            this.alignTextStack(gridPowerElements, 26, 12, 3.5);
+        }
+
+        this.setDisplay('line-grid-v', showGridV);
+        if (showGridV)
+            gridInfoElements.push(this.getEl('line-grid-v'));
+
+        this.setDisplay('line-grid-f', showGridF);
+        if (showGridF)
+            gridInfoElements.push(this.getEl('line-grid-f'));
+
+        this.alignTextStack(gridInfoElements, 117, 12, 3.5);
+
+        // --- ĐỌC TRẠNG THÁI LOAD TIÊU THỤ & DỰ PHÒNG EPS ---
+        let loadP = 0,
+        loadL1 = 0,
+        loadL2 = 0,
+        loadL3 = 0;
+        let loadVL1 = 0.0,
+        loadVL2 = 0.0,
+        loadVL3 = 0.0;
+        let loadCL1 = 0.0,
+        loadCL2 = 0.0,
+        loadCL3 = 0.0;
+
+        let epsP = 0,
+        epsL1 = 0,
+        epsL2 = 0,
+        epsL3 = 0;
+        let epsVL1 = 0.0,
+        epsVL2 = 0.0,
+        epsVL3 = 0.0;
+        let epsCL1 = 0.0,
+        epsCL2 = 0.0,
+        epsCL3 = 0.0;
+        let epsFL1 = 0.0,
+        epsFL2 = 0.0,
+        epsFL3 = 0.0;
+
+        if (isThreePhase) {
+            loadL1 = Math.abs(Math.round(this.getState(ent.load_power_l1, 0)));
+            loadL2 = Math.abs(Math.round(this.getState(ent.load_power_l2, 0)));
+            loadL3 = Math.abs(Math.round(this.getState(ent.load_power_l3, 0)));
+
+            loadVL1 = this.getState(ent.load_voltage_l1, 0.0);
+            loadVL2 = this.getState(ent.load_voltage_l2, 0.0);
+            loadVL3 = this.getState(ent.load_voltage_l3, 0.0);
+
+            loadCL1 = this.getState(ent.load_current_l1, 0.0);
+            loadCL2 = this.getState(ent.load_current_l2, 0.0);
+            loadCL3 = this.getState(ent.load_current_l3, 0.0);
+
+            loadP = (ent.load_power_l1 || ent.load_power_l2 || ent.load_power_l3)
+             ? (loadL1 + loadL2 + loadL3)
+             : Math.abs(Math.round(this.getState(ent.load_power, 0)));
+
+            epsL1 = Math.abs(Math.round(this.getState(ent.eps_power_l1, 0)));
+            epsL2 = Math.abs(Math.round(this.getState(ent.eps_power_l2, 0)));
+            epsL3 = Math.abs(Math.round(this.getState(ent.eps_power_l3, 0)));
+
+            epsVL1 = this.getState(ent.eps_voltage_l1, 0.0);
+            epsVL2 = this.getState(ent.eps_voltage_l2, 0.0);
+            epsVL3 = this.getState(ent.eps_voltage_l3, 0.0);
+
+            epsCL1 = this.getState(ent.eps_current_l1, 0.0);
+            epsCL2 = this.getState(ent.eps_current_l2, 0.0);
+            epsCL3 = this.getState(ent.eps_current_l3, 0.0);
+
+            epsFL1 = this.getState(ent.eps_frequency_l1, 0.0);
+            epsFL2 = this.getState(ent.eps_frequency_l2, 0.0);
+            epsFL3 = this.getState(ent.eps_frequency_l3, 0.0);
+
+            epsP = (ent.eps_power_l1 || ent.eps_power_l2 || ent.eps_power_l3)
+             ? (epsL1 + epsL2 + epsL3)
+             : Math.abs(Math.round(this.getState(ent.eps_power, 0)));
+        } else {
+            loadP = Math.abs(Math.round(this.getState(ent.load_power, 0)));
+            const loadV = this.getState(ent.load_voltage, 0.0);
+            const loadC = this.getState(ent.load_current, 0.0);
+            const loadF = this.getState(ent.load_frequency, 0.0);
+
+            epsP = Math.abs(Math.round(this.getState(ent.eps_power, 0)));
+            const epsC = this.getState(ent.eps_current, 0.0);
+        }
+
+        if (singleLoadMode) {
+            const activeP = Math.max(loadP, epsP);
+            const activeL1 = Math.max(loadL1, epsL1);
+            const activeL2 = Math.max(loadL2, epsL2);
+            const activeL3 = Math.max(loadL3, epsL3);
+
+            if (isGridConnected) {
+                loadP = activeP;
+                loadL1 = activeL1;
+                loadL2 = activeL2;
+                loadL3 = activeL3;
+
+                epsP = 0;
+                epsL1 = 0;
+                epsL2 = 0;
+                epsL3 = 0;
+            } else {
+                epsP = activeP;
+                epsL1 = activeL1;
+                epsL2 = activeL2;
+                epsL3 = activeL3;
+
+                loadP = 0;
+                loadL1 = 0;
+                loadL2 = 0;
+                loadL3 = 0;
+            }
+        }
+
+        this.setDisplay('grp-eps', true);
+        this.setDisplay('grp-load', true);
+
+        if (isThreePhase) {
+            this.setPower('txt-load-l1', loadL1);
+            this.setPower('txt-load-l2', loadL2);
+            this.setPower('txt-load-l3', loadL3);
+        } else {
+            this.setPower('txt-load-p', loadP);
+        }
+
+        const showLoadPowerLines = !singleLoadMode || isGridConnected;
+
+        const loadElements = [];
+        if (showLoadPowerLines) {
+            if (isThreePhase) {
+                this.setDisplay('line-load-1p', false);
+                this.setDisplay('line-load-l1', true);
+                this.setDisplay('line-load-l2', true);
+                this.setDisplay('line-load-l3', true);
+                loadElements.push(this.getEl('line-load-l1'), this.getEl('line-load-l2'), this.getEl('line-load-l3'));
+            } else {
+                this.setDisplay('line-load-1p', true);
+                this.setDisplay('line-load-l1', false);
+                this.setDisplay('line-load-l2', false);
+                this.setDisplay('line-load-l3', false);
+                loadElements.push(this.getEl('line-load-1p'));
+            }
+        } else {
+            this.setDisplay('line-load-1p', false);
+            this.setDisplay('line-load-l1', false);
+            this.setDisplay('line-load-l2', false);
+            this.setDisplay('line-load-l3', false);
+        }
+
+        const loadCenterY = isThreePhase ? 27 : 13.5;
+        this.alignTextStack(loadElements, loadCenterY, 12, 3.5);
+
+        const lblLoadSub = this.getEl('lbl-load-sub');
+        if (lblLoadSub) {
+            if (isThreePhase) {
+                lblLoadSub.setAttribute('x', '59');
+                lblLoadSub.setAttribute('y', '64');
+            } else {
+                lblLoadSub.setAttribute('x', '59');
+                lblLoadSub.setAttribute('y', '48');
+            }
+        }
+
+        // --- CẤU HÌNH HÌNH ẢNH / ICON TUỲ CHỈNH CHO KHỐI TIÊU THỤ (LOAD) ---
+        const loadImgConfig = this.config?.load_image ?? this.config?.home_image;
+        const isLoadImgConfigTrue = isTrue(loadImgConfig);
+        const isLoadImgConfigFalse = loadImgConfig === false || String(loadImgConfig).toLowerCase() === 'false';
+        const isLoadImgConfigStringPath = typeof loadImgConfig === 'string' && !isLoadImgConfigTrue && !isLoadImgConfigFalse && loadImgConfig.trim() !== '';
+
+        const customLoadImage = isLoadImgConfigStringPath
+             ? loadImgConfig
+             : (this.config?.load_icon || this.config?.home_icon || this.config?.custom_load_icon || '');
+
+        const useLoadCustomImg = !isLoadImgConfigFalse && (isLoadImgConfigTrue || isLoadImgConfigStringPath) && Boolean(customLoadImage && String(customLoadImage).trim() !== '');
+
+        const loadDefaultG = this.getEl('load-default-graphics');
+        const loadCustomImg = this.getEl('load-custom-image');
+
+        const loadWidth = Number(this.config?.load_width || this.config?.load_size || 100);
+        const loadHeight = Number(this.config?.load_height || this.config?.load_size || 92);
+        const loadCustomX = Number(this.config?.load_custom_x ?? this.config?.load_icon_x ?? 0);
+        const loadCustomY = Number(this.config?.load_custom_y ?? this.config?.load_icon_y ?? 0);
+
+        const loadIconGroup = this.getEl('grp-load-icon');
+        const loadX = Number(this.config?.load_x ?? 0);
+        const loadY = Number(this.config?.load_y ?? 0);
+
+        if (loadIconGroup) {
+            if (loadX !== 0 || loadY !== 0) {
+                loadIconGroup.setAttribute('transform', `translate(${loadX}, ${loadY})`);
+            }
+        }
+
+        if (loadDefaultG && loadCustomImg) {
+            if (useLoadCustomImg) {
+                loadDefaultG.style.display = 'none';
+                loadCustomImg.style.display = 'inline';
+                loadCustomImg.setAttribute('href', customLoadImage);
+                loadCustomImg.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', customLoadImage);
+                loadCustomImg.setAttribute('width', loadWidth);
+                loadCustomImg.setAttribute('height', loadHeight);
+                loadCustomImg.setAttribute('x', loadCustomX);
+                loadCustomImg.setAttribute('y', loadCustomY);
+            } else {
+                loadDefaultG.style.display = 'inline';
+                loadCustomImg.style.display = 'none';
+            }
+        }
+
+        // --- XỬ LÝ EPS ---
+        if (isThreePhase) {
+            this.setPower('txt-eps-l1', epsL1);
+            this.setPower('txt-eps-l2', epsL2);
+            this.setPower('txt-eps-l3', epsL3);
+        } else {
+            this.setPower('txt-eps-p', epsP);
+        }
+
+        const epsVoltEnt = ent.eps_voltage_l1 || ent.eps_voltage;
+        const epsFreqEnt = ent.eps_frequency_l1 || ent.eps_frequency;
+
+        const hasEpsV = Boolean(epsVoltEnt && this._hass?.states[epsVoltEnt] !== undefined);
+        const hasEpsF = hasEpsV && Boolean(epsFreqEnt && this._hass?.states[epsFreqEnt] !== undefined);
+
+        const epsV = hasEpsV ? this.getState(epsVoltEnt, 0.0) : 0;
+        const epsF = hasEpsF ? this.getState(epsFreqEnt, 0.0) : 0;
+
+        const showEpsV = (!singleLoadMode || !isGridConnected) && !isThreePhase && hasEpsV && epsV > 0;
+        const showEpsF = (!singleLoadMode || !isGridConnected) && !isThreePhase && hasEpsF && epsF > 0;
+
+        if (showEpsV)
+            this.setText('txt-eps-v', epsV.toFixed(1));
+        if (showEpsF)
+            this.setText('txt-eps-f', epsF.toFixed(2));
+
+        const showEpsPowerLines = !singleLoadMode || !isGridConnected;
+
+        const epsElements = [];
+        if (showEpsPowerLines) {
+            if (isThreePhase) {
+                this.setDisplay('line-eps-1p', false);
+                this.setDisplay('line-eps-l1', true);
+                this.setDisplay('line-eps-l2', true);
+                this.setDisplay('line-eps-l3', true);
+                epsElements.push(this.getEl('line-eps-l1'), this.getEl('line-eps-l2'), this.getEl('line-eps-l3'));
+            } else {
+                this.setDisplay('line-eps-1p', true);
+                this.setDisplay('line-eps-l1', false);
+                this.setDisplay('line-eps-l2', false);
+                this.setDisplay('line-eps-l3', false);
+                epsElements.push(this.getEl('line-eps-1p'));
+            }
+        } else {
+            this.setDisplay('line-eps-1p', false);
+            this.setDisplay('line-eps-l1', false);
+            this.setDisplay('line-eps-l2', false);
+            this.setDisplay('line-eps-l3', false);
+        }
+
+        this.setDisplay('line-eps-v', showEpsV);
+        if (showEpsV)
+            epsElements.push(this.getEl('line-eps-v'));
+
+        this.setDisplay('line-eps-f', showEpsF);
+        if (showEpsF)
+            epsElements.push(this.getEl('line-eps-f'));
+
+        this.alignTextStack(epsElements, 28, 12, 3.5);
+
+        this.setText('lbl-eps-sub', t.backup_power);
+
+        const showStandby = epsP === 0;
+        this.setDisplay('lbl-eps-standby', showStandby);
+        this.setText('lbl-eps-standby', t.standby_mode);
+
+        // --- CẤU HÌNH ICON / ẢNH TUỲ CHỈNH CHO KHỐI EPS ---
+        const epsImgConfig = this.config?.eps_image;
+        const isEpsImgConfigTrue = isTrue(epsImgConfig);
+        const isEpsImgConfigFalse = epsImgConfig === false || String(epsImgConfig).toLowerCase() === 'false';
+        const isEpsImgConfigStringPath = typeof epsImgConfig === 'string' && !isEpsImgConfigTrue && !isEpsImgConfigFalse && epsImgConfig.trim() !== '';
+
+        const customEpsImage = isEpsImgConfigStringPath
+             ? epsImgConfig
+             : (this.config?.eps_icon || this.config?.custom_eps_icon || '');
+
+        const useEpsCustomImg = !isEpsImgConfigFalse && (isEpsImgConfigTrue || isEpsImgConfigStringPath) && Boolean(customEpsImage && String(customEpsImage).trim() !== '');
+
+        const epsDefaultG = this.getEl('eps-default-graphics');
+        const epsCustomImg = this.getEl('eps-custom-image');
+
+        const epsWidth = Number(this.config?.eps_width || this.config?.eps_size || 50);
+        const epsHeight = Number(this.config?.eps_height || this.config?.eps_size || 50);
+        const epsCustomX = Number(this.config?.eps_custom_x ?? this.config?.eps_icon_x ?? 0);
+        const epsCustomY = Number(this.config?.eps_custom_y ?? this.config?.eps_icon_y ?? 0);
+
+        const epsIconGroup = this.getEl('grp-eps-icon');
+        const epsX = Number(this.config?.eps_x ?? 0);
+        const epsY = Number(this.config?.eps_y ?? 0);
+
+        if (epsIconGroup && (epsX !== 0 || epsY !== 0)) {
+            epsIconGroup.setAttribute('transform', `translate(${epsX}, ${epsY})`);
+        }
+
+        if (epsDefaultG && epsCustomImg) {
+            if (useEpsCustomImg) {
+                epsDefaultG.style.display = 'none';
+                epsCustomImg.style.display = 'inline';
+                epsCustomImg.setAttribute('href', customEpsImage);
+                epsCustomImg.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', customEpsImage);
+                epsCustomImg.setAttribute('width', epsWidth);
+                epsCustomImg.setAttribute('height', epsHeight);
+                epsCustomImg.setAttribute('x', epsCustomX);
+                epsCustomImg.setAttribute('y', epsCustomY);
+            } else {
+                epsDefaultG.style.display = 'inline';
+                epsCustomImg.style.display = 'none';
+            }
+        }
+
+        // --- ĐỌC TRẠNG THÁI BATTERY 1 ---
+        let batP = Math.round(this.getState(ent.battery_power, 0));
+        const batV = this.getState(ent.battery_voltage, 0);
+        const soc = Math.round(this.getState(ent.battery_soc, 0));
+        const batCurrent = this.getState(ent.battery_current, 0);
+        const batTemp = this.getState(ent.battery_temp, 0);
+
+        const invertBat = isTrue(this.config?.invert_battery_power) || isTrue(ent?.invert_battery_power);
+        if (invertBat)
+            batP = -batP;
+
+        const isCharging = batP > 5;
+        const isDischarging = batP < -5;
+
+        this.setPower('txt-bat-p', Math.abs(batP));
+        this.setText('txt-bat-v', batV.toFixed(1));
+
+        const lblBatMode = this.getEl('lbl-bat-mode');
+        if (lblBatMode) {
+            if (isCharging)
+                lblBatMode.textContent = t.bat_charging;
+            else if (isDischarging)
+                lblBatMode.textContent = t.bat_discharging;
+            else {
+                if (soc >= 100)
+                    lblBatMode.textContent = t.bat_full;
+                else if (soc >= 20)
+                    lblBatMode.textContent = t.bat_standby;
+                else
+                    lblBatMode.textContent = t.bat_low;
+            }
+        }
+
+        const showBatV = batV > 0;
+        this.setDisplay('line-bat-v', showBatV);
+
+        const batElements = [
+            this.getEl('line-bat-p'),
+            this.getEl('lbl-bat-mode'),
+            ...(showBatV ? [this.getEl('line-bat-v')] : []),
+            this.getEl('line-bat-soc')
+        ];
+
+        this.alignTextStack(batElements, 84, 12, 3.5, 1, 2);
+
+        const batFill = this.getEl('bat-fill');
+        const maxH = 43.0;
+        const h = Math.max(1, (soc / 100) * maxH);
+        if (batFill) {
+            batFill.setAttribute('height', h);
+            batFill.setAttribute('y', 7 + (maxH - h));
+        }
+
+        let batColor = '#059669';
+        if (soc <= 20)
+            batColor = '#dc2626';
+        else if (soc <= 40)
+            batColor = '#ea580c';
+
+        this.setText('txt-soc-val', soc);
+        const txtSoc = this.getEl('txt-soc-val');
+        if (txtSoc)
+            txtSoc.setAttribute('fill', batColor);
+        if (batFill)
+            batFill.setAttribute('fill', batColor);
+
+        // --- ĐỌC TRẠNG THÁI BATTERY 2 ---
+        const hasBat2Entities = Boolean(
+                (ent.battery2_power || ent.battery2_soc || ent.battery2_voltage || ent.battery2_current || ent.battery2_temp) &&
+                (this._hass?.states[ent.battery2_power] !== undefined || this._hass?.states[ent.battery2_soc] !== undefined));
+        const alwaysShowBat2 = isTrue(this.config?.always_show_battery2) || isTrue(ent?.always_show_battery2);
+        const showBat2 = alwaysShowBat2 || hasBat2Entities;
+
+        let bat2P = 0;
+        let isCharging2 = false;
+        let isDischarging2 = false;
+
+        this.setDisplay('grp-bat2', showBat2);
+
+        if (showBat2) {
+            bat2P = Math.round(this.getState(ent.battery2_power, 0));
+            const bat2V = this.getState(ent.battery2_voltage, 0);
+            const soc2 = Math.round(this.getState(ent.battery2_soc, 0));
+            const bat2Current = this.getState(ent.battery2_current, 0);
+            const bat2Temp = this.getState(ent.battery2_temp, 0);
+
+            const invertBat2 = isTrue(this.config?.invert_battery2_power) || isTrue(ent?.invert_battery2_power);
+            if (invertBat2)
+                bat2P = -bat2P;
+
+            isCharging2 = bat2P > 5;
+            isDischarging2 = bat2P < -5;
+
+            this.setPower('txt-bat2-p', Math.abs(bat2P));
+            this.setText('txt-bat2-v', bat2V.toFixed(1));
+
+            const lblBat2Mode = this.getEl('lbl-bat2-mode');
+            if (lblBat2Mode) {
+                if (isCharging2)
+                    lblBat2Mode.textContent = t.bat_charging;
+                else if (isDischarging2)
+                    lblBat2Mode.textContent = t.bat_discharging;
+                else {
+                    if (soc2 >= 100)
+                        lblBat2Mode.textContent = t.bat_full;
+                    else if (soc2 >= 20)
+                        lblBat2Mode.textContent = t.bat_standby;
+                    else
+                        lblBat2Mode.textContent = t.bat_low;
+                }
+            }
+
+            const showBat2V = bat2V > 0;
+            this.setDisplay('line-bat2-v', showBat2V);
+
+            const bat2Elements = [
+                this.getEl('line-bat2-p'),
+                this.getEl('lbl-bat2-mode'),
+                ...(showBat2V ? [this.getEl('line-bat2-v')] : []),
+                this.getEl('line-bat2-soc')
+            ];
+
+            this.alignTextStack(bat2Elements, 84, 12, 3.5, 1, 2);
+
+            const bat2Fill = this.getEl('bat2-fill');
+            const h2 = Math.max(1, (soc2 / 100) * maxH);
+            if (bat2Fill) {
+                bat2Fill.setAttribute('height', h2);
+                bat2Fill.setAttribute('y', 7 + (maxH - h2));
+            }
+
+            let bat2Color = '#059669';
+            if (soc2 <= 20)
+                bat2Color = '#dc2626';
+            else if (soc2 <= 40)
+                bat2Color = '#ea580c';
+
+            this.setText('txt-soc2-val', soc2);
+            const txtSoc2 = this.getEl('txt-soc2-val');
+            if (txtSoc2)
+                txtSoc2.setAttribute('fill', bat2Color);
+            if (bat2Fill)
+                bat2Fill.setAttribute('fill', bat2Color);
+        }
+
+        // --- CẬP NHẬT CÁC THÔNG SỐ THỐNG KÊ ---
+        this.setEnergyStat('stat-pv-today', this.getState(ent.pv_daily));
+        this.setEnergyStat('stat-pv-total', this.getState(ent.pv_total));
+        this.setEnergyStat('stat-load-today', this.getState(ent.load_daily));
+        this.setEnergyStat('stat-load-total', this.getState(ent.load_total));
+
+        const isBatCharge = this._batToggle === 'charge';
+        this.setText('lbl-bat-title', isBatCharge ? t.bat_charge_title : t.bat_discharge_title);
+        this.setText('lbl-bat-today', isBatCharge ? t.charge_today : t.discharge_today);
+        this.setText('lbl-bat-total', isBatCharge ? t.total_charge : t.total_discharge);
+        this.setEnergyStat('stat-bat-today', this.getState(isBatCharge ? ent.battery_charge_daily : ent.battery_discharge_daily));
+        this.setEnergyStat('stat-bat-total', this.getState(isBatCharge ? ent.battery_charge_total : ent.battery_discharge_total));
+
+        const isGridSell = this._gridToggle === 'sell';
+        this.setText('lbl-grid-title', isGridSell ? t.grid_export_title : t.grid_import_title);
+        this.setText('lbl-grid-today', isGridSell ? t.export_today : t.import_today);
+        this.setText('lbl-grid-total', isGridSell ? t.total_export : t.total_import);
+        this.setEnergyStat('stat-grid-today', this.getState(isGridSell ? ent.grid_sell_daily : ent.grid_buy_daily));
+        this.setEnergyStat('stat-grid-total', this.getState(isGridSell ? ent.grid_sell_total : ent.grid_buy_total));
+
+        // --- XÁC ĐỊNH TRẠNG THÁI CÁC THIẾT BỊ ---
+        const MIN_POWER = 5;
+
+        const isBat1Charging = batP > MIN_POWER;
+        const isBat1Discharging = batP < -MIN_POWER;
+        const isBat2Charging = showBat2 && bat2P > MIN_POWER;
+        const isBat2Discharging = showBat2 && bat2P < -MIN_POWER;
+
+        const netBatPower = batP + (showBat2 ? bat2P : 0);
+        const isNetCharging = netBatPower > MIN_POWER;
+        const isNetDischarging = netBatPower < -MIN_POWER;
+
+        const isImporting = isGridConnected && gridP < -MIN_POWER;
+        const isExporting = isGridConnected && gridP > MIN_POWER;
+
+        const hasPvPower = pvP > MIN_POWER;
+        const hasAuxPower = hasAuxP && auxP > MIN_POWER;
+        const hasLoadPower = loadP > MIN_POWER;
+        const hasEpsPower = epsP > MIN_POWER;
+
+        const isAuxSpecialOffgrid = isGridConnected &&
+            !hasLoadPower &&
+            !isImporting &&
+            (hasPvPower || isNetCharging || isNetDischarging) &&
+            hasAuxPower &&
+            hasEpsPower;
+
+        // --- BẬT / TẮT ĐƯỜNG ĐI CỦA CÁC LUỒNG NĂNG LƯỢNG ---
+        this.setFlowVisible('flow-bat-charge', isBat1Charging);
+        this.setFlowVisible('flow-bat-discharge', isBat1Discharging);
+        this.setFlowVisible('flow-bat2-charge', showBat2 && isBat2Charging);
+        this.setFlowVisible('flow-bat2-discharge', showBat2 && isBat2Discharging);
+        this.setFlowVisible('flow-bat-trunk-charge', isNetCharging);
+        this.setFlowVisible('flow-bat-trunk-discharge', isNetDischarging);
+
+        this.setFlowVisible('flow-grid-import', isImporting);
+        this.setFlowVisible('flow-grid-export', isExporting);
+
+        this.setFlowVisible('flow-pv', hasPvPower);
+
+        // Cập nhật luồng Aux / Smart Load: khi smart_load_aux = true (Tải), luồng hướng lên từ bus -> Aux
+        const showAuxFlow = isSmartLoadAux
+             ? hasAuxPower
+             : (hasAuxPower && (isGridConnected || hasEpsPower || isNetCharging || isAuxSpecialOffgrid));
+
+        this.setFlowVisible('flow-aux', showAuxFlow);
+
+        const flowAuxEl = this.getEl('flow-aux');
+        if (flowAuxEl) {
+            const chevrons = flowAuxEl.querySelectorAll('use');
+            if (isSmartLoadAux) {
+                // AUX là Smart Load (Tải) -> dòng chạy NGUỢC từ Bus lên AUX
+                const delays = ["0.60s", "0.48s", "0.36s", "0.24s", "0.12s", "0.00s"];
+                chevrons.forEach((chv, idx) => {
+                    chv.setAttribute('href', '#chv-block-u');
+                    if (delays[idx])
+                        chv.style.animationDelay = delays[idx];
+                });
+            } else {
+                // AUX là Hoà lưới / AC PV -> dòng chạy TỪ AUX xuống Bus
+                const delays = ["0.00s", "0.12s", "0.24s", "0.36s", "0.48s", "0.60s"];
+                chevrons.forEach((chv, idx) => {
+                    chv.setAttribute('href', '#chv-block-d');
+                    if (delays[idx])
+                        chv.style.animationDelay = delays[idx];
+                });
+            }
+        }
+
+        this.setFlowVisible('flow-bus-to-load', isGridConnected && hasLoadPower);
+        this.setFlowVisible('flow-eps', hasEpsPower);
+
+        // --- TÍNH TOÁN HƯỚNG DÒNG ĐIỆN GIỮA INVERTER VÀ THANH CÁI AC (BUS) ---
+        const gridImportPower = isImporting ? Math.abs(gridP) : 0;
+
+        const gridToLoadDiff = gridImportPower - loadP;
+        const isGridBypass = isGridConnected &&
+            isImporting &&
+            !isNetDischarging &&
+            (!isNetCharging || hasPvPower) &&
+            (gridToLoadDiff >= 0 && gridToLoadDiff <= 5);
+
+        const isInvGenerating = hasPvPower || isNetDischarging;
+        const hasAcSourceOnBus = isImporting || (!isSmartLoadAux && hasAuxPower);
+        const inverterNeedsAc = isNetCharging || hasEpsPower;
+        const hasAnyLoadOnBus = hasLoadPower || (isSmartLoadAux && hasAuxPower);
+
+        const rawInvToBus = (isGridConnected || hasAnyLoadOnBus) && !isGridBypass && isInvGenerating && (hasAnyLoadOnBus || isExporting);
+        const rawBusToInv = hasAcSourceOnBus && inverterNeedsAc && !isGridBypass;
+
+        let isInvSupplyingBus = false;
+        let isBusChargingInv = false;
+
+        if (rawBusToInv && !rawInvToBus) {
+            isBusChargingInv = true;
+        } else if (rawInvToBus && !rawBusToInv) {
+            isInvSupplyingBus = true;
+        } else if (rawBusToInv && rawInvToBus) {
+            if (!isInvGenerating) {
+                isBusChargingInv = true;
+            } else if (isNetCharging && (isImporting || (!isSmartLoadAux && hasAuxPower))) {
+                isBusChargingInv = true;
+            } else {
+                isInvSupplyingBus = true;
+            }
+        }
+
+        this.setFlowVisible('flow-inv-to-bus', isInvSupplyingBus);
+        this.setFlowVisible('flow-bus-to-inv', isBusChargingInv);
+
+        const loadIconColor = isGridConnected ? '#10b982' : (hasLoadPower ? '#e11d48' : '#94a3b8');
+        const loadIcons = this.shadowRoot.querySelectorAll('#icon-load .load-icon-color');
+        loadIcons.forEach(icon => icon.setAttribute('fill', loadIconColor));
+        const loadStrokes = this.shadowRoot.querySelectorAll('#icon-load .load-icon-stroke');
+        loadStrokes.forEach(icon => icon.setAttribute('stroke', loadIconColor));
+
+        const invLed = this.getEl('inv-led');
+        if (invLed)
+            invLed.setAttribute('fill', isGridConnected ? '#16a34a' : '#dc2626');
+
+        const acNode = this.getEl('ac-bus-node');
+        if (acNode)
+            acNode.setAttribute('fill', isGridConnected ? '#16a34a' : '#0284c7');
+
+        const lblGridMode = this.getEl('lbl-grid-mode');
+        const pill = this.getEl('sys-status-pill');
+        const pillTxt = this.getEl('sys-status-text');
+
+        if (pill)
+            pill.className = 'status-pill';
+
+        if (!isGridConnected) {
+            if (lblGridMode) {
+                lblGridMode.textContent = t.grid_offline;
+                lblGridMode.style.fill = "#dc2626";
+            }
+            if (pill)
+                pill.classList.add('offline');
+            if (pillTxt)
+                pillTxt.textContent = t.grid_offline;
+        } else if (isExporting) {
+            if (lblGridMode) {
+                lblGridMode.textContent = t.grid_exporting;
+                lblGridMode.style.fill = "#0284c7";
+            }
+            if (pill)
+                pill.classList.add('exporting');
+            if (pillTxt)
+                pillTxt.textContent = t.grid_exporting;
+        } else if (isImporting) {
+            if (lblGridMode) {
+                lblGridMode.textContent = t.grid_importing;
+                lblGridMode.style.fill = "#d97706";
+            }
+            if (pill)
+                pill.classList.add('importing');
+            if (pillTxt)
+                pillTxt.textContent = t.grid_importing;
+        } else {
+            if (lblGridMode) {
+                lblGridMode.textContent = t.grid_ongrid;
+                lblGridMode.style.fill = "#16a34a";
+            }
+            if (pill)
+                pill.classList.add('ongrid');
+            if (pillTxt)
+                pillTxt.textContent = t.grid_ongrid;
+        }
+    }
+
+    render() {
+        const t = this.getTranslation();
+        this.shadowRoot.innerHTML = `
       <style>
         :host { display: block; width: 100%; box-sizing: border-box; -webkit-text-size-adjust: 100%; -webkit-font-smoothing: antialiased; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
@@ -1235,7 +1776,7 @@ class PowerFlowCardInverter extends HTMLElement {
                 <use href="#chv-block-d" x="168" y="44"  class="chv-block" style="animation-delay: 0.36s;" />
               </g>
 
-              <g id="flow-ac-pv">
+              <g id="flow-aux">
                 <use href="#chv-block-d" x="291" y="4"   class="chv-block" style="animation-delay: 0.00s;" />
                 <use href="#chv-block-d" x="291" y="20"  class="chv-block" style="animation-delay: 0.12s;" />
                 <use href="#chv-block-d" x="291" y="36"  class="chv-block" style="animation-delay: 0.24s;" />
@@ -1337,7 +1878,7 @@ class PowerFlowCardInverter extends HTMLElement {
               <g id="flow-grid-export">
                 <use href="#chv-block-r" x="304" y="98" class="chv-block" style="animation-delay: 0.00s;" />
                 <use href="#chv-block-r" x="318" y="98" class="chv-block" style="animation-delay: 0.12s;" />
-                <use href="#chv-block-r" x="332" y="98" class="chv-block" style="animation-delay: 0.24s;" />
+                <use href="#chv-block-r" x="332" y="98" class="chv-block" style="animation-delay: 0.23s;" />
                 <use href="#chv-block-r" x="346" y="98" class="chv-block" style="animation-delay: 0.36s;" />
               </g>
 
@@ -1373,102 +1914,113 @@ class PowerFlowCardInverter extends HTMLElement {
                   </text>
                 </g>
 
-                <g id="grp-pv-icon" transform="translate(138, -56) scale(0.57)">
-                  <defs>
-                    <style>
-                      .sun-icon { stroke: #10b982; fill: none; stroke-width: 4.5; stroke-linecap: round; }
-                      .sun-core { fill: #10b982; }
-                      .pv-frame { fill: #10b982; }
-                    </style>
+<g id="grp-pv-icon" transform="translate(138, -56) scale(0.57)">
+  <defs>
+    <style>
+      .sun-icon { stroke: #10b982; fill: none; stroke-width: 4.5; stroke-linecap: round; }
+      .sun-core { fill: #10b982; }
+      .pv-frame { fill: #10b982; }
+    </style>
 
-                    <mask id="sun-cutout-mask">
-                      <rect width="100%" height="100%" fill="white" />
-                      <path d="M 33.5,42 L 84.5,42 Q 85.8,42 86.1,43.3 L 95.9,84.7 Q 96.2,86 94.5,86 L 19.5,86 Q 17.8,86 18.1,84.7 L 31.9,43.3 Q 32.2,42 33.5,42 Z"
-                            fill="black"
-                            stroke="black"
-                            stroke-width="3"
-                            stroke-linejoin="round" />
-                    </mask>
+    <mask id="sun-cutout-mask">
+      <rect width="100%" height="100%" fill="white" />
+      <path d="M 33.5,42 L 84.5,42 Q 85.8,42 86.1,43.3 L 95.9,84.7 Q 96.2,86 94.5,86 L 19.5,86 Q 17.8,86 18.1,84.7 L 31.9,43.3 Q 32.2,42 33.5,42 Z"
+            fill="black"
+            stroke="black"
+            stroke-width="3"
+            stroke-linejoin="round" />
+    </mask>
 
-                    <mask id="pv-grid-mask">
-                      <rect width="100%" height="100%" fill="white" />
-                      <g stroke="black" stroke-width="2.2" stroke-linecap="butt">
-                        <line x1="10" y1="53" x2="100" y2="53" />
-                        <line x1="10" y1="64" x2="100" y2="64" />
-                        <line x1="10" y1="75" x2="100" y2="75" />
-                        <line x1="46.5" y1="35" x2="36.5" y2="92" />
-                        <line x1="59.5" y1="35" x2="56.5" y2="92" />
-                        <line x1="72.0" y1="35" x2="77.0" y2="92" />
-                      </g>
-                    </mask>
-                  </defs>
+    <mask id="pv-grid-mask">
+      <rect width="100%" height="100%" fill="white" />
+      <g stroke="black" stroke-width="2.2" stroke-linecap="butt">
+        <line x1="10" y1="53" x2="100" y2="53" />
+        <line x1="10" y1="64" x2="100" y2="64" />
+        <line x1="10" y1="75" x2="100" y2="75" />
+        <line x1="46.5" y1="35" x2="36.5" y2="92" />
+        <line x1="59.5" y1="35" x2="56.5" y2="92" />
+        <line x1="72.0" y1="35" x2="77.0" y2="92" />
+      </g>
+    </mask>
+  </defs>
 
-                  <g class="sun-icon" mask="url(#sun-cutout-mask)">
-                    <circle class="sun-core" cx="34" cy="34" r="14" />
-                    <line x1="56" y1="34" x2="64.4" y2="34" />
-                    <line x1="53.1" y1="45" x2="60.3" y2="49.2" />
-                    <line x1="45" y1="53.1" x2="49.2" y2="60.3" />
-                    <line x1="34" y1="56" x2="34" y2="64.4" />
-                    <line x1="23" y1="53.1" x2="18.8" y2="60.3" />
-                    <line x1="14.9" y1="45" x2="7.7" y2="49.2" />
-                    <line x1="12" y1="34" x2="3.6" y2="34" />
-                    <line x1="14.9" y1="23" x2="7.7" y2="18.8" />
-                    <line x1="23" y1="14.9" x2="18.8" y2="7.7" />
-                    <line x1="34" y1="12" x2="34" y2="3.6" />
-                    <line x1="45" y1="14.9" x2="49.2" y2="7.7" />
-                    <line x1="53.1" y1="23" x2="60.3" y2="18.8" />
-                  </g>
+  <!-- Khối đồ họa PV mặc định -->
+  <g id="pv-default-graphics">
+    <g class="sun-icon" mask="url(#sun-cutout-mask)">
+      <circle class="sun-core" cx="34" cy="34" r="14" />
+      <line x1="56" y1="34" x2="64.4" y2="34" />
+      <line x1="53.1" y1="45" x2="60.3" y2="49.2" />
+      <line x1="45" y1="53.1" x2="49.2" y2="60.3" />
+      <line x1="34" y1="56" x2="34" y2="64.4" />
+      <line x1="23" y1="53.1" x2="18.8" y2="60.3" />
+      <line x1="14.9" y1="45" x2="7.7" y2="49.2" />
+      <line x1="12" y1="34" x2="3.6" y2="34" />
+      <line x1="14.9" y1="23" x2="7.7" y2="18.8" />
+      <line x1="23" y1="14.9" x2="18.8" y2="7.7" />
+      <line x1="34" y1="12" x2="34" y2="3.6" />
+      <line x1="45" y1="14.9" x2="49.2" y2="7.7" />
+      <line x1="53.1" y1="23" x2="60.3" y2="18.8" />
+    </g>
 
-                  <path class="pv-frame" mask="url(#pv-grid-mask)" d="M 33.5,42 L 84.5,42 Q 85.8,42 86.1,43.3 L 95.9,84.7 Q 96.2,86 94.5,86 L 19.5,86 Q 17.8,86 18.1,84.7 L 31.9,43.3 Q 32.2,42 33.5,42 Z" />
-                </g>
-              </g>
+    <path class="pv-frame" mask="url(#pv-grid-mask)" d="M 33.5,42 L 84.5,42 Q 85.8,42 86.1,43.3 L 95.9,84.7 Q 96.2,86 94.5,86 L 19.5,86 Q 17.8,86 18.1,84.7 L 31.9,43.3 Q 32.2,42 33.5,42 Z" />
+  </g>
 
-              <!-- Khối PV AC/Hoà lưới -->
-              <g id="grp-pv-ac">
-                <text id="line-ac-pv-1p" x="324" y="0" text-anchor="start"><tspan id="txt-ac-pv-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
-                <text id="line-ac-pv-l1" x="324" y="0" text-anchor="start" style="display:none;"><tspan id="txt-ac-pv-l1" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
-                <text id="line-ac-pv-l2" x="324" y="0" text-anchor="start" style="display:none;"><tspan id="txt-ac-pv-l2" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
-                <text id="line-ac-pv-l3" x="324" y="0" text-anchor="start" style="display:none;"><tspan id="txt-ac-pv-l3" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
-                <text id="line-ac-pv-v" x="324" y="0" text-anchor="start"><tspan id="txt-ac-pv-v" class="highlight-val">0.0</tspan><tspan class="unit-lbl" dx="3"> Vac</tspan></text>
-                <text id="line-ac-pv-f" x="324" y="0" text-anchor="start"><tspan id="txt-ac-pv-f" class="highlight-freq">0.00</tspan><tspan class="unit-lbl" dx="3"> Hz</tspan></text>
+  <!-- Thẻ chứa ảnh tùy chỉnh PV -->
+  <image id="pv-custom-image" x="0" y="0" width="50" height="50" preserveAspectRatio="xMidYMid meet" style="display: none;" />
+</g>
 
-                <g transform="translate(274, -58) scale(0.22)">
-                  <defs>
-                    <style>
-                      .acpv-card-bg { fill: #ffffff; stroke: #b0bec5; stroke-width: 2; stroke-dasharray: 6,4; }
-                      .acpv-panel { fill: #10b982; }
-                      .acpv-inverter-frame { fill: none; stroke: #0284c7; stroke-width: 5.2; stroke-linejoin: round; }
-                      .acpv-divider-line { stroke: #b0bec5; stroke-width: 3; stroke-linecap: round; }
-                      .acpv-symbol { stroke: #1a1a1a; stroke-width: 4.5; stroke-linecap: round; fill: none; }
-                      .acpv-symbol-ac { stroke: #2563eb; stroke-width: 4.5; stroke-linecap: round; fill: none; }
-                      .acpv-shadow-effect { flood-color: #000000; flood-opacity: 0.18; }
-                    </style>
+<!-- Khối Tải phụ / Smart Load (AUX) -->
+<g id="grp-aux">
+  <text id="line-aux-1p" x="324" y="0" text-anchor="start"><tspan id="txt-aux-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+  <text id="line-aux-l1" x="324" y="0" text-anchor="start" style="display:none;"><tspan id="txt-aux-l1" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+  <text id="line-aux-l2" x="324" y="0" text-anchor="start" style="display:none;"><tspan id="txt-aux-l2" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+  <text id="line-aux-l3" x="324" y="0" text-anchor="start" style="display:none;"><tspan id="txt-aux-l3" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+  <text id="line-aux-v" x="324" y="0" text-anchor="start"><tspan id="txt-aux-v" class="highlight-val">0.0</tspan><tspan class="unit-lbl" dx="3"> Vac</tspan></text>
+  <text id="line-aux-f" x="324" y="0" text-anchor="start"><tspan id="txt-aux-f" class="highlight-freq">0.00</tspan><tspan class="unit-lbl" dx="3"> Hz</tspan></text>
 
-                    <filter id="acpv-shadow" x="-20%" y="-20%" width="150%" height="150%">
-                      <feDropShadow dx="0" dy="3" stdDeviation="2.5" class="acpv-shadow-effect" />
-                    </filter>
-                  </defs>
+  <!-- Khối Icon / Đồ hoạ AUX (Đã tích hợp wrapper tùy biến) -->
+  <g id="grp-aux-icon" transform="translate(274, -58)">
+    <g id="aux-default-graphics" transform="scale(0.22)">
+      <defs>
+        <style>
+          .aux-card-bg { fill: #ffffff; stroke: #b0bec5; stroke-width: 2; stroke-dasharray: 6,4; }
+          .aux-panel { fill: #10b982; }
+          .aux-inverter-frame { fill: none; stroke: #0284c7; stroke-width: 5.2; stroke-linejoin: round; }
+          .aux-divider-line { stroke: #b0bec5; stroke-width: 3; stroke-linecap: round; }
+          .aux-symbol { stroke: #1a1a1a; stroke-width: 4.5; stroke-linecap: round; fill: none; }
+          .aux-symbol-ac { stroke: #2563eb; stroke-width: 4.5; stroke-linecap: round; fill: none; }
+          .aux-shadow-effect { flood-color: #000000; flood-opacity: 0.18; }
+        </style>
 
-                  <rect class="svg-bg-card acpv-card-bg" x="1" y="1" width="198" height="208" rx="16"/>
+        <filter id="aux-shadow" x="-20%" y="-20%" width="150%" height="150%">
+          <feDropShadow dx="0" dy="3" stdDeviation="2.5" class="aux-shadow-effect" />
+        </filter>
+      </defs>
 
-                  <polygon id="bottom-pv-panel" class="acpv-panel" points="65,44 165,44 135,80 35,80" />
-                  <polygon id="top-pv-panel" class="acpv-panel" points="65,20 165,20 135,56 35,56" filter="url(#acpv-shadow)" />
+      <rect class="svg-bg-card aux-card-bg" x="1" y="1" width="198" height="208" rx="16"/>
 
-                  <g id="inverter-box">
-                    <rect class="acpv-inverter-frame" x="32.5" y="100" width="135" height="89" rx="19" />
-                    <line class="acpv-divider-line" x1="45" y1="178" x2="155" y2="111" />
+      <polygon id="bottom-pv-panel" class="aux-panel" points="65,44 165,44 135,80 35,80" />
+      <polygon id="top-pv-panel" class="aux-panel" points="65,20 165,20 135,56 35,56" filter="url(#aux-shadow)" />
 
-                    <line class="svg-stroke-dark acpv-symbol" x1="48" y1="121" x2="84" y2="121" />
-                    <line class="svg-stroke-dark acpv-symbol" x1="48" y1="134" x2="84" y2="134" />
+      <g id="inverter-box">
+        <rect class="aux-inverter-frame" x="32.5" y="100" width="135" height="89" rx="19" />
+        <line class="aux-divider-line" x1="45" y1="178" x2="155" y2="111" />
 
-                    <path class="svg-stroke-dark acpv-symbol-ac" d="M 112 154 Q 118 146 125 154 T 138 154" />
-                    <path class="svg-stroke-dark acpv-symbol-ac" d="M 112 167 Q 118 159 125 167 T 138 167" />
-                  </g>
-                </g>
-              </g>
+        <line class="svg-stroke-dark aux-symbol" x1="48" y1="121" x2="84" y2="121" />
+        <line class="svg-stroke-dark aux-symbol" x1="48" y1="134" x2="84" y2="134" />
+
+        <path class="svg-stroke-dark aux-symbol-ac" d="M 112 154 Q 118 146 125 154 T 138 154" />
+        <path class="svg-stroke-dark aux-symbol-ac" d="M 112 167 Q 118 159 125 167 T 138 167" />
+      </g>
+    </g>
+
+    <!-- Thẻ render ảnh tùy chỉnh -->
+    <image id="aux-custom-image" x="0" y="0" width="44" height="46" preserveAspectRatio="xMidYMid meet" style="display: none;" />
+  </g>
+</g>
 
               <!-- Khối Pin Lưu Trữ 1 -->
-              <g id="grp-bat1" transform="translate(1, 72)">
+              <g id="grp-bat1" transform="translate(-4, 83)">
                 <rect x="12.705" y="1" width="11.55" height="4" rx="1.5" fill="#059669" />
                 <rect class="svg-bg-card" x="2.31" y="5" width="32.34" height="48" rx="4" fill="#ffffff" stroke="#059669" stroke-width="2" />
                 <rect id="bat-fill" x="4.62" y="7" width="27.72" height="43" rx="1.5" fill="#059669" />
@@ -1480,7 +2032,7 @@ class PowerFlowCardInverter extends HTMLElement {
               </g>
 
               <!-- Khối Pin Lưu Trữ 2 -->
-              <g id="grp-bat2" transform="translate(1, 196)" style="display: none;">
+              <g id="grp-bat2" transform="translate(-4, 207)" style="display: none;">
                 <rect x="12.705" y="1" width="11.55" height="4" rx="1.5" fill="#059669" />
                 <rect class="svg-bg-card" x="2.31" y="5" width="32.34" height="48" rx="4" fill="#ffffff" stroke="#059669" stroke-width="2" />
                 <rect id="bat2-fill" x="4.62" y="7" width="27.72" height="43" rx="1.5" fill="#059669" />
@@ -1492,7 +2044,7 @@ class PowerFlowCardInverter extends HTMLElement {
               </g>
 
               <!-- Khối Inverter -->
-              <g transform="translate(144, 74)">
+              <g transform="translate(132, 78)">
                 <g id="inv-default-graphics">
                   <rect class="svg-inv-bg" x="0" y="0" width="58" height="58" rx="6" fill="#ffffff" stroke="#0284c7" stroke-width="2"/>
                   <circle cx="10" cy="10" r="3.5" fill="#16a34a" id="inv-led"/>
@@ -1546,21 +2098,26 @@ class PowerFlowCardInverter extends HTMLElement {
                 <text id="line-grid-f" x="21" y="0" text-anchor="middle"><tspan id="txt-grid-f" class="highlight-freq">0.00</tspan><tspan class="unit-lbl" dx="3"> Hz</tspan></text>
               </g>
 
-              <!-- Khối EPS -->
+<!-- Khối EPS -->
               <g id="grp-eps" transform="translate(148, 232)">
-                <svg id="icon-eps" x="0" y="0" width="56" height="56" viewBox="0 0 60 60">
-                  <g stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                    <rect class="eps-icon-stroke" x="8" y="8" width="23" height="12" rx="3" stroke="#10b982"/>
-                    <text class="eps-icon-text" x="19.5" y="16.5" font-size="7.5" font-weight="bold" fill="#10b982" stroke="none" text-anchor="middle" font-family="sans-serif">UPS</text>
-                    <circle class="eps-icon-stroke" cx="43" cy="23" r="9" stroke="#10b982"/>
-                    <line class="eps-icon-stroke" x1="40" y1="19" x2="40" y2="27" stroke-width="2.5" stroke="#10b982"/>
-                    <line class="eps-icon-stroke" x1="46" y1="19" x2="46" y2="27" stroke-width="2.5" stroke="#10b982"/>
-                    <path class="eps-icon-stroke" d="M 8 20 C 12 28, 10 38, 12 43 L 24 43" stroke="#10b982"/>
-                    <path class="eps-icon-fill" d="M 23 37 C 23 37, 32 34, 35 43 C 36 48, 30 52, 24 50 Z" fill="#10b982"/>
-                    <line class="eps-icon-stroke" x1="31" y1="34" x2="35" y2="30" stroke-width="2.5" stroke="#10b982"/>
-                    <line class="eps-icon-stroke" x1="36" y1="39" x2="40" y2="35" stroke-width="2.5" stroke="#10b982"/>
-                  </g>
-                </svg>
+                <g id="grp-eps-icon">
+                  <svg id="icon-eps" x="0" y="0" width="56" height="56" viewBox="0 0 60 60">
+                    <!-- Đồ họa icon EPS mặc định -->
+                    <g id="eps-default-graphics" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                      <rect class="eps-icon-stroke" x="8" y="8" width="23" height="12" rx="3" stroke="#10b982"/>
+                      <text class="eps-icon-text" x="19.5" y="16.5" font-size="7.5" font-weight="bold" fill="#10b982" stroke="none" text-anchor="middle" font-family="sans-serif">UPS</text>
+                      <circle class="eps-icon-stroke" cx="43" cy="23" r="9" stroke="#10b982"/>
+                      <line class="eps-icon-stroke" x1="40" y1="19" x2="40" y2="27" stroke-width="2.5" stroke="#10b982"/>
+                      <line class="eps-icon-stroke" x1="46" y1="19" x2="46" y2="27" stroke-width="2.5" stroke="#10b982"/>
+                      <path class="eps-icon-stroke" d="M 8 20 C 12 28, 10 38, 12 43 L 24 43" stroke="#10b982"/>
+                      <path class="eps-icon-fill" d="M 23 37 C 23 37, 32 34, 35 43 C 36 48, 30 52, 24 50 Z" fill="#10b982"/>
+                      <line class="eps-icon-stroke" x1="31" y1="34" x2="35" y2="30" stroke-width="2.5" stroke="#10b982"/>
+                      <line class="eps-icon-stroke" x1="36" y1="39" x2="40" y2="35" stroke-width="2.5" stroke="#10b982"/>
+                    </g>
+                    <!-- Thẻ chứa ảnh custom -->
+                    <image id="eps-custom-image" style="display:none;" />
+                  </svg>
+                </g>
 
                 <text id="line-eps-1p" x="58" y="15" text-anchor="start"><tspan id="txt-eps-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
                 <text id="line-eps-l1" x="58" y="15" text-anchor="start" style="display:none;"><tspan id="txt-eps-l1" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
@@ -1573,35 +2130,42 @@ class PowerFlowCardInverter extends HTMLElement {
               </g>
 
               <!-- Khối Tiêu Thụ (Load) -->
-              <g id="grp-load" transform="translate(270, 232)">
-                <svg id="icon-load" x="0" y="0" width="56" height="56" viewBox="0 0 100 92">
-                  <defs>
-                    <mask id="lightning-cutout">
-                      <rect width="100%" height="100%" fill="white" />
-                      <polygon points="52.1,41.5 41.6,56.5 49.5,56.5 46.3,74.5 58.4,55.5 50.5,55.5" fill="black" />
-                    </mask>
-                  </defs>
+<g id="grp-load" transform="translate(270, 232)">
+  <g id="grp-load-icon">
+    <svg id="icon-load" x="0" y="0" width="56" height="56" viewBox="0 0 100 92">
+      <defs>
+        <mask id="lightning-cutout">
+          <rect width="100%" height="100%" fill="white" />
+          <polygon points="52.1,41.5 41.6,56.5 49.5,56.5 46.3,74.5 58.4,55.5 50.5,55.5" fill="black" />
+        </mask>
+      </defs>
 
-                  <rect class="load-icon-color house-accent" x="25.85" y="10" width="10.5" height="20" rx="1" fill="#10b982" />
-                  <path class="load-icon-stroke roof-stroke" d="M 8 46 L 50 17 L 92 46" fill="none" stroke="#10b982" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" />
-                  <path class="load-icon-color house-body" mask="url(#lightning-cutout)" d="M 50 25.5 L 83.6 48.5 L 83.6 81 C 83.6 82.5 82 84 80.5 84 L 19.6 84 C 18 84 16.4 82.5 16.4 81 L 16.4 48.5 Z" fill="#10b982" />
-                </svg>
+      <!-- Ảnh/Icon Tùy Chỉnh (Custom Image) -->
+      <image id="load-custom-image" href="" x="0" y="0" width="56" height="56" style="display:none;" />
 
-                 <text id="line-load-1p" x="59" y="25" text-anchor="start"><tspan id="txt-load-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
-                 <text id="line-load-l1" x="59" y="25" text-anchor="start" style="display:none;"><tspan id="txt-load-l1" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
-                 <text id="line-load-l2" x="59" y="25" text-anchor="start" style="display:none;"><tspan id="txt-load-l2" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
-                 <text id="line-load-l3" x="59" y="25" text-anchor="start" style="display:none;"><tspan id="txt-load-l3" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
-                 <text id="lbl-load-sub" x="59" y="51" class="svg-txt-sub" text-anchor="start">${t.consumption}</text>
-              </g>
+      <!-- Đồ Họa Mặc Định -->
+      <g id="load-default-graphics">
+        <rect class="load-icon-color house-accent" x="25.85" y="10" width="10.5" height="20" rx="1" fill="#10b982" />
+        <path class="load-icon-stroke roof-stroke" d="M 8 46 L 50 17 L 92 46" fill="none" stroke="#10b982" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" />
+        <path class="load-icon-color house-body" mask="url(#lightning-cutout)" d="M 50 25.5 L 83.6 48.5 L 83.6 81 C 83.6 82.5 82 84 80.5 84 L 19.6 84 C 18 84 16.4 82.5 16.4 81 L 16.4 48.5 Z" fill="#10b982" />
+      </g>
+    </svg>
+  </g>
+
+  <text id="line-load-1p" x="59" y="25" text-anchor="start"><tspan id="txt-load-p" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+  <text id="line-load-l1" x="59" y="25" text-anchor="start" style="display:none;"><tspan id="txt-load-l1" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+  <text id="line-load-l2" x="59" y="25" text-anchor="start" style="display:none;"><tspan id="txt-load-l2" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+  <text id="line-load-l3" x="59" y="25" text-anchor="start" style="display:none;"><tspan id="txt-load-l3" class="svg-txt-bold">0</tspan><tspan class="unit-lbl" dx="3"> W</tspan></text>
+  <text id="lbl-load-sub" x="59" y="51" class="svg-txt-sub" text-anchor="start">${t.consumption}</text>
+</g>
             </svg>
           </div>
         </div>
       </ha-card>
     `;
-    this.attachEventListeners();
-  }
+        this.attachEventListeners();
+    }
 }
-
 /* ==================================================================== */
 /*                    VISUAL CARD EDITOR COMPONENT                      */
 /* ==================================================================== */
@@ -1653,90 +2217,193 @@ class PowerFlowCardEditor extends HTMLElement {
           }
         }
       },
-      { name: "dark_mode", label: "Giao diện tối                              (Dark mode)", selector: { boolean: {} } },
-      { name: "three_phase", label: "Hệ thống điện 3 pha                      (Three phase)", selector: { boolean: {} } },
-      { name: "single_load_mode", label: "Chế độ 1 tải Load/EPS               (Single load mode)", selector: { boolean: {} } },
-      { name: "always_show_ac_pv", label: "Luôn hiển thị Hoà lưới/Máy phát    (Always show Draw/Generator)", selector: { boolean: {} } },
-      { name: "invert_grid_power", label: "Đảo chiều công suất lưới           (Invert grid power)", selector: { boolean: {} } },
-      { name: "invert_battery_power", label: "Đảo chiều công suất Pin 1       (Invert battery power)", selector: { boolean: {} } },
-      { name: "always_show_battery2", label: "Luôn hiển thị Pin lưu trữ 2     (Always show battery2)", selector: { boolean: {} } },
-      { name: "invert_battery2_power", label: "Đảo chiều công suất Pin 2      (Invert battery2 power)", selector: { boolean: {} } },
-      { name: "inverter_image", label: "Bật tùy chỉnh ảnh Biến tần            (Set true to use custom image)", selector: { boolean: {} } },
-	  { name: "inverter_icon", label: "Icon Biến tần                          (Inverter icon)", selector: { icon: {} } },
-      { name: "inverter_icon", label: "Tùy chỉnh ảnh Biến tần                 (Đường dẫn / URL-Inverter image) ", selector: { text: {} } },
-      { name: "inverter_x", label: "Tọa độ X Biến tần                         (Inverter X coordinate-Default: 136)", selector: { number: { min: 0, max: 800, step: 1, mode: "box" } } },
-      { name: "inverter_y", label: "Tọa độ Y Biến tần                         (Inverter Y coordinate-Default: 68)", selector: { number: { min: 0, max: 800, step: 1, mode: "box" } } },
-      { name: "inverter_width", label: "Chiều rộng hình ảnh                   (Image width-Default: 75)", selector: { number: { min: 0, max: 800, step: 1, mode: "box" } } },
-      { name: "inverter_height", label: "Chiều cao hình ảnh                   (Image height-Default: 75)", selector: { number: { min: 0, max: 800, step: 1, mode: "box" } } },
-
+		
+		   //----CẤU HÌNH CHUNG -----
+            
+            { name: "dark_mode", label: "Giao diện tối (Dark mode)", selector: { boolean: {} } },
+            { name: "three_phase", label: "Hệ thống điện 3 pha (Three phase)", selector: { boolean: {} } },
+            { name: "single_load_mode", label: "Chế độ 1 tải Load/EPS (Single load mode)", selector: { boolean: {} } },
+			{ name: "invert_grid_power", label: "Đảo chiều công suất lưới (Invert grid power)", selector: { boolean: {} } },
+			{ name: "invert_battery_power", label: "Đảo chiều công suất Pin 1 (Invert battery power)", selector: { boolean: {} } },
+            { name: "always_show_battery2", label: "Luôn hiển thị Pin lưu trữ 2 (Always show battery2)", selector: { boolean: {} } },
+            { name: "invert_battery2_power", label: "Đảo chiều công suất Pin 2 (Invert battery2 power)", selector: { boolean: {} } },
+            { name: "always_show_aux", label: "Luôn hiển thị cổng AUX(Always display the AUX port) ", selector: { boolean: {} } },
+            { name: "invert_aux_power", label: "Đảo chiều công suất cổng AUX(Invert aux power) ", selector: { boolean: {} } },
+            { name: "smart_load_aux", label: "AUX là Tải tiêu thụ(AUX is power consumption) ", selector: { boolean: {} } },
+            
+		  // --- Biến tần (Inverter) ---
+            { name: "inverter_image", label: "Bật tùy chỉnh ảnh Biến tần (Set true to use custom image)", selector: { boolean: {} } },
+            { name: "inverter_icon", label: "Icon Biến tần (Inverter icon)", selector: { icon: {} } },
+            { name: "inverter_icon", label: "Tùy chỉnh ảnh Biến tần (Đường dẫn / URL-Inverter image)", selector: { text: {} } },
+            { name: "inverter_x", label: "Tọa độ X Biến tần (Inverter X coordinate-Default: 132)", selector: { number: { min: -800, max: 800, step: 1, mode: "box" } } },
+            { name: "inverter_y", label: "Tọa độ Y Biến tần (Inverter Y coordinate-Default: 78)", selector: { number: { min: -800, max: 800, step: 1, mode: "box" } } },
+            { name: "inverter_width", label: "Chiều rộng hình ảnh (Image width-Default: 75)", selector: { number: { min: -800, max: 800, step: 1, mode: "box" } } },
+            { name: "inverter_height", label: "Chiều cao hình ảnh (Image height-Default: 75)", selector: { number: { min: -800, max: 800, step: 1, mode: "box" } } },
+			
+          // --- Điện mặt trời (PV) ---
+            { name: "pv_image", label: "Bật tùy chỉnh ảnh PV (Set true to use custom image)", selector: { boolean: {} } },
+            { name: "pv_icon", label: "Icon PV (PV icon)", selector: { icon: {} } },
+            { name: "pv_icon", label: "Tùy chỉnh ảnh PV (Đường dẫn / URL-PV image)", selector: { text: {} } },
+            { name: "pv_x", label: "Tọa độ X PV (PV X coordinate-Default: 138)", selector: { number: { min: -800, max: 800, step: 1, mode: "box" } } },
+            { name: "pv_y", label: "Tọa độ Y PV (PV Y coordinate-Default: -56)", selector: { number: { min: -800, max: 800, step: 1, mode: "box" } } },
+            { name: "pv_width", label: "Chiều rộng hình ảnh (Image width-Default: 50)", selector: { number: { min: -800, max: 800, step: 1, mode: "box" } } },
+            { name: "pv_height", label: "Chiều cao hình ảnh (Image height-Default: 50)", selector: { number: { min: -800, max: 800, step: 1, mode: "box" } } },
+			
+          // --- Tải tiêu thụ nhà (Load) ---
+            { name: "load_image", label: "Bật tùy chỉnh ảnh Tiêu Thụ (Set true to use custom image)", selector: { boolean: {} } },
+            { name: "load_icon", label: "Icon Tiêu Thụ (load icon)", selector: { icon: {} } },
+            { name: "load_icon", label: "Tùy chỉnh ảnh Tiêu Thụ (Đường dẫn / URL-load image)", selector: { text: {} } },
+            { name: "load_x", label: "Tọa độ X Tiêu Thụ (load X coordinate-Default: 100)", selector: { number: { min: -800, max: 800, step: 1, mode: "box" } } },
+            { name: "load_y", label: "Tọa độ Y Tiêu Thụ (load Y coordinate-Default: 92)", selector: { number: { min: -800, max: 800, step: 1, mode: "box" } } },
+            { name: "load_width", label: "Chiều rộng hình ảnh (Image width-Default: 0)", selector: { number: { min: -800, max: 800, step: 1, mode: "box" } } },
+            { name: "load_height", label: "Chiều cao hình ảnh (Image height-Default: 0)", selector: { number: { min: -800, max: 800, step: 1, mode: "box" } } },
+			
+          // --- Tải dự phòng (EPS / Backup Load) ---
+            { name: "eps_image", label: "Bật tùy chỉnh ảnh UPS (Set true to use custom image)", selector: { boolean: {} } },
+            { name: "eps_icon", label: "Icon Biến tần (UPS icon)", selector: { icon: {} } },
+            { name: "eps_icon", label: "Tùy chỉnh ảnh Biến tần (Đường dẫn / URL-UPS image)", selector: { text: {} } },
+            { name: "eps_x", label: "Tọa độ X Biến tần (UPS X coordinate-Default: 0)", selector: { number: { min: -800, max: 800, step: 1, mode: "box" } } },
+            { name: "eps_y", label: "Tọa độ Y Biến tần (UPS Y coordinate-Default: 0)", selector: { number: { min: -800, max: 800, step: 1, mode: "box" } } },
+            { name: "eps_width", label: "Chiều rộng hình ảnh (Image width-Default: 50)", selector: { number: { min: -800, max: 800, step: 1, mode: "box" } } },
+            { name: "eps_height", label: "Chiều cao hình ảnh (Image height-Default: 50)", selector: { number: { min: -800, max: 800, step: 1, mode: "box" } } },
+			
+          // --- Tải phụ / Smart Load (AUX) ---
+            { name: "aux_image", label: "Bật tùy chỉnh ảnh AUX (Set true to use custom image)", selector: { boolean: {} } },
+            { name: "aux_icon", label: "Icon AUX (AUX icon)", selector: { icon: {} } },
+            { name: "aux_icon", label: "Tùy chỉnh ảnh AUX (Đường dẫn / URL-AUX image)", selector: { text: {} } },
+            { name: "aux_x", label: "Tọa độ X AUX (AUX X coordinate-Default: 274)", selector: { number: { min: -800, max: 800, step: 1, mode: "box" } } },
+            { name: "aux_y", label: "Tọa độ Y AUX (AUX Y coordinate-Default: -58)", selector: { number: { min: -800, max: 800, step: 1, mode: "box" } } },
+            { name: "aux_width", label: "Chiều rộng hình ảnh (Image width-Default: 44)", selector: { number: { min: -800, max: 800, step: 1, mode: "box" } } },
+            { name: "aux_height", label: "Chiều cao hình ảnh (Image height-Default: 46)", selector: { number: { min: -800, max: 800, step: 1, mode: "box" } } },
+			
+			
       {
         name: "entities",
         title: "Khai báo Thực thể / Entities",
         type: "expandable",
         schema: [
-          // PV DC
-{ name: "pv_power", label: "PV Tổng công suất - PV Total Power", selector: entitySelector },
-{ name: "pv_daily", label: "PV Sản lượng hôm nay - PV Today's Production", selector: entitySelector },
-{ name: "pv_total", label: "PV Tổng sản lượng - PV Total Production", selector: entitySelector },
-{ name: "pv1_power", label: "PV1 Công suất - PV1 Power Output", selector: entitySelector },
-{ name: "pv1_voltage", label: "PV1 Điện áp - PV1 Voltage", selector: entitySelector },
-{ name: "pv2_power", label: "PV2 Công suất - PV2 Power Capacity", selector: entitySelector },
-{ name: "pv2_voltage", label: "PV2 Điện áp - PV2 Voltage", selector: entitySelector },
-{ name: "pv3_power", label: "PV3 Công suất - PV3 Power Capacity", selector: entitySelector },
-{ name: "pv3_voltage", label: "PV3 Điện áp - PV3 Voltage", selector: entitySelector },
-{ name: "pv4_power", label: "PV4 Công suất - PV4 Power Capacity", selector: entitySelector },
-{ name: "pv4_voltage", label: "PV4 Điện áp - PV4 Voltage", selector: entitySelector },
+                    // --- Thông tin Biến tần (Inverter) ---
+                    { name: "inverter_power", label: "Biến tần Công suất - Inverter Power", selector: entitySelector },
+                    { name: "inverter_current", label: "Biến tần Dòng điện - Inverter Current", selector: entitySelector },
+                    { name: "inverter_voltage", label: "Biến tần Điện áp - Inverter Voltage", selector: entitySelector },
+                    { name: "inverter_temp", label: "Biến tần Nhiệt độ - Inverter Temperature", selector: entitySelector },
 
-// Hoà lưới/Máy phát
-{ name: "ac_pv_power", label: "Hoà lưới/Máy phát Công suất - AC PV/Generator Power", selector: entitySelector },
-{ name: "ac_pv_voltage", label: "Hoà lưới/Máy phát Điện áp - AC PV/Generator Voltage", selector: entitySelector },
-{ name: "ac_pv_frequency", label: "Hoà lưới/Máy phát Tần số - AC PV/Generator Frequency", selector: entitySelector },
-{ name: "ac_pv_power_l1", label: "Hoà lưới/Máy phát Công suất L1 - AC PV/Generator L1 Power", selector: entitySelector },
-{ name: "ac_pv_power_l2", label: "Hoà lưới/Máy phát Công suất L2 - AC PV/Generator L2 Power", selector: entitySelector },
-{ name: "ac_pv_power_l3", label: "Hoà lưới/Máy phát Công suất L3 - AC PV/Generator L3 Power", selector: entitySelector },
+                    // --- Tổng Pin lưu trữ (Battery 1 + 2) ---
+                    { name: "battery1_battery2_power", label: "Tổng Pin Công suất - Total Battery Power", selector: entitySelector },
+                    { name: "battery1_battery2_current", label: "Tổng Pin Dòng điện - Total Battery Current", selector: entitySelector },
 
-// Grid
-{ name: "grid_power", label: "Lưới Công suất 1 pha - Grid Single-phase Power", selector: entitySelector },
-{ name: "grid_voltage", label: "Lưới Điện áp - Grid Voltage", selector: entitySelector },
-{ name: "grid_frequency", label: "Lưới Tần số - Grid Frequency", selector: entitySelector },
-{ name: "grid_buy_daily", label: "Lưới Nhập hôm nay - Grid Import Today", selector: entitySelector },
-{ name: "grid_buy_total", label: "Lưới Tổng nhập - Grid Total Import", selector: entitySelector },
-{ name: "grid_sell_daily", label: "Lưới Phát hôm nay - Grid Export Today", selector: entitySelector },
-{ name: "grid_sell_total", label: "Lưới Tổng phát - Grid Total Export", selector: entitySelector },
-{ name: "grid_power_l1", label: "Lưới Công suất L1 - Grid L1 Power", selector: entitySelector },
-{ name: "grid_power_l2", label: "Lưới Công suất L2 - Grid L2 Power", selector: entitySelector },
-{ name: "grid_power_l3", label: "Lưới Công suất L3 - Grid L3 Power", selector: entitySelector },
-{ name: "grid_voltage_l1", label: "Lưới Điện áp L1 - Grid L1 Voltage", selector: entitySelector },
+                    // --- Điện mặt trời (Solar PV 1-4 & Tổng) ---
+                    { name: "pv_power", label: "PV Tổng công suất - PV Total Power", selector: entitySelector },
+                    { name: "pv1_power", label: "PV1 Công suất - PV1 Power Output", selector: entitySelector },
+                    { name: "pv1_voltage", label: "PV1 Điện áp - PV1 Voltage", selector: entitySelector },
+                    { name: "pv1_current", label: "PV1 Dòng điện - PV1 Current", selector: entitySelector },
+                    { name: "pv2_power", label: "PV2 Công suất - PV2 Power Capacity", selector: entitySelector },
+                    { name: "pv2_voltage", label: "PV2 Điện áp - PV2 Voltage", selector: entitySelector },
+                    { name: "pv2_current", label: "PV2 Dòng điện - PV2 Current", selector: entitySelector },
+                    { name: "pv3_power", label: "PV3 Công suất - PV3 Power Capacity", selector: entitySelector },
+                    { name: "pv3_voltage", label: "PV3 Điện áp - PV3 Voltage", selector: entitySelector },
+                    { name: "pv3_current", label: "PV3 Dòng điện - PV3 Current", selector: entitySelector },
+                    { name: "pv4_power", label: "PV4 Công suất - PV4 Power Capacity", selector: entitySelector },
+                    { name: "pv4_voltage", label: "PV4 Điện áp - PV4 Voltage", selector: entitySelector },
+                    { name: "pv4_current", label: "PV4 Dòng điện - PV4 Current", selector: entitySelector },
 
-// Load
-{ name: "load_power", label: "Tải Công suất 1 pha - Load Single-phase Power", selector: entitySelector },
-{ name: "load_daily", label: "Tải Tiêu thụ hôm nay - Load Consumption Today", selector: entitySelector },
-{ name: "load_total", label: "Tải Tổng tiêu thụ - Load Total Consumption", selector: entitySelector },
-{ name: "load_power_l1", label: "Tải Công suất L1 - Load L1 Power", selector: entitySelector },
-{ name: "load_power_l2", label: "Tải Công suất L2 - Load L2 Power", selector: entitySelector },
-{ name: "load_power_l3", label: "Tải Công suất L3 - Load L3 Power", selector: entitySelector },
 
-// EPS
-{ name: "eps_power", label: "UPS Công suất 1 pha - UPS Single-phase Power", selector: entitySelector },
-{ name: "eps_voltage", label: "UPS Điện áp - UPS Voltage", selector: entitySelector },
-{ name: "eps_frequency", label: "UPS Tần số - UPS Frequency", selector: entitySelector },
-{ name: "eps_power_l1", label: "UPS Công suất L1 - UPS L1 Power", selector: entitySelector },
-{ name: "eps_power_l2", label: "UPS Công suất L2 - UPS L2 Power", selector: entitySelector },
-{ name: "eps_power_l3", label: "UPS Công suất L3 - UPS L3 Power", selector: entitySelector },
+                    // --- Điện lưới (Grid 1 Pha & 3 Pha) ---
+                    { name: "grid_power", label: "Lưới Công suất 1 pha - Grid Single-phase Power", selector: entitySelector },
+                    { name: "grid_voltage", label: "Lưới Điện áp - Grid Voltage", selector: entitySelector },
+                    { name: "grid_frequency", label: "Lưới Tần số - Grid Frequency", selector: entitySelector },
+                    { name: "grid_current", label: "Lưới Dòng điện - Grid Current", selector: entitySelector },
+                    { name: "grid_power_l1", label: "Lưới Công suất L1 - Grid L1 Power", selector: entitySelector },
+                    { name: "grid_power_l2", label: "Lưới Công suất L2 - Grid L2 Power", selector: entitySelector },
+                    { name: "grid_power_l3", label: "Lưới Công suất L3 - Grid L3 Power", selector: entitySelector },
+                    { name: "grid_voltage_l1", label: "Lưới Điện áp L1 - Grid L1 Voltage", selector: entitySelector },
+                    { name: "grid_voltage_l2", label: "Lưới Điện áp L2 - Grid L2 Voltage", selector: entitySelector },
+                    { name: "grid_voltage_l3", label: "Lưới Điện áp L3 - Grid L3 Voltage", selector: entitySelector },
+                    { name: "grid_frequency_l1", label: "Lưới Tần số L1 - Grid L1 Frequency", selector: entitySelector },
+                    { name: "grid_frequency_l2", label: "Lưới Tần số L2 - Grid L2 Frequency", selector: entitySelector },
+                    { name: "grid_frequency_l3", label: "Lưới Tần số L3 - Grid L3 Frequency", selector: entitySelector },
+                    { name: "grid_current_l1", label: "Lưới Dòng điện L1 - Grid L1 Current", selector: entitySelector },
+                    { name: "grid_current_l2", label: "Lưới Dòng điện L2 - Grid L2 Current", selector: entitySelector },
+                    { name: "grid_current_l3", label: "Lưới Dòng điện L3 - Grid L3 Current", selector: entitySelector },
 
-// Battery 1
-{ name: "battery_power", label: "Pin 1 Công suất - Battery 1 Power", selector: entitySelector },
-{ name: "battery_voltage", label: "Pin 1 Điện áp - Battery 1 Voltage", selector: entitySelector },
-{ name: "battery_soc", label: "Pin 1 Dung lượng SOC (%) - Battery 1 SOC (%)", selector: entitySelector },
-{ name: "battery_charge_daily", label: "Pin Lưu Trữ Nạp hôm nay - Battery Charge Today", selector: entitySelector },
-{ name: "battery_charge_total", label: "Pin Lưu Trữ Tổng nạp - Battery Total Charge", selector: entitySelector },
-{ name: "battery_discharge_daily", label: "Pin Lưu Trữ Xả hôm nay - Battery Discharge Today", selector: entitySelector },
-{ name: "battery_discharge_total", label: "Pin Lưu Trữ Tổng xả - Battery Total Discharge", selector: entitySelector },
+                    // --- Tải tiêu thụ nhà (Load 1 Pha & 3 Pha) ---
+                    { name: "load_power", label: "Tải Công suất 1 pha - Load Single-phase Power", selector: entitySelector },
+                    { name: "load_voltage", label: "Tải Điện áp - Load Voltage", selector: entitySelector },
+                    { name: "load_frequency", label: "Tải Tần số - Load Frequency", selector: entitySelector },
+                    { name: "load_current", label: "Tải Dòng điện - Load Current", selector: entitySelector },
+                    { name: "load_power_l1", label: "Tải Công suất L1 - Load L1 Power", selector: entitySelector },
+                    { name: "load_power_l2", label: "Tải Công suất L2 - Load L2 Power", selector: entitySelector },
+                    { name: "load_power_l3", label: "Tải Công suất L3 - Load L3 Power", selector: entitySelector },
+                    { name: "load_voltage_l1", label: "Tải Điện áp L1 - Load L1 Voltage", selector: entitySelector },
+                    { name: "load_voltage_l2", label: "Tải Điện áp L2 - Load L2 Voltage", selector: entitySelector },
+                    { name: "load_voltage_l3", label: "Tải Điện áp L3 - Load L3 Voltage", selector: entitySelector },
+                    { name: "load_current_l1", label: "Tải Dòng điện L1 - Load L1 Current", selector: entitySelector },
+                    { name: "load_current_l2", label: "Tải Dòng điện L2 - Load L2 Current", selector: entitySelector },
+                    { name: "load_current_l3", label: "Tải Dòng điện L3 - Load L3 Current", selector: entitySelector },
 
-// Battery 2
-{ name: "battery2_power", label: "Pin 2 Công suất - Battery 2 Power", selector: entitySelector },
-{ name: "battery2_voltage", label: "Pin 2 Điện áp - Battery 2 Voltage", selector: entitySelector },
-{ name: "battery2_soc", label: "Pin 2 Dung lượng SOC (%) - Battery 2 SOC (%)", selector: entitySelector },
+                    // --- Tải dự phòng (EPS / Backup Load 1 Pha & 3 Pha) ---
+                    { name: "eps_power", label: "UPS Công suất 1 pha - UPS Single-phase Power", selector: entitySelector },
+                    { name: "eps_voltage", label: "UPS Điện áp - UPS Voltage", selector: entitySelector },
+                    { name: "eps_frequency", label: "UPS Tần số - UPS Frequency", selector: entitySelector },
+                    { name: "eps_current", label: "UPS Dòng điện - UPS Current", selector: entitySelector },
+                    { name: "eps_power_l1", label: "UPS Công suất L1 - UPS L1 Power", selector: entitySelector },
+                    { name: "eps_power_l2", label: "UPS Công suất L2 - UPS L2 Power", selector: entitySelector },
+                    { name: "eps_power_l3", label: "UPS Công suất L3 - UPS L3 Power", selector: entitySelector },
+                    { name: "eps_voltage_l1", label: "UPS Điện áp L1 - UPS L1 Voltage", selector: entitySelector },
+                    { name: "eps_voltage_l2", label: "UPS Điện áp L2 - UPS L2 Voltage", selector: entitySelector },
+                    { name: "eps_voltage_l3", label: "UPS Điện áp L3 - UPS L3 Voltage", selector: entitySelector },
+                    { name: "eps_frequency_l1", label: "UPS Tần số L1 - UPS L1 Frequency", selector: entitySelector },
+                    { name: "eps_frequency_l2", label: "UPS Tần số L2 - UPS L2 Frequency", selector: entitySelector },
+                    { name: "eps_frequency_l3", label: "UPS Tần số L3 - UPS L3 Frequency", selector: entitySelector },
+                    { name: "eps_current_l1", label: "UPS Dòng điện L1 - UPS L1 Current", selector: entitySelector },
+                    { name: "eps_current_l2", label: "UPS Dòng điện L2 - UPS L2 Current", selector: entitySelector },
+                    { name: "eps_current_l3", label: "UPS Dòng điện L3 - UPS L3 Current", selector: entitySelector },
+
+                    // --- Tải phụ / Smart Load (AUX 1 Pha & 3 Pha) ---
+                    { name: "aux_power", label: "Tải phụ Công suất 1 pha - AUX Single-phase Power", selector: entitySelector },
+                    { name: "aux_voltage", label: "Tải phụ Điện áp - AUX Voltage", selector: entitySelector },
+                    { name: "aux_frequency", label: "Tải phụ Tần số - AUX Frequency", selector: entitySelector },
+                    { name: "aux_current", label: "Tải phụ Dòng điện - AUX Current", selector: entitySelector },
+                    { name: "aux_power_l1", label: "Tải phụ Công suất L1 - AUX L1 Power", selector: entitySelector },
+                    { name: "aux_power_l2", label: "Tải phụ Công suất L2 - AUX L2 Power", selector: entitySelector },
+                    { name: "aux_power_l3", label: "Tải phụ Công suất L3 - AUX L3 Power", selector: entitySelector },
+                    { name: "aux_voltage_l1", label: "Tải phụ Điện áp L1 - AUX L1 Voltage", selector: entitySelector },
+                    { name: "aux_voltage_l2", label: "Tải phụ Điện áp L2 - AUX L2 Voltage", selector: entitySelector },
+                    { name: "aux_voltage_l3", label: "Tải phụ Điện áp L3 - AUX L3 Voltage", selector: entitySelector },
+                    { name: "aux_frequency_l1", label: "Tải phụ Tần số L1 - AUX L1 Frequency", selector: entitySelector },
+                    { name: "aux_frequency_l2", label: "Tải phụ Tần số L2 - AUX L2 Frequency", selector: entitySelector },
+                    { name: "aux_frequency_l3", label: "Tải phụ Tần số L3 - AUX L3 Frequency", selector: entitySelector },
+                    { name: "aux_current_l1", label: "Tải phụ Dòng điện L1 - AUX L1 Current", selector: entitySelector },
+                    { name: "aux_current_l2", label: "Tải phụ Dòng điện L2 - AUX L2 Current", selector: entitySelector },
+                    { name: "aux_current_l3", label: "Tải phụ Dòng điện L3 - AUX L3 Current", selector: entitySelector },
+
+                    // --- Pin lưu trữ 1 (Battery 1) ---
+                    { name: "battery_power", label: "Pin 1 Công suất - Battery 1 Power", selector: entitySelector },
+                    { name: "battery_voltage", label: "Pin 1 Điện áp - Battery 1 Voltage", selector: entitySelector },
+                    { name: "battery_soc", label: "Pin 1 Dung lượng SOC (%) - Battery 1 SOC (%)", selector: entitySelector },
+                    { name: "battery_current", label: "Pin 1 Dòng điện - Battery 1 Current", selector: entitySelector },
+                    { name: "battery_temp", label: "Pin 1 Nhiệt độ - Battery 1 Temp", selector: entitySelector },
+
+                    // --- Pin lưu trữ 2 (Battery 2) ---
+                    { name: "battery2_power", label: "Pin 2 Công suất - Battery 2 Power", selector: entitySelector },
+                    { name: "battery2_voltage", label: "Pin 2 Điện áp - Battery 2 Voltage", selector: entitySelector },
+                    { name: "battery2_soc", label: "Pin 2 Dung lượng SOC (%) - Battery 2 SOC (%)", selector: entitySelector },
+                    { name: "battery2_current", label: "Pin 2 Dòng điện - Battery 2 Current", selector: entitySelector },
+                    { name: "battery2_temp", label: "Pin 2 Nhiệt độ - Battery 2 Temp", selector: entitySelector },
+
+                    // --- Bảng Thống Kê Sản Lượng & Tiêu Thụ ---
+                    { name: "pv_daily", label: "PV Sản lượng hôm nay - PV Today's Production", selector: entitySelector },
+                    { name: "pv_total", label: "PV Tổng sản lượng - PV Total Production", selector: entitySelector },
+                    { name: "grid_buy_daily", label: "Lưới Nhập hôm nay - Grid Import Today", selector: entitySelector },
+                    { name: "grid_buy_total", label: "Lưới Tổng nhập - Grid Total Import", selector: entitySelector },
+                    { name: "grid_sell_daily", label: "Lưới Phát hôm nay - Grid Export Today", selector: entitySelector },
+                    { name: "grid_sell_total", label: "Lưới Tổng phát - Grid Total Export", selector: entitySelector },
+                    { name: "load_daily", label: "Tải Tiêu thụ hôm nay - Load Consumption Today", selector: entitySelector },
+                    { name: "load_total", label: "Tải Tổng tiêu thụ - Load Total Consumption", selector: entitySelector },
+                    { name: "battery_charge_daily", label: "Pin Lưu Trữ Nạp hôm nay - Battery Charge Today", selector: entitySelector },
+                    { name: "battery_charge_total", label: "Pin Lưu Trữ Tổng nạp - Battery Total Charge", selector: entitySelector },
+                    { name: "battery_discharge_daily", label: "Pin Lưu Trữ Xả hôm nay - Battery Discharge Today", selector: entitySelector },
+                    { name: "battery_discharge_total", label: "Pin Lưu Trữ Tổng xả - Battery Total Discharge", selector: entitySelector }
         ]
       }
     ];
