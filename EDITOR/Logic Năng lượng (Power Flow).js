@@ -1,127 +1,154 @@
-    // =========================================================================
-    // 1. XÁC ĐỊNH TRẠNG THÁI HOẠT ĐỘNG VÀ CÔNG SUẤT CỦA CÁC THIẾT BỊ
-    // =========================================================================
+// =========================================================================
+// 1. CẤU HÌNH NGƯỠNG & KIỂM TRA TRẠNG THÁI PIN (BATTERY)
+// =========================================================================
+const MIN_POWER = 5; // Ngưỡng công suất tối thiểu để tính dòng điện (W)
 
-    // Ngưỡng lọc nhiễu công suất tối thiểu (5W) để loại bỏ sai số cảm biến khi thiết bị ở chế độ chờ
-    const MIN_POWER = 5;
+const isBat1Charging = batP > MIN_POWER; // Pin 1 đang sạc
+const isBat1Discharging = batP < -MIN_POWER; // Pin 1 đang xả
+const isBat2Charging = showBat2 && bat2P > MIN_POWER; // Pin 2 đang sạc
+const isBat2Discharging = showBat2 && bat2P < -MIN_POWER; // Pin 2 đang xả
 
-    // Trạng thái sạc / xả của khối Pin lưu trữ thứ nhất (Battery 1)
-    const isBat1Charging = batP > MIN_POWER;       // Pin 1 đang nhận điện sạc vào (> 5W)
-    const isBat1Discharging = batP < -MIN_POWER;   // Pin 1 đang xả điện ra cấp cho tải (< -5W)
+const netBatPower = batP + (showBat2 ? bat2P : 0); // Tổng công suất Pin
+const isNetCharging = netBatPower > MIN_POWER; // Trạng thái Pin tổng đang sạc
+const isNetDischarging = netBatPower < -MIN_POWER; // Trạng thái Pin tổng đang xả
 
-    // Trạng thái sạc / xả của khối Pin lưu trữ thứ hai (Battery 2 - nếu có bật hiển thị)
-    const isBat2Charging = showBat2 && bat2P > MIN_POWER;     // Pin 2 đang nhận điện sạc vào
-    const isBat2Discharging = showBat2 && bat2P < -MIN_POWER; // Pin 2 đang xả điện ra
+// =========================================================================
+// 2. KIỂM TRA TRẠNG THÁI LƯỚI & CÁC NGUỒN ĐIỆN / TẢI TIÊU THỤ
+// =========================================================================
+const isImporting = isGridConnected && gridP < -MIN_POWER; // Đang nhận (nhập) điện từ Lưới
+const isExporting = isGridConnected && gridP > MIN_POWER; // Đang phát (xuất) điện ra Lưới
 
-    // Tổng công suất sạc / xả ròng (Net Power) của toàn bộ hệ thống Pin (Pin 1 + Pin 2)
-    const netBatPower = batP + (showBat2 ? bat2P : 0);
-    const isNetCharging = netBatPower > MIN_POWER;     // Toàn hệ thống Pin đang nhận điện sạc ròng
-    const isNetDischarging = netBatPower < -MIN_POWER; // Toàn hệ thống Pin đang xả điện ròng
+const hasPvPower = pvP > MIN_POWER; // Có nguồn điện năng lượng mặt trời (PV)
+const hasAuxPower = auxP > MIN_POWER; // Có công suất phát/tiêu thụ ở cổng phụ (AUX)
+const hasAcPvPower = !isSmartLoadAux && hasAuxPower; // Nguồn AUX đóng vai trò AC-PV (Microinverter)
+const hasLoadPower = loadP > MIN_POWER; // Có tải tiêu thụ nhà thông thường (Load)
+const hasEpsPower = epsP > MIN_POWER; // Có tải tiêu thụ quan trọng / dự phòng (EPS)
 
-    // Trạng thái Mua (Nhập) / Bán (Phát) điện đối với Lưới điện quốc gia (Grid)
-    const isImporting = isGridConnected && gridP < -MIN_POWER; // Đang mua (nhập) điện từ Lưới về
-    const isExporting = isGridConnected && gridP > MIN_POWER;  // Đang phát (bán) điện dư ra Lưới
+// Điều kiện hoạt động đặc biệt của AC-PV khi chạy Offgrid hoặc mất lưới
+const isAcPvSpecialOffgrid = isGridConnected && 
+                             !hasLoadPower && 
+                             !isImporting && 
+                             (hasPvPower || isNetCharging || isNetDischarging) && 
+                             hasAcPvPower && 
+                             hasEpsPower;
 
-    // Xác định sự hiện diện công suất từ nguồn phát (Solar) và tải tiêu thụ (Loads)
-    const hasPvPower = pvP > MIN_POWER;             // Dàn tấm pin mặt trời DC (PV) đang phát điện
-    const hasAcPvPower = hasAcPvP && acPvP > MIN_POWER; // Inverter phụ hòa lưới AC (AC PV) đang phát điện
-    const hasLoadPower = loadP > MIN_POWER;         // Tải tiêu thụ chính (House Load) đang dùng điện
-    const hasEpsPower = epsP > MIN_POWER;           // Tải dự phòng khẩn cấp (EPS / Backup Load) đang dùng điện
+// =========================================================================
+// 3. HIỂN THỊ LUỒNG ĐIỆN PIN, LƯỚI VÀ QUANG ĐIỆN (PV)
+// =========================================================================
+this.setFlowVisible('flow-bat-charge', isBat1Charging);
+this.setFlowVisible('flow-bat-discharge', isBat1Discharging);
+this.setFlowVisible('flow-bat2-charge', showBat2 && isBat2Charging);
+this.setFlowVisible('flow-bat2-discharge', showBat2 && isBat2Discharging);
+this.setFlowVisible('flow-bat-trunk-charge', isNetCharging);
+this.setFlowVisible('flow-bat-trunk-discharge', isNetDischarging);
 
-    // Chế độ đặc biệt: AC PV phát điện khi mất lưới (Off-grid) hoặc không có tải chính tiêu thụ
-    const isAcPvSpecialOffgrid = isGridConnected && 
-                                 !hasLoadPower && 
-                                 !isImporting && 
-                                 (hasPvPower || isNetCharging || isNetDischarging) && 
-                                 hasAcPvPower && 
-                                 hasEpsPower;
+this.setFlowVisible('flow-grid-import', isImporting);
+this.setFlowVisible('flow-grid-export', isExporting);
 
-    // =========================================================================
-    // 2. BẬT / TẮT ĐƯỜNG ĐI HIỂN THỊ CỦA CÁC LUỒNG NĂNG LƯỢNG (SET FLOW VISIBILITY)
-    // =========================================================================
+this.setFlowVisible('flow-pv', hasPvPower);
 
-    // 2.1. Quản lý luồng điện riêng biệt và luồng tổng của hệ thống Pin lưu trữ
-    this.setFlowVisible('flow-bat-charge', isBat1Charging);             // Luồng sạc vào Pin 1
-    this.setFlowVisible('flow-bat-discharge', isBat1Discharging);       // Luồng xả ra từ Pin 1
-    this.setFlowVisible('flow-bat2-charge', showBat2 && isBat2Charging); // Luồng sạc vào Pin 2
-    this.setFlowVisible('flow-bat2-discharge', showBat2 && isBat2Discharging); // Luồng xả ra từ Pin 2
-    this.setFlowVisible('flow-bat-trunk-charge', isNetCharging);       // Trục luồng tổng sạc Pin
-    this.setFlowVisible('flow-bat-trunk-discharge', isNetDischarging); // Trục luồng tổng xả Pin
+// =========================================================================
+// 4. XỬ LÝ ĐIỀU KIỆN VÀ HƯỚNG HIỆU ỨNG MŨI TÊN CỔNG AUX
+// =========================================================================
+const showAuxFlow = isSmartLoadAux
+     ? hasAuxPower
+     : (hasAuxPower && (isGridConnected || hasEpsPower || isNetCharging || isAcPvSpecialOffgrid));
 
-    // 2.2. Quản lý luồng giao tiếp với Lưới điện quốc gia
-    this.setFlowVisible('flow-grid-import', isImporting); // Mua điện từ Lưới vào Bus AC
-    this.setFlowVisible('flow-grid-export', isExporting); // Bán điện dư từ Bus AC ra Lưới
+this.setFlowVisible('flow-aux', showAuxFlow);
 
-    // 2.3. Quản lý luồng điện từ Nguồn quang điện DC (Solar PV)
-    this.setFlowVisible('flow-pv', hasPvPower); // Điện DC từ Tấm Pin mặt trời vào Biến tần
-
-    // 2.4. Quản lý luồng điện từ Nguồn hòa lưới AC (AC PV Inverter)
-    const showAcPvFlow = hasAcPvPower && (isGridConnected || hasEpsPower || isNetCharging || isAcPvSpecialOffgrid);
-    this.setFlowVisible('flow-ac-pv', showAcPvFlow); // Điện AC từ PV hòa lưới vào Thanh cái Bus AC
-
-    // 2.5. Quản lý luồng điện cấp cho Tải tiêu thụ chính
-    this.setFlowVisible('flow-bus-to-load', isGridConnected && hasLoadPower); // Điện từ Bus AC đến Tải nhà
-
-    // 2.6. Quản lý luồng điện cấp cho Tải dự phòng khẩn cấp
-    this.setFlowVisible('flow-eps', hasEpsPower); // Điện từ Biến tần / Cổng dự phòng đến Tải EPS
-
-    // =========================================================================
-    // 3. TÍNH TOÁN HƯỚNG DÒNG ĐIỆN GIỮA BIẾN TẦN (INVERTER) VÀ THANH CÁI AC (BUS)
-    // =========================================================================
-
-    // Công suất sạc pin thực tế và công suất nhập lưới thực tế
-    const batChargePower = isNetCharging ? netBatPower : 0;
-    const gridImportPower = isImporting ? Math.abs(gridP) : 0;
-
-    // Kiểm tra chế độ Bypass (Điện lưới chạy thẳng sang tải chính, Lưới chỉ bù nhẹ 0-5W chênh lệch)
-    const gridToLoadDiff = gridImportPower - loadP;
-    const isGridBypass = isGridConnected && 
-                         isImporting && 
-                         !isNetDischarging && 
-                         (!isNetCharging || hasPvPower) &&
-                         (gridToLoadDiff >= 0 && gridToLoadDiff <= 5);
-
-    // Xác định Inverter đang đóng vai trò Nguồn phát DC (Có điện từ PV DC hoặc đang xả Pin)
-    const isInvGenerating = hasPvPower || isNetDischarging;
-
-    // Xác định đang có Nguồn phát điện AC trên Thanh cái Bus AC (Lưới đang nhập điện hoặc AC PV đang phát)
-    const hasAcSourceOnBus = isImporting || hasAcPvPower;
-
-    // Xác định Inverter đang đóng vai trò Tải tiêu thụ AC (Cần nhận điện AC để sạc Pin hoặc nuôi Tải EPS)
-    const inverterNeedsAc = isNetCharging || hasEpsPower;
-
-    // Điều kiện thô 1: Luồng điện đi từ Inverter -> Bus AC (Inverter cấp điện ra Thanh cái)
-    const rawInvToBus = (isGridConnected || hasLoadPower) && !isGridBypass && isInvGenerating && (hasLoadPower || isExporting);
-
-    // Điều kiện thô 2: Luồng điện đi từ Bus AC -> Inverter (Thanh cái/Lưới/AC PV cấp điện ngược vào Inverter)
-    const rawBusToInv = hasAcSourceOnBus && inverterNeedsAc && !isGridBypass;
-
-    // =========================================================================
-    // 4. XỬ LÝ KHỬ XUNG ĐỘT LUỒNG ĐIỆN 2 CHIỀU (PRIORITY RESOLUTION)
-    // =========================================================================
-    let isInvSupplyingBus = false;
-    let isBusChargingInv = false;
-
-    if (rawBusToInv && !rawInvToBus) {
-      // Chỉ thỏa mãn chiều Bus -> Inverter: Bật mũi tên nhận điện vào Inverter
-      isBusChargingInv = true;
-    } else if (rawInvToBus && !rawBusToInv) {
-      // Chỉ thỏa mãn chiều Inverter -> Bus: Bật mũi tên cấp điện ra Bus AC
-      isInvSupplyingBus = true;
-    } else if (rawBusToInv && rawInvToBus) {
-      // TRƯỜNG HỢP XUNG ĐỘT: Cả 2 chiều đều thỏa mãn điều kiện thô cùng lúc
-      if (!isInvGenerating) {
-        // Phía DC không phát điện -> Ưu tiên chiều Bus AC -> Inverter
-        isBusChargingInv = true;
-      } else if (isNetCharging && (isImporting || hasAcPvPower)) {
-        // Pin đang sạc và có Nguồn AC cấp điện (Lưới/AC PV) -> Ưu tiên chiều Bus AC -> Inverter (Nạp cho Pin/EPS)
-        isBusChargingInv = true;
-      } else {
-        // Các trường hợp còn lại -> Ưu tiên chiều Inverter -> Bus AC (DC phát ra Thanh cái)
-        isInvSupplyingBus = true;
-      }
+const flowAuxEl = this.getEl('flow-aux');
+if (flowAuxEl) {
+    const chevrons = flowAuxEl.querySelectorAll('use');
+    if (isSmartLoadAux) {
+        // Chế độ SmartLoad: Mũi tên hướng lên (cấp điện ra tải AUX)
+        const delays = ["0.60s", "0.48s", "0.36s", "0.24s", "0.12s", "0.00s"];
+        chevrons.forEach((chv, idx) => {
+            chv.setAttribute('href', '#chv-block-u');
+            if (delays[idx]) chv.style.animationDelay = delays[idx];
+        });
+    } else {
+        // Chế độ AC-PV: Mũi tên hướng xuống (nhận điện từ Microinverter vào thanh cái)
+        const delays = ["0.00s", "0.12s", "0.24s", "0.36s", "0.48s", "0.60s"];
+        chevrons.forEach((chv, idx) => {
+            chv.setAttribute('href', '#chv-block-d');
+            if (delays[idx]) chv.style.animationDelay = delays[idx];
+        });
     }
+}
 
-    // Gán trạng thái hiển thị cuối cùng cho các mũi tên hướng dòng điện trên giao diện
-    this.setFlowVisible('flow-inv-to-bus', isInvSupplyingBus); // Bật/tắt mũi tên hướng Inverter -> Bus AC
-    this.setFlowVisible('flow-bus-to-inv', isBusChargingInv);  // Bật/tắt mũi tên hướng Bus AC -> Inverter
+// =========================================================================
+// 5. HIỂN THỊ LUỒNG ĐIỆN CẤP CHO TẢI THƯỜNG (LOAD) VÀ TẢI DỰ PHÒNG (EPS)
+// =========================================================================
+this.setFlowVisible('flow-bus-to-load', isGridConnected && hasLoadPower); // Luồng điện từ thanh cái Bus đến Load
+this.setFlowVisible('flow-eps', hasEpsPower); // Luồng điện cấp cho cổng EPS
+
+// =========================================================================
+// 6. PHÂN TÍCH CÂN BẰNG TẢI VÀ ĐIỀU KIỆN BYPASS LƯỚI
+// =========================================================================
+const batChargePower = isNetCharging ? netBatPower : 0;
+const gridImportPower = isImporting ? Math.abs(gridP) : 0;
+
+const gridToLoadDiff = gridImportPower - loadP;
+// Kiểm tra trường hợp Lưới cấp trực tiếp cho Load (Bypass), không đi qua Inverter
+const isGridBypass = isGridConnected && 
+                     isImporting && 
+                     !isNetDischarging && 
+                     (!isNetCharging || hasPvPower) &&
+                     (gridToLoadDiff >= 0 && gridToLoadDiff <= 5);
+
+const isInvGenerating = hasPvPower || isNetDischarging; // Inverter đang tự phát điện (từ PV hoặc Pin)
+const hasAcSourceOnBus = isImporting || hasAcPvPower; // Thanh cái Bus có nguồn AC điện lưới hoặc AC-PV
+const inverterNeedsAc = isNetCharging || hasEpsPower; // Inverter đang cần nguồn AC (sạc Pin hoặc nuôi EPS)
+const hasAnyLoadOnBus = hasLoadPower || (isSmartLoadAux && hasAuxPower); // Đang có tải trên thanh cái
+
+// Xác định hướng dòng điện thô (chưa tính ưu tiên)
+const rawInvToBus = (isGridConnected || hasAnyLoadOnBus) && !isGridBypass && isInvGenerating && (hasAnyLoadOnBus || isExporting); // Inverter -> Bus
+const rawBusToInv = hasAcSourceOnBus && inverterNeedsAc && !isGridBypass; // Bus -> Inverter
+
+// Điều kiện ưu tiên: Inverter phát điện ra Bus
+const isInvToBusCondition = isGridConnected && 
+                             hasLoadPower && 
+                             hasPvPower && 
+                             (pvP > batChargePower) && 
+                             (
+                               !isImporting || 
+                               (gridImportPower <= loadP && (loadP - gridImportPower) <= 5)
+                             );
+
+// Điều kiện ưu tiên: Thanh cái Bus cấp ngược lại vào Inverter
+const isBusToInvCondition = isGridConnected && 
+                             isImporting && 
+                             hasPvPower && 
+                             (pvP > batChargePower) && 
+                             (gridImportPower > loadP && (gridImportPower - loadP) > 5);
+
+// =========================================================================
+// 7. XÁC ĐỊNH HƯỚNG DÒNG ĐIỆN CUỐI CÙNG GIỮA INVERTER VÀ BUS
+// =========================================================================
+let isInvSupplyingBus = false;
+let isBusChargingInv = false;
+
+if (isInvToBusCondition) {
+    isInvSupplyingBus = true; // Inverter cấp điện ra Bus
+    isBusChargingInv = false;
+} else if (isBusToInvCondition) {
+    isBusChargingInv = true; // Bus cấp điện/sạc cho Inverter
+    isInvSupplyingBus = false;
+} else if (rawBusToInv && !rawInvToBus) {
+    isBusChargingInv = true;
+} else if (rawInvToBus && !rawBusToInv) {
+    isInvSupplyingBus = true;
+} else if (rawBusToInv && rawInvToBus) {
+    // Xử lý khi thỏa mãn cả 2 chiều thô: Phân định theo ưu tiên sạc / phát
+    if (!isInvGenerating) {
+        isBusChargingInv = true;
+    } else if (isNetCharging && (isImporting || hasAcPvPower)) {
+        isBusChargingInv = true;
+    } else {
+        isInvSupplyingBus = true;
+    }
+}
+
+// Bật/tắt các luồng hiển thị tương ứng
+this.setFlowVisible('flow-inv-to-bus', isInvSupplyingBus); // Bật luồng Inverter -> Bus
+this.setFlowVisible('flow-bus-to-inv', isBusChargingInv); // Bật luồng Bus -> Inverter
