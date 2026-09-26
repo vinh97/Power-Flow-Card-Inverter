@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <!-- Nền trắng -->
+  <rect width="512" height="512" fill="#FFFFFF"/>
+
+  <!-- Ống khói -->
+  <rect x="138" y="92" width="40" height="92" rx="7" fill="#4CB885"/>
+
+  <!-- Mái nhà -->
+  <path d="M 44,252 L 256,110 L 468,252" 
+        fill="none" 
+        stroke="#4CB885" 
+        stroke-width="40" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"/>
+
+  <!-- Thân nhà -->
+  <path d="M 256,151 
+           L 422,262 
+           V 402 
+           a 14,14 0 0 1 -14,14 
+           H 104 
+           a 14,14 0 0 1 -14,-14 
+           V 262 
+           Z" 
+        fill="#4CB885"/>
+
+  <!-- Biểu tượng tia sét (Đỉnh và đuôi nhọn hơn) -->
+  <path d="M 270.0,224.4 Q 272.0,206.0 261.8,221.5 L 207.1,304.2 Q 202.0,312.0 211.3,312.0 L 238.1,312.0 Q 248.0,312.0 247.0,321.9 L 241.9,372.8 Q 240.0,392.0 250.2,375.7 L 305.2,287.6 Q 310.0,280.0 301.0,280.0 L 274.0,280.0 Q 264.0,280.0 265.1,270.0 Z" 
+        fill="#FFFFFF"/>
+</svg>
